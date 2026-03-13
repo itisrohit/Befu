@@ -101,6 +101,8 @@ Run Android app (from `android/`):
 ./gradlew :app:assembleDebug
 ```
 
+The Android folder now includes Gradle Wrapper scripts, so `./gradlew` works without globally installed Gradle.
+
 Prereqs for Rust JNI build inside Android:
 
 ```bash

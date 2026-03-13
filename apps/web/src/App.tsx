@@ -1,11 +1,20 @@
 import { createSignal, onMount } from 'solid-js'
-import { configureBridge, createNativeTransport, invoke, type BridgeTransport } from '@befu/bridge'
+import {
+  configureBridge,
+  createNativeTransport,
+  getNativeBackendMode,
+  invoke,
+  type BridgeTransport,
+} from '@befu/bridge'
 import './App.css'
 
 function App() {
   const [bridgeStatus, setBridgeStatus] = createSignal('Checking bridge...')
   const [pingCount, setPingCount] = createSignal(0)
   const [appVersion, setAppVersion] = createSignal('unknown')
+  const [backendMode, setBackendMode] = createSignal<'jni' | 'fallback' | 'unavailable'>(
+    'unavailable',
+  )
 
   onMount(() => {
     const mockTransport: BridgeTransport = (payload) => {
@@ -43,13 +52,16 @@ function App() {
     configureBridge(async (payload) => {
       const nativeResponse = await nativeTransport(payload)
       if (nativeResponse.ok) {
+        setBackendMode(getNativeBackendMode())
         return nativeResponse
       }
 
       if (nativeResponse.error.code !== 'NATIVE_BRIDGE_UNAVAILABLE') {
+        setBackendMode(getNativeBackendMode())
         return nativeResponse
       }
 
+      setBackendMode('unavailable')
       return mockTransport(payload)
     })
 
@@ -81,6 +93,9 @@ function App() {
         <p class="status">{bridgeStatus()}</p>
         <p class="status">
           App version from bridge: <code>{appVersion()}</code>
+        </p>
+        <p class="status">
+          Android backend mode: <code>{backendMode()}</code>
         </p>
         <div class="actions">
           <button

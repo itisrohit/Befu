@@ -47,6 +47,12 @@ During build, Gradle runs `cargo ndk` to produce Rust `.so` libraries under `app
 
 5. Run on emulator/device. The app points to `http://10.0.2.2:5173`.
 
+6. Verify bridge mode in UI:
+
+- `Android backend mode: jni` means Rust JNI path is active
+- `Android backend mode: fallback` means Kotlin fallback is active
+- `Android backend mode: unavailable` means native bridge is not present (desktop web/dev browser)
+
 ## Next step
 
 - Build and package `libbefu_core.so` for Android ABIs so JNI path is active on-device.
