@@ -39,7 +39,19 @@ class MainActivity : AppCompatActivity() {
         webView.webChromeClient = WebChromeClient()
         webView.webViewClient = object : WebViewClientCompat() {
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-                return false
+                val url = request.url
+                val allowed = when {
+                    url.scheme == "https" &&
+                        url.host == "appassets.androidplatform.net" &&
+                        (url.path ?: "").startsWith("/assets/") -> true
+                    BuildConfig.DEBUG &&
+                        url.scheme == "http" &&
+                        url.host == "10.0.2.2" &&
+                        url.port == 5173 -> true
+                    else -> false
+                }
+
+                return !allowed
             }
 
             override fun shouldInterceptRequest(

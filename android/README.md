@@ -50,11 +50,11 @@ During build, Gradle runs `cargo ndk` to produce Rust `.so` libraries under `app
 For release builds, Gradle also runs a web asset pipeline:
 
 - `bun run build` (from repo root)
-- syncs `apps/web/dist` into `android/app/src/main/assets`
+- syncs `apps/web/dist` into `android/app/build/generated/befu-web-assets`
 
 This allows release APKs to boot from bundled assets without a local dev server.
 
-5. Run on emulator/device. The app points to `http://10.0.2.2:5173`.
+1. Run on emulator/device. The app points to `http://10.0.2.2:5173`.
 
 Debug vs release app loading:
 

@@ -107,7 +107,7 @@ Develop the `befu.ts` API to expose Rust functionality to the UI.
 
 **Recent hardening**: CI reproducibility updates, debug-only network security overrides, and WebView API deprecation cleanup.
 
-**Latest milestone**: debug/release loading split implemented (`10.0.2.2` for debug, `appassets.androidplatform.net` entrypoint for release).
+**Latest milestone**: debug/release loading split implemented (`http://10.0.2.2:5173` for debug, `https://appassets.androidplatform.net/assets/index.html` for release).
 
 #### iOS Support
 

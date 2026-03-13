@@ -39,7 +39,6 @@ android/.gradle/
 android/build/
 android/app/build/
 android/app/src/main/jniLibs/
-android/app/src/main/assets/
 local.properties
 Captures/
 *.apk

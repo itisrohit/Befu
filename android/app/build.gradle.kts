@@ -32,7 +32,6 @@ android {
 
         release {
             isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("debug")
             buildConfigField(
                 "String",
                 "WEB_ENTRY_URL",
@@ -116,7 +115,6 @@ val syncWebAssets by tasks.registering(Sync::class) {
 }
 
 tasks.matching {
-    it.name == "mergeDebugAssets" ||
     it.name == "mergeReleaseAssets" ||
     it.name == "generateReleaseLintVitalReportModel" ||
         it.name == "lintVitalAnalyzeRelease" ||
