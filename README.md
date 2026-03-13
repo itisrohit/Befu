@@ -54,6 +54,8 @@ bun run rust:clippy
 - CI workflow: `.github/workflows/ci.yml`
 - Required command for PRs: `bun run quality`
 - CodeRabbit config: `.coderabbit.yaml`
+- Contribution guide: `CONTRIBUTING.md`
+- PR template: `.github/PULL_REQUEST_TEMPLATE.md`
 
 Recommended repository settings on GitHub:
 
