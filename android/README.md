@@ -43,6 +43,8 @@ cd android
 ./gradlew :app:assembleDebug
 ```
 
+For debug dev server loading (`http://10.0.2.2:5173`), cleartext HTTP is enabled in manifest.
+
 During build, Gradle runs `cargo ndk` to produce Rust `.so` libraries under `app/src/main/jniLibs`.
 
 5. Run on emulator/device. The app points to `http://10.0.2.2:5173`.
