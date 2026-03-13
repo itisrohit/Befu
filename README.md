@@ -102,6 +102,9 @@ Run Android app (from `android/`):
 ./gradlew :app:assembleDebug
 ```
 
+Release builds bundle web assets into Android app assets and load through
+`https://appassets.androidplatform.net/assets/index.html` via `WebViewAssetLoader`.
+
 The Android folder now includes Gradle Wrapper scripts, so `./gradlew` works without globally installed Gradle.
 
 Prereqs for Rust JNI build inside Android:

@@ -17,6 +17,7 @@ The primary objective is to provide a thin, non-intrusive runtime layer that all
 - JNI symbol path from Android to Rust dispatcher is implemented with Kotlin fallback.
 - Android CI now includes a debug APK assemble job with Gradle caching and artifact upload.
 - Android network policy is now debug-scoped (cleartext dev host only via debug manifest overlays).
+- Android release flow now bundles web assets and serves them through `WebViewAssetLoader` in release mode.
 
 ---
 
@@ -105,6 +106,8 @@ Develop the `befu.ts` API to expose Rust functionality to the UI.
 **Status**: In progress (WebView shell and bridge interface done, JNI entrypoint wired, Rust `.so` packaging flow added via `cargo-ndk`).
 
 **Recent hardening**: CI reproducibility updates, debug-only network security overrides, and WebView API deprecation cleanup.
+
+**Latest milestone**: debug/release loading split implemented (`10.0.2.2` for debug, `appassets.androidplatform.net` entrypoint for release).
 
 #### iOS Support
 
