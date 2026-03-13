@@ -29,6 +29,8 @@ target/
 **/*.rs.bk
 debug/
 release/
+!android/app/src/debug/
+!android/app/src/release/
 
 # --- Android ---
 .gradle/

@@ -3,8 +3,6 @@ package dev.befu.app
 import android.webkit.JavascriptInterface
 import org.json.JSONObject
 
-private const val APP_VERSION = "0.1.0"
-
 class BefuNativeBridge {
     @JavascriptInterface
     fun backendMode(): String {
@@ -52,7 +50,7 @@ class BefuNativeBridge {
                     "result",
                     JSONObject()
                         .put("name", "Befu")
-                        .put("version", APP_VERSION)
+                        .put("version", BuildConfig.VERSION_NAME)
                         .put("runtime", "befu")
                 )
                 .toString()

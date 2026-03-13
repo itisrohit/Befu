@@ -119,22 +119,4 @@ bun run dev
 
 ## Android shortcuts
 
-One-command happy path:
-
-```bash
-bun run android:up
-```
-
-This command handles setup checks, emulator/device readiness, dev server startup, APK install, and app launch.
-
-Useful helpers:
-
-```bash
-bun run android:status
-bun run android:setup
-bun run android:assemble:debug
-bun run android:install:debug
-bun run android:app:restart
-bun run android:logs
-bun run android:down
-```
+See `android/README.md` for the canonical Android command flow (`android:up`, setup, build/install, logs).

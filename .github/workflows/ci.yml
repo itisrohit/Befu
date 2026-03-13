@@ -69,7 +69,7 @@ jobs:
           echo "ANDROID_NDK_ROOT=${ANDROID_HOME}/ndk/27.0.12077973" >> "$GITHUB_ENV"
 
       - name: Install cargo-ndk
-        run: cargo install cargo-ndk
+        run: cargo install cargo-ndk --version 4.1.2 --locked
 
       - name: Add Rust Android targets
         run: rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android

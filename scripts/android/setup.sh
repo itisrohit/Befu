@@ -6,7 +6,7 @@ echo "[android:setup] Checking Rust Android toolchain..."
 
 if ! cargo ndk --version >/dev/null 2>&1; then
   echo "[android:setup] Installing cargo-ndk..."
-  cargo install cargo-ndk
+  cargo install cargo-ndk --version 4.1.2 --locked
 fi
 
 echo "[android:setup] Ensuring Rust Android targets are installed..."
