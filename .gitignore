@@ -1,0 +1,77 @@
+# --- IDEs and Editors ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# --- OS Specific ---
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak
+
+# --- Node/Frontend ---
+node_modules/
+dist/
+dist-ssr/
+*.local
+.npm
+.eslintcache
+.stylelintcache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# --- Rust/Backend ---
+target/
+**/*.rs.bk
+debug/
+release/
+
+# --- Android ---
+.gradle/
+build/
+local.properties
+Captures/
+*.apk
+*.aar
+*.jks
+*.keystore
+.externalNativeBuild
+.cxx
+*.hprof
+*.klib
+
+# --- iOS ---
+build/
+DerivedData/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xccheckout
+*.xcscmblueprint
+*.appbox
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# CocosPods
+Pods/
+Podfile.lock
+/Frameworks/
+
+# --- Project Specific ---
+*.log
+.env
+.env.*
+!.env.example
