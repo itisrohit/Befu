@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity() {
         with(webView.settings) {
             javaScriptEnabled = true
             domStorageEnabled = true
-            databaseEnabled = true
         }
 
         webView.webChromeClient = WebChromeClient()

@@ -119,4 +119,13 @@ bun run dev
 
 ## Android shortcuts
 
-See `android/README.md` for the canonical Android command flow (`android:up`, setup, build/install, logs).
+See `android/README.md` for the canonical Android command flow.
+
+Quick aliases:
+
+```bash
+bun run a:up
+bun run a:restart
+bun run a:logs
+bun run a:down
+```

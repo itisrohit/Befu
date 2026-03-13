@@ -68,6 +68,15 @@ bun run android:logs
 bun run android:down
 ```
 
+Short aliases:
+
+```bash
+bun run a:up
+bun run a:restart
+bun run a:logs
+bun run a:down
+```
+
 ## Next step
 
 - Build and package `libbefu_core.so` for Android ABIs so JNI path is active on-device.

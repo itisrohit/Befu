@@ -34,7 +34,11 @@
     "android:app:restart": "adb shell am force-stop dev.befu.app && adb shell am start -n dev.befu.app/.MainActivity",
     "android:devices": "adb devices -l",
     "android:logs": "adb logcat -d | rg -i \"BefuMainActivity|WebView|ERR_\"",
-    "android:doctor": "cargo ndk --version && rustup target list --installed | rg \"android\" && adb devices -l"
+    "android:doctor": "cargo ndk --version && rustup target list --installed | rg \"android\" && adb devices -l",
+    "a:up": "bun run android:up",
+    "a:down": "bun run android:down",
+    "a:logs": "bun run android:logs",
+    "a:restart": "bun run android:app:restart"
   },
   "devDependencies": {
     "@eslint/js": "^9",
