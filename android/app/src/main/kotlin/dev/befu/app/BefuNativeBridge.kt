@@ -1,6 +1,5 @@
 package dev.befu.app
 
-import android.os.Build
 import android.webkit.JavascriptInterface
 import org.json.JSONObject
 
@@ -52,7 +51,7 @@ class BefuNativeBridge {
                     JSONObject()
                         .put("name", "Befu")
                         .put("version", BuildConfig.VERSION_NAME)
-                        .put("runtime", "befu"),
+                        .put("runtime", "befu")
                 )
                 .toString()
 

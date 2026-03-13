@@ -68,6 +68,14 @@ export class BridgeInvokeError extends Error {
 
 let transport: BridgeTransport | null = null
 
+function createRequestId(): string {
+  if (typeof globalThis.crypto?.randomUUID === 'function') {
+    return globalThis.crypto.randomUUID()
+  }
+
+  return `req-${Date.now()}-${Math.random().toString(16).slice(2)}`
+}
+
 export function configureBridge(nextTransport: BridgeTransport): void {
   transport = nextTransport
 }
@@ -109,7 +117,7 @@ export async function invoke<C extends BridgeCommand>(
   }
 
   const payload: BridgeRequest<C> = {
-    id: crypto.randomUUID(),
+    id: createRequestId(),
     command,
     args: (args ?? undefined) as BridgeCommandMap[C]['args'],
   }

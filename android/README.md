@@ -43,6 +43,8 @@ cd android
 ./gradlew :app:assembleDebug
 ```
 
+For debug dev server loading (`http://10.0.2.2:5173`), cleartext HTTP is enabled only in debug manifests.
+
 During build, Gradle runs `cargo ndk` to produce Rust `.so` libraries under `app/src/main/jniLibs`.
 
 5. Run on emulator/device. The app points to `http://10.0.2.2:5173`.
@@ -52,6 +54,28 @@ During build, Gradle runs `cargo ndk` to produce Rust `.so` libraries under `app
 - `Android backend mode: jni` means Rust JNI path is active
 - `Android backend mode: fallback` means Kotlin fallback is active
 - `Android backend mode: unavailable` means native bridge is not present (desktop web/dev browser)
+
+## Shortcuts (repo root)
+
+```bash
+bun run android:up
+bun run android:status
+bun run android:setup
+bun run android:assemble:debug
+bun run android:install:debug
+bun run android:app:restart
+bun run android:logs
+bun run android:down
+```
+
+Short aliases:
+
+```bash
+bun run a:up
+bun run a:restart
+bun run a:logs
+bun run a:down
+```
 
 ## Next step
 

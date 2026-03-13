@@ -56,6 +56,7 @@ bun run rust:clippy
 - CodeRabbit config: `.coderabbit.yaml`
 - Contribution guide: `CONTRIBUTING.md`
 - PR template: `.github/PULL_REQUEST_TEMPLATE.md`
+- Android CI build: `Android Debug Build` (APK assemble + Rust JNI libs)
 
 Recommended repository settings on GitHub:
 
@@ -114,4 +115,17 @@ For emulator dev mode, keep web dev server running from repo root:
 
 ```bash
 bun run dev
+```
+
+## Android shortcuts
+
+See `android/README.md` for the canonical Android command flow.
+
+Quick aliases:
+
+```bash
+bun run a:up
+bun run a:restart
+bun run a:logs
+bun run a:down
 ```

@@ -15,6 +15,8 @@ The primary objective is to provide a thin, non-intrusive runtime layer that all
 - End-to-end demo path works in development (`ping` and `app.info`).
 - Android shell scaffold added with `WebView` host and native bridge entrypoint.
 - JNI symbol path from Android to Rust dispatcher is implemented with Kotlin fallback.
+- Android CI now includes a debug APK assemble job with Gradle caching and artifact upload.
+- Android network policy is now debug-scoped (cleartext dev host only via debug manifest overlays).
 
 ---
 
@@ -101,6 +103,8 @@ Develop the `befu.ts` API to expose Rust functionality to the UI.
 - Enable bridge routing to the Rust library.
 
 **Status**: In progress (WebView shell and bridge interface done, JNI entrypoint wired, Rust `.so` packaging flow added via `cargo-ndk`).
+
+**Recent hardening**: CI reproducibility updates, debug-only network security overrides, and WebView API deprecation cleanup.
 
 #### iOS Support
 
