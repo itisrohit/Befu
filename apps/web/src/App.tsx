@@ -1,5 +1,5 @@
 import { createSignal, onMount } from 'solid-js'
-import { configureBridge, invoke } from '@befu/bridge'
+import { configureBridge, createNativeTransport, invoke, type BridgeTransport } from '@befu/bridge'
 import './App.css'
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
   const [appVersion, setAppVersion] = createSignal('unknown')
 
   onMount(() => {
-    configureBridge((payload) => {
+    const mockTransport: BridgeTransport = (payload) => {
       if (payload.command === 'ping') {
         return Promise.resolve({
           id: payload.id,
@@ -37,6 +37,20 @@ function App() {
           message: `Unknown command: ${String(payload.command)}`,
         },
       })
+    }
+
+    const nativeTransport = createNativeTransport()
+    configureBridge(async (payload) => {
+      const nativeResponse = await nativeTransport(payload)
+      if (nativeResponse.ok) {
+        return nativeResponse
+      }
+
+      if (nativeResponse.error.code !== 'NATIVE_BRIDGE_UNAVAILABLE') {
+        return nativeResponse
+      }
+
+      return mockTransport(payload)
     })
 
     void (async () => {

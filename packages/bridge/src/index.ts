@@ -43,6 +43,16 @@ export type BridgeResponse<T> = BridgeSuccess<T> | BridgeFailure
 
 export type BridgeTransport = (payload: BridgeRequest) => Promise<BridgeResponse<unknown>>
 
+interface NativeBridge {
+  invokeRaw(payloadJson: string): string
+}
+
+declare global {
+  interface Window {
+    BefuNative?: NativeBridge
+  }
+}
+
 export class BridgeInvokeError extends Error {
   code: string
   details?: unknown
@@ -59,6 +69,25 @@ let transport: BridgeTransport | null = null
 
 export function configureBridge(nextTransport: BridgeTransport): void {
   transport = nextTransport
+}
+
+export function createNativeTransport(): BridgeTransport {
+  return (payload) => {
+    const nativeBridge = globalThis.window?.BefuNative
+    if (!nativeBridge) {
+      return Promise.resolve({
+        id: payload.id,
+        ok: false,
+        error: {
+          code: 'NATIVE_BRIDGE_UNAVAILABLE',
+          message: 'window.BefuNative.invokeRaw is unavailable',
+        },
+      })
+    }
+
+    const responseJson = nativeBridge.invokeRaw(JSON.stringify(payload))
+    return Promise.resolve(JSON.parse(responseJson) as BridgeResponse<unknown>)
+  }
 }
 
 export async function invoke<C extends BridgeCommand>(

@@ -33,6 +33,10 @@ release/
 # --- Android ---
 .gradle/
 build/
+android/.gradle/
+android/build/
+android/app/build/
+android/app/src/main/jniLibs/
 local.properties
 Captures/
 *.apk

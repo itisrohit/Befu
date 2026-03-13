@@ -13,6 +13,8 @@ The primary objective is to provide a thin, non-intrusive runtime layer that all
 - `packages/bridge` exposes typed `configureBridge()` and `invoke()` with response envelopes.
 - `crates/core` exposes JSON request dispatcher (`handle_request`) with command routing.
 - End-to-end demo path works in development (`ping` and `app.info`).
+- Android shell scaffold added with `WebView` host and native bridge entrypoint.
+- JNI symbol path from Android to Rust dispatcher is implemented with Kotlin fallback.
 
 ---
 
@@ -98,6 +100,8 @@ Develop the `befu.ts` API to expose Rust functionality to the UI.
 - Configure `JavascriptInterface` for message passing.
 - Enable bridge routing to the Rust library.
 
+**Status**: In progress (WebView shell and bridge interface done, JNI entrypoint wired, Rust `.so` packaging flow added via `cargo-ndk`).
+
 #### iOS Support
 
 - Use `WKWebView` with `WKScriptMessageHandler`.
@@ -114,6 +118,7 @@ During development, the mobile shell points to the Vite dev server for an optima
 - **URL**: `http://localhost:5173`
 - **Features**: Hot Module Replacement (HMR) and Chrome DevTools debugging.
 - **Run**: `bun run dev`
+- **Android Emulator URL**: `http://10.0.2.2:5173`
 
 ### Production Mode
 
