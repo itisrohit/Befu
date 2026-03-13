@@ -87,3 +87,29 @@ bun run hooks:install
 - UI calls typed commands (`invoke('ping')`, `invoke('app.info')`) from `@befu/bridge`.
 - Transport returns a protocol response envelope (`{ id, ok, result | error }`).
 - Rust crate exposes `handle_request(json)` in `crates/core/src/lib.rs` as backend command dispatcher.
+
+## Android shell (early scaffold)
+
+- Android project lives in `android/`.
+- `MainActivity` hosts a `WebView` and exposes `window.BefuNative.invokeRaw(payloadJson)`.
+- Web bridge now tries native transport first, then falls back to local mock transport for desktop/web dev.
+- JNI symbol path is prepared from Android to Rust dispatcher (`handle_request`).
+
+Run Android app (from `android/`):
+
+```bash
+./gradlew :app:assembleDebug
+```
+
+Prereqs for Rust JNI build inside Android:
+
+```bash
+cargo install cargo-ndk
+rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android
+```
+
+For emulator dev mode, keep web dev server running from repo root:
+
+```bash
+bun run dev
+```
