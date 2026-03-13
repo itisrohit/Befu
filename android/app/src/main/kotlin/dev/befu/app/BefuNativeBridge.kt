@@ -3,12 +3,24 @@ package dev.befu.app
 import android.webkit.JavascriptInterface
 import org.json.JSONObject
 
+/**
+ * JavaScript bridge exposed as `window.BefuNative` for WebView pages.
+ *
+ * The bridge prefers JNI-backed command handling when the native Rust library
+ * is available and falls back to Kotlin handlers otherwise.
+ */
 class BefuNativeBridge {
+    /**
+     * Returns the active native backend mode for runtime diagnostics.
+     */
     @JavascriptInterface
     fun backendMode(): String {
         return if (isNativeLoaded) "jni" else "fallback"
     }
 
+    /**
+     * Accepts a JSON request envelope and returns a JSON response envelope.
+     */
     @JavascriptInterface
     fun invokeRaw(payloadJson: String): String {
         return runCatching {
@@ -31,6 +43,9 @@ class BefuNativeBridge {
         }
     }
 
+    /**
+     * Kotlin fallback command router used when JNI library loading is unavailable.
+     */
     private fun fallbackInvokeRaw(payloadJson: String): String {
         val request = JSONObject(payloadJson)
         val id = request.optString("id")

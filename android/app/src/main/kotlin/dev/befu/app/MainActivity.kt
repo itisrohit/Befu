@@ -14,6 +14,12 @@ import androidx.webkit.WebViewClientCompat
 
 private const val TAG = "BefuMainActivity"
 
+/**
+ * Hosts the Befu web runtime inside an Android [WebView].
+ *
+ * Debug builds load the local Vite dev server, while release builds load
+ * bundled assets through `WebViewAssetLoader`.
+ */
 class MainActivity : AppCompatActivity() {
     private lateinit var webView: WebView
     private lateinit var assetLoader: WebViewAssetLoader
@@ -54,6 +60,9 @@ class MainActivity : AppCompatActivity() {
                 return !allowed
             }
 
+            /**
+             * Serves release assets from the app package through the appassets host.
+             */
             override fun shouldInterceptRequest(
                 view: WebView,
                 request: WebResourceRequest,
@@ -61,6 +70,9 @@ class MainActivity : AppCompatActivity() {
                 return assetLoader.shouldInterceptRequest(request.url)
             }
 
+            /**
+             * Logs top-level navigation failures for faster runtime diagnostics.
+             */
             override fun onReceivedError(
                 view: WebView,
                 request: WebResourceRequest,
