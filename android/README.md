@@ -47,7 +47,19 @@ For debug dev server loading (`http://10.0.2.2:5173`), cleartext HTTP is enabled
 
 During build, Gradle runs `cargo ndk` to produce Rust `.so` libraries under `app/src/main/jniLibs`.
 
-5. Run on emulator/device. The app points to `http://10.0.2.2:5173`.
+For release builds, Gradle also runs a web asset pipeline:
+
+- `bun run build` (from repo root)
+- syncs `apps/web/dist` into `android/app/build/generated/befu-web-assets`
+
+This allows release APKs to boot from bundled assets without a local dev server.
+
+1. Run on emulator/device. The app points to `http://10.0.2.2:5173`.
+
+Debug vs release app loading:
+
+- Debug: `http://10.0.2.2:5173`
+- Release: `https://appassets.androidplatform.net/assets/index.html`
 
 6. Verify bridge mode in UI:
 
@@ -62,6 +74,7 @@ bun run android:up
 bun run android:status
 bun run android:setup
 bun run android:assemble:debug
+bun run android:assemble:release
 bun run android:install:debug
 bun run android:app:restart
 bun run android:logs

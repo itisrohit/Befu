@@ -9,8 +9,11 @@ export default tseslint.config(
     ignores: [
       '**/node_modules/**',
       '**/dist/**',
+      '**/build/**',
+      '**/generated/**',
       '**/coverage/**',
       '**/.turbo/**',
+      'android/app/src/main/assets/**',
       '**/*.d.ts',
       'eslint.config.mjs',
     ],

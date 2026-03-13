@@ -5,16 +5,24 @@ import android.os.Bundle
 import android.util.Log
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
-import android.webkit.WebResourceError
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
+import androidx.webkit.WebResourceErrorCompat
+import androidx.webkit.WebViewAssetLoader
+import androidx.webkit.WebViewClientCompat
 
-private const val DEV_SERVER_URL = "http://10.0.2.2:5173"
 private const val TAG = "BefuMainActivity"
 
+/**
+ * Hosts the Befu web runtime inside an Android [WebView].
+ *
+ * Debug builds load the local Vite dev server, while release builds load
+ * bundled assets through `WebViewAssetLoader`.
+ */
 class MainActivity : AppCompatActivity() {
     private lateinit var webView: WebView
+    private lateinit var assetLoader: WebViewAssetLoader
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,26 +35,58 @@ class MainActivity : AppCompatActivity() {
             domStorageEnabled = true
         }
 
+        assetLoader = WebViewAssetLoader.Builder()
+            .addPathHandler(
+                "/assets/",
+                WebViewAssetLoader.AssetsPathHandler(this),
+            )
+            .build()
+
         webView.webChromeClient = WebChromeClient()
-        webView.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                return false
+        webView.webViewClient = object : WebViewClientCompat() {
+            override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+                val url = request.url
+                val allowed = when {
+                    url.scheme == "https" &&
+                        url.host == "appassets.androidplatform.net" &&
+                        (url.path ?: "").startsWith("/assets/") -> true
+                    BuildConfig.DEBUG &&
+                        url.scheme == "http" &&
+                        url.host == "10.0.2.2" &&
+                        url.port == 5173 -> true
+                    else -> false
+                }
+
+                return !allowed
             }
 
+            /**
+             * Serves release assets from the app package through the appassets host.
+             */
+            override fun shouldInterceptRequest(
+                view: WebView,
+                request: WebResourceRequest,
+            ): WebResourceResponse? {
+                return assetLoader.shouldInterceptRequest(request.url)
+            }
+
+            /**
+             * Logs top-level navigation failures for faster runtime diagnostics.
+             */
             override fun onReceivedError(
-                view: WebView?,
-                request: WebResourceRequest?,
-                error: WebResourceError?,
+                view: WebView,
+                request: WebResourceRequest,
+                error: WebResourceErrorCompat,
             ) {
-                if (request?.isForMainFrame == true) {
-                    Log.e(TAG, "WebView main-frame error: ${error?.description} (${error?.errorCode})")
+                if (request.isForMainFrame) {
+                    Log.e(TAG, "WebView main-frame error: ${error.description} (${error.errorCode})")
                 }
             }
         }
 
         webView.addJavascriptInterface(BefuNativeBridge(), "BefuNative")
 
-        webView.loadUrl(DEV_SERVER_URL)
+        webView.loadUrl(BuildConfig.WEB_ENTRY_URL)
     }
 
     override fun onDestroy() {

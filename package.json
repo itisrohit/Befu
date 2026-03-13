@@ -28,6 +28,7 @@
     "android:down": "bash scripts/android/stop.sh",
     "android:status": "bash scripts/android/doctor.sh",
     "android:assemble:debug": "./android/gradlew -p android :app:assembleDebug",
+    "android:assemble:release": "./android/gradlew -p android :app:assembleRelease",
     "android:install:debug": "./android/gradlew -p android :app:installDebug",
     "android:emulator:start": "emulator -avd Pixel_7",
     "android:app:start": "adb shell am start -n dev.befu.app/.MainActivity",
