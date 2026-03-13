@@ -1,0 +1,53 @@
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+  min-height: 100%;
+  padding: 2rem;
+}
+
+.card,
+.notes {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.card {
+  text-align: left;
+}
+
+.eyebrow {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.status {
+  margin: 1rem 0;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.counter {
+  font-size: 0.95rem;
+  padding: 0.5rem 0.85rem;
+  border-radius: 10px;
+  color: var(--text-h);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    padding: 1rem;
+  }
+}
