@@ -1,0 +1,34 @@
+{
+  "name": "befu",
+  "private": true,
+  "packageManager": "bun@1.2.16",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bun run --cwd apps/web dev",
+    "build": "bun run --cwd apps/web build",
+    "check": "bun run --cwd apps/web tsc -b",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "test:bridge": "bun run --cwd packages/bridge test",
+    "test:rust": "cargo test --manifest-path crates/core/Cargo.toml",
+    "rust:fmt": "cargo fmt --all",
+    "rust:fmt:check": "cargo fmt --all --check",
+    "rust:clippy": "cargo clippy --all-targets --all-features -- -D warnings",
+    "quality": "bun run lint && bun run format:check && bun run check && bun run test:bridge && bun run rust:fmt:check && bun run rust:clippy && bun run test:rust && bun run build"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9",
+    "bun-types": "^1.3.10",
+    "eslint": "^9",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-solid": "^0.14.5",
+    "globals": "^17.4.0",
+    "prettier": "^3.8.1",
+    "typescript-eslint": "^8.57.0"
+  }
+}
