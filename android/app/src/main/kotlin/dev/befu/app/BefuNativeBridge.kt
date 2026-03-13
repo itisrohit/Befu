@@ -6,6 +6,11 @@ import org.json.JSONObject
 
 class BefuNativeBridge {
     @JavascriptInterface
+    fun backendMode(): String {
+        return if (isNativeLoaded) "jni" else "fallback"
+    }
+
+    @JavascriptInterface
     fun invokeRaw(payloadJson: String): String {
         return runCatching {
             if (isNativeLoaded) {
