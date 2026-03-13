@@ -49,6 +49,36 @@ bun run rust:fmt:check
 bun run rust:clippy
 ```
 
+## Pull request gates
+
+- CI workflow: `.github/workflows/ci.yml`
+- Required command for PRs: `bun run quality`
+- CodeRabbit config: `.coderabbit.yaml`
+
+Recommended repository settings on GitHub:
+
+- protect `main`
+- require pull request before merge
+- require status checks to pass (CI / Quality Gate)
+- require branch to be up to date before merge
+- require at least 1 approving review
+
+## Git hooks (block bad commits)
+
+This repo uses Lefthook (`lefthook.yml`) as a YAML-based git hooks manager.
+
+- `pre-commit` runs: format check, lint, type-check, bridge tests, rust format check
+- `pre-push` runs: full `bun run quality`
+
+If any step fails, commit/push is blocked.
+
+Setup:
+
+```bash
+bun install
+bun run hooks:install
+```
+
 ## Current bridge flow
 
 - `apps/web/src/App.tsx` configures an in-app transport.
