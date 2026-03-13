@@ -84,6 +84,6 @@ bun run hooks:install
 ## Current bridge flow
 
 - `apps/web/src/App.tsx` configures an in-app transport.
-- UI calls `invoke('ping')` from `@befu/bridge`.
-- Transport responds with `pong`.
-- Rust crate provides the backend counterpart API in `crates/core/src/lib.rs`.
+- UI calls typed commands (`invoke('ping')`, `invoke('app.info')`) from `@befu/bridge`.
+- Transport returns a protocol response envelope (`{ id, ok, result | error }`).
+- Rust crate exposes `handle_request(json)` in `crates/core/src/lib.rs` as backend command dispatcher.

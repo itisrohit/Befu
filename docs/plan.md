@@ -10,9 +10,9 @@ The primary objective is to provide a thin, non-intrusive runtime layer that all
 
 - Bun-based monorepo initialized with workspaces.
 - `apps/web` scaffolded with SolidJS + Vite + TypeScript.
-- `packages/bridge` exposes `configureBridge()` and `invoke()`.
-- `crates/core` initialized as `befu-core` with starter `ping() -> "pong"`.
-- End-to-end demo path works in development (`invoke('ping')` returns `pong`).
+- `packages/bridge` exposes typed `configureBridge()` and `invoke()` with response envelopes.
+- `crates/core` exposes JSON request dispatcher (`handle_request`) with command routing.
+- End-to-end demo path works in development (`ping` and `app.info`).
 
 ---
 
@@ -78,7 +78,7 @@ Build the core execution engine.
 - Implement command routing logic.
 - Define internal API for native lifecycle events.
 
-**Status**: In progress (`befu-core` crate created with starter command).
+**Status**: In progress (`befu-core` command dispatcher and starter handlers implemented).
 
 ### Phase 3: Communication Bridge
 
@@ -88,7 +88,7 @@ Develop the `befu.ts` API to expose Rust functionality to the UI.
 - Target a bridge footprint of less than 1KB.
 - Ensure asynchronous fulfillment using native callback markers.
 
-**Status**: In progress (`@befu/bridge` package and transport contract implemented).
+**Status**: In progress (`@befu/bridge` typed command map and error envelope implemented).
 
 ### Phase 4: Mobile Shell Integration
 
