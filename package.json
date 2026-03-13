@@ -7,6 +7,8 @@
     "packages/*"
   ],
   "scripts": {
+    "prepare": "lefthook install",
+    "hooks:install": "lefthook install",
     "dev": "bun run --cwd apps/web dev",
     "build": "bun run --cwd apps/web build",
     "check": "bun run --cwd apps/web tsc -b",
@@ -28,6 +30,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-solid": "^0.14.5",
     "globals": "^17.4.0",
+    "lefthook": "^2.1.4",
     "prettier": "^3.8.1",
     "typescript-eslint": "^8.57.0"
   }
