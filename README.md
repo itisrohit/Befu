@@ -61,4 +61,6 @@ Experimental prototype.
 - Scaffolder usage and troubleshooting: [`docs/scaffolder-cli.md`](docs/scaffolder-cli.md)
 - Current roadmap and priorities: [`docs/phases-next.md`](docs/phases-next.md)
 
-Built with love ❤
+---
+
+Built with love ❤️
