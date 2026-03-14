@@ -15,7 +15,6 @@ export default tseslint.config(
       '**/.turbo/**',
       'android/app/src/main/assets/**',
       'ios/App/Resources/web/**',
-      'tools/create-befu-app/template/**',
       '**/*.d.ts',
       'eslint.config.mjs',
     ],

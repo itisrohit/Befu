@@ -1,10 +1,36 @@
 {
   "name": "create-befu-app",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.1.2",
+  "description": "Scaffold a Befu app workspace",
+  "license": "MIT",
   "type": "module",
+  "keywords": [
+    "befu",
+    "scaffold",
+    "cli",
+    "solid",
+    "rust",
+    "android",
+    "ios"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itisrohit/Befu.git",
+    "directory": "tools/create-befu-app"
+  },
+  "homepage": "https://github.com/itisrohit/Befu/tree/main/tools/create-befu-app",
+  "bugs": {
+    "url": "https://github.com/itisrohit/Befu/issues"
+  },
+  "files": [
+    "bin",
+    "template"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
-    "create-befu-app": "./bin/create-befu-app.mjs"
+    "create-befu-app": "bin/create-befu-app.mjs"
   },
   "scripts": {
     "create-befu-app": "node ./bin/create-befu-app.mjs"
