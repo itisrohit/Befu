@@ -31,7 +31,8 @@ Rust runtime
 
 - Prototype runtime for Android/iOS webview shells + Rust command backend
 - Bun-first developer workflow and `create-befu-app` scaffolder
-- Current priority: Rust command DX (`invoke("name", args)`) with minimal boilerplate
+- Current priority: Rust command registry DX (`invoke("name", args)`) with minimal boilerplate
+- Current status: registry dispatch foundation is implemented with typed `hello` command example
 - Planned differentiator (debug-only): hot Rust command reload on Android and iOS simulator for faster iteration
 - Focused on bridge ergonomics and iteration speed, not full production hardening yet
 
