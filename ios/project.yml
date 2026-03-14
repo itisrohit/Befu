@@ -12,6 +12,8 @@ targets:
     deploymentTarget: '16.0'
     sources:
       - path: App
+        excludes:
+          - Libraries/libbefu_core.a
     resources:
       - path: App/Resources
         type: folder

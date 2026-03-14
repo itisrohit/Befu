@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0AD459B371EE8C5CBB9A3B96 /* libbefu_core.a in Resources */ = {isa = PBXBuildFile; fileRef = BB2570060A6416020782730C /* libbefu_core.a */; };
 		2EA4BF116E52E8963DD29BDE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B532526CAA57F2741CA0F61 /* ViewController.swift */; };
 		4F80C644DA9C3DBD9B161B81 /* index-DMmvIaei.js in Resources */ = {isa = PBXBuildFile; fileRef = 8C97B4DA2E1AA6ECB9A59A68 /* index-DMmvIaei.js */; };
 		7782F65116C68C4BED1E89B9 /* icons.svg in Resources */ = {isa = PBXBuildFile; fileRef = C36404437ECC9348A7683DEE /* icons.svg */; };
@@ -28,7 +27,6 @@
 		8C97B4DA2E1AA6ECB9A59A68 /* index-DMmvIaei.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "index-DMmvIaei.js"; sourceTree = "<group>"; };
 		965EB56567CB5E1072CA7E1E /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		B031A43FB78A56C2789D7526 /* favicon.svg */ = {isa = PBXFileReference; path = favicon.svg; sourceTree = "<group>"; };
-		BB2570060A6416020782730C /* libbefu_core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libbefu_core.a; sourceTree = "<group>"; };
 		C36404437ECC9348A7683DEE /* icons.svg */ = {isa = PBXFileReference; path = icons.svg; sourceTree = "<group>"; };
 		E134596DA921CD53B917E34A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -62,7 +60,6 @@
 				2CA0A4011A9B7622BFDF5A8F /* Info.plist */,
 				6B532526CAA57F2741CA0F61 /* ViewController.swift */,
 				85FC8A2F9D9CAB8DA597AF96 /* include */,
-				F7E00039A208CA13CD619B9F /* Libraries */,
 				00896623AFCCB78F8B7E66C6 /* Resources */,
 			);
 			path = App;
@@ -99,14 +96,6 @@
 				8C97B4DA2E1AA6ECB9A59A68 /* index-DMmvIaei.js */,
 			);
 			path = assets;
-			sourceTree = "<group>";
-		};
-		F7E00039A208CA13CD619B9F /* Libraries */ = {
-			isa = PBXGroup;
-			children = (
-				BB2570060A6416020782730C /* libbefu_core.a */,
-			);
-			path = Libraries;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -173,7 +162,6 @@
 				D2339390E4772EE3829919B5 /* index-CDHmPV-p.css in Resources */,
 				4F80C644DA9C3DBD9B161B81 /* index-DMmvIaei.js in Resources */,
 				7C68F51000D20644FD81D702 /* index.html in Resources */,
-				0AD459B371EE8C5CBB9A3B96 /* libbefu_core.a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

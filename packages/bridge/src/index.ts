@@ -117,7 +117,20 @@ export function getNativeBackendMode(): 'jni' | 'fallback' | 'ios' | 'unavailabl
     return 'unavailable'
   }
 
-  return nativeBridge.backendMode?.() ?? 'fallback'
+  if (typeof nativeBridge.backendMode !== 'function') {
+    return 'fallback'
+  }
+
+  try {
+    const mode = nativeBridge.backendMode()
+    if (mode === 'jni' || mode === 'fallback' || mode === 'ios') {
+      return mode
+    }
+  } catch {
+    return 'fallback'
+  }
+
+  return 'fallback'
 }
 
 export async function invoke<C extends BridgeCommand>(
