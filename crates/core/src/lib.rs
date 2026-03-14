@@ -15,6 +15,7 @@ const COMMANDS: [(&str, CommandHandler); 2] =
 const DEMO_COMMANDS: [(&str, CommandHandler); 1] = [("hello", demo_commands::hello_command)];
 
 #[derive(Debug, Deserialize)]
+/// Incoming bridge request payload from web/native shells.
 pub struct BridgeRequest {
     pub id: String,
     pub command: String,
@@ -23,6 +24,7 @@ pub struct BridgeRequest {
 }
 
 #[derive(Debug, Serialize)]
+/// Structured bridge error payload.
 pub struct BridgeError {
     pub code: &'static str,
     pub message: String,
@@ -32,15 +34,18 @@ pub struct BridgeError {
 
 #[derive(Debug, Serialize)]
 #[serde(untagged)]
+/// Envelope for command success/failure responses.
 pub enum BridgeResponse {
     Success { id: String, ok: bool, result: Value },
     Failure { id: String, ok: bool, error: BridgeError },
 }
 
+/// Lightweight health command used for connectivity checks.
 pub fn ping() -> &'static str {
     "pong"
 }
 
+/// Returns static runtime metadata exposed to bridge callers.
 pub fn app_info() -> Value {
     serde_json::json!({
         "name": "Befu",
@@ -82,6 +87,7 @@ fn app_info_command(request: &BridgeRequest) -> BridgeResponse {
     success_response(&request.id, app_info())
 }
 
+/// Deserializes, dispatches, and serializes a bridge command request.
 pub fn handle_request(request_json: &str) -> Result<String, serde_json::Error> {
     let request: BridgeRequest = serde_json::from_str(request_json)?;
 

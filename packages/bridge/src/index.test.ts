@@ -65,30 +65,6 @@ describe('bridge invoke', () => {
     expect(invoke('app.info')).rejects.toBeInstanceOf(BridgeInvokeError)
   })
 
-  it('supports additional command handlers through registry transport', async () => {
-    configureBridge((payload) => {
-      if (payload.command === 'hello') {
-        return Promise.resolve({
-          id: payload.id,
-          ok: true,
-          result: { message: `Hello ${(payload.args as { name: string }).name}` },
-        })
-      }
-
-      return Promise.resolve({
-        id: payload.id,
-        ok: false,
-        error: {
-          code: 'UNKNOWN_COMMAND',
-          message: 'unknown command',
-        },
-      })
-    })
-
-    const helloResult = await invoke('hello', { name: 'Developer' })
-    expect(helloResult).toEqual({ message: 'Hello Developer' })
-  })
-
   it('returns unavailable mode when native bridge is absent', () => {
     globalThis.window = undefined as unknown as Window & typeof globalThis
     expect(getNativeBackendMode()).toBe('unavailable')

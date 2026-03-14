@@ -6,38 +6,32 @@ struct HelloArgs {
     name: String,
 }
 
+/// Returns a greeting for the given name.
 fn hello(name: &str) -> String {
     format!("Hello {name}")
 }
 
+/// Handles the demo `hello` command with typed argument parsing.
 pub(crate) fn hello_command(request: &BridgeRequest) -> BridgeResponse {
-    let parsed_args = request
-        .args
-        .clone()
-        .ok_or_else(|| {
-            failure_response(
-                &request.id,
-                "INVALID_ARGUMENT",
-                "Missing args for command: hello",
-                None,
-            )
-        })
-        .and_then(|value| {
-            serde_json::from_value::<HelloArgs>(value.clone()).map_err(|error| {
-                failure_response(
-                    &request.id,
-                    "INVALID_ARGUMENT",
-                    format!("Invalid args for command: hello ({error})"),
-                    Some(value),
-                )
-            })
-        });
+    let Some(value) = request.args.clone() else {
+        return failure_response(
+            &request.id,
+            "INVALID_ARGUMENT",
+            "Missing args for command: hello",
+            None,
+        );
+    };
 
-    match parsed_args {
+    match serde_json::from_value::<HelloArgs>(value.clone()) {
         Ok(args) => {
             success_response(&request.id, serde_json::json!({ "message": hello(&args.name) }))
         }
-        Err(error_response) => error_response,
+        Err(error) => failure_response(
+            &request.id,
+            "INVALID_ARGUMENT",
+            format!("Invalid args for command: hello ({error})"),
+            Some(value),
+        ),
     }
 }
 
