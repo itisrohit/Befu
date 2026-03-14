@@ -10,7 +10,7 @@ const DEFAULT_PACKAGE_MANAGER = process.env.BEFU_PACKAGE_MANAGER ?? 'bun@1.2.16'
 const DEFAULT_PLATFORM = 'both'
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url))
-const TEMPLATE_ROOT = resolve(SCRIPT_DIR, '../../..')
+const TEMPLATE_ROOT = resolve(SCRIPT_DIR, '../template')
 
 const TEMPLATE_ENTRIES = [
   '.coderabbit.yaml',

@@ -23,7 +23,8 @@
     "url": "https://github.com/itisrohit/Befu/issues"
   },
   "files": [
-    "bin"
+    "bin",
+    "template"
   ],
   "publishConfig": {
     "access": "public"

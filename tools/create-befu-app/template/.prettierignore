@@ -4,4 +4,3 @@ coverage
 target
 bun.lock
 Cargo.lock
-tools/create-befu-app/template/ios/App/Resources/web
