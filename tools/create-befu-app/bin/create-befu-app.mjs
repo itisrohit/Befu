@@ -367,14 +367,20 @@ async function main() {
     console.log('Scaffold a full Befu workspace template.')
 
     const nameInput =
-      args.name.length > 0 ? args.name : await rl.question('App name (default: my-befu-app): ')
+      args.name.length > 0
+        ? args.name
+        : rl
+          ? await rl.question('App name (default: my-befu-app): ')
+          : 'my-befu-app'
 
     const appName = toSlug(nameInput || 'my-befu-app') || 'my-befu-app'
 
     const platformInput =
       args.platform.length > 0
         ? args.platform
-        : await rl.question('Target platform [android/ios/both] (default: both): ')
+        : rl
+          ? await rl.question('Target platform [android/ios/both] (default: both): ')
+          : DEFAULT_PLATFORM
 
     const platformAnswer = platformInput.trim().toLowerCase()
     const platform = ['android', 'ios', 'both'].includes(platformAnswer)
