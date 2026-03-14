@@ -40,18 +40,26 @@ This runs:
 ## Run via CLI (simulator)
 
 ```bash
-xcrun simctl list devices available
-xcodebuild -project ios/BefuIOS.xcodeproj -scheme Befu -destination "generic/platform=iOS Simulator" -derivedDataPath ios/build build
-xcrun simctl install booted ios/build/Build/Products/Debug-iphonesimulator/Befu.app
-xcrun simctl launch booted dev.befu.ios
+bun run i:list
+bun run i:build
+bun run i:install
+bun run i:launch
 ```
 
 Use `xcrun simctl list devices available` to pick a simulator present in your local Xcode runtime.
+
+One-command flow:
+
+```bash
+bun run i:up
+```
 
 ## Debug vs release loading behavior
 
 - Debug: `http://localhost:5173` (requires `bun run dev`)
 - Release-style fallback: bundled assets from `ios/App/Resources/web`
+
+For iOS debug mode, `bun run i:dev` is a shorthand for the web dev server.
 
 ## Current status
 

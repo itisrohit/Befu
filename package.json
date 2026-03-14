@@ -39,10 +39,22 @@
     "ios:project": "xcodegen generate --spec ios/project.yml",
     "ios:assets": "bash scripts/ios/prepare-assets.sh",
     "ios:prepare": "bun run ios:assets && bun run ios:project",
+    "ios:sim:list": "xcrun simctl list devices available",
+    "ios:build:sim": "xcodebuild -project ios/BefuIOS.xcodeproj -scheme Befu -destination \"generic/platform=iOS Simulator\" -derivedDataPath ios/build build",
+    "ios:sim:install": "xcrun simctl install booted ios/build/Build/Products/Debug-iphonesimulator/Befu.app",
+    "ios:sim:launch": "xcrun simctl launch booted dev.befu.ios",
+    "ios:up": "bun run ios:prepare && bun run ios:build:sim && bun run ios:sim:install && bun run ios:sim:launch",
+    "ios:dev": "bun run dev",
     "a:up": "bun run android:up",
     "a:down": "bun run android:down",
     "a:logs": "bun run android:logs",
-    "a:restart": "bun run android:app:restart"
+    "a:restart": "bun run android:app:restart",
+    "i:list": "bun run ios:sim:list",
+    "i:build": "bun run ios:build:sim",
+    "i:install": "bun run ios:sim:install",
+    "i:launch": "bun run ios:sim:launch",
+    "i:up": "bun run ios:up",
+    "i:dev": "bun run ios:dev"
   },
   "devDependencies": {
     "@eslint/js": "^9",

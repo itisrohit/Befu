@@ -130,21 +130,27 @@ From repo root:
 bun run ios:prepare
 ```
 
-Then either run from Xcode, or use CLI:
+Then either run from Xcode, or use short Bun commands:
 
 ```bash
-xcrun simctl list devices available
-xcodebuild -project ios/BefuIOS.xcodeproj -scheme Befu -destination "generic/platform=iOS Simulator" -derivedDataPath ios/build build
-xcrun simctl install booted ios/build/Build/Products/Debug-iphonesimulator/Befu.app
-xcrun simctl launch booted dev.befu.ios
+bun run i:list
+bun run i:build
+bun run i:install
+bun run i:launch
 ```
 
 Use `xcrun simctl list devices available` to choose a simulator that exists on your Xcode version.
 
+One-command iOS flow:
+
+```bash
+bun run i:up
+```
+
 For debug server mode on iOS, keep web dev server running:
 
 ```bash
-bun run dev
+bun run i:dev
 ```
 
 ## Android shortcuts
