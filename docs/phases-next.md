@@ -14,7 +14,7 @@
 - [done] Support interactive prompts and non-interactive flags (`--name`, `--platform`, `--yes`).
 - [done] Generate a full Befu template workspace (Solid + Rust + bridge + Android/iOS shells).
 - [next] Expose command flow similar to Tauri ergonomics (`bun create befu-app`, `bunx create-befu-app`).
-- [next] Add selective template shaping by platform choice (currently full template always generated).
+- [done] Add selective platform shaping (`android`, `ios`, `both`) for generated content.
 
 ## Phase 2 - iOS Production Packaging
 
