@@ -1,6 +1,31 @@
 # Befu
 
-Lightweight cross-platform runtime prototype: SolidJS frontend, Rust core, Android/iOS webview shells, and a typed bridge.
+Befu is a lightweight runtime for building cross-platform mobile apps with:
+
+- Rust backend
+- WebView runtime (Android/iOS)
+- modern web UI (SolidJS and beyond)
+
+The goal is to keep apps small, fast, and simple while letting developers use the full JavaScript (Bun/npm) and Rust ecosystems.
+
+## Architecture
+
+```text
+Frontend (SolidJS)
+      ↓
+invoke() bridge
+      ↓
+WebView shell
+      ↓
+Rust runtime
+```
+
+## Why Befu?
+
+- tiny runtime footprint
+- web-framework flexibility
+- Rust ecosystem access
+- minimal bridge surface
 
 ## Quick Start
 
@@ -14,13 +39,7 @@ Open `http://localhost:5173`.
 
 ## Scaffold A New App
 
-```bash
-bunx create-befu-app
-```
-
 Package: [create-befu-app on npm](https://www.npmjs.com/package/create-befu-app)
-
-Non-interactive:
 
 ```bash
 bunx create-befu-app --name my-befu-app --platform both --yes
@@ -32,21 +51,14 @@ If your local `bunx` cache is stale, pin explicitly:
 bunx create-befu-app@0.1.2 --name my-befu-app --platform both --yes
 ```
 
-## Core Commands
+## Status
 
-```bash
-bun run quality
-bun run a:up
-bun run i:up
-```
-
-## CI/CD
-
-- Main CI: [`.github/workflows/ci.yml`](.github/workflows/ci.yml)
-- Scaffolder CI: [`.github/workflows/scaffolder-ci.yml`](.github/workflows/scaffolder-ci.yml)
+Experimental prototype.
 
 ## Docs
 
 - Setup and daily workflows: [`docs/getting-started.md`](docs/getting-started.md)
 - Scaffolder usage and troubleshooting: [`docs/scaffolder-cli.md`](docs/scaffolder-cli.md)
-- Current roadmap and next priorities: [`docs/phases-next.md`](docs/phases-next.md)
+- Current roadmap and priorities: [`docs/phases-next.md`](docs/phases-next.md)
+
+Built with love ❤
