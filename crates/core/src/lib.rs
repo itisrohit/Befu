@@ -6,6 +6,14 @@ use serde_json::Value;
 use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 
+mod demo_commands;
+
+type CommandHandler = fn(&BridgeRequest) -> BridgeResponse;
+
+const COMMANDS: [(&str, CommandHandler); 2] =
+    [("ping", ping_command), ("app.info", app_info_command)];
+const DEMO_COMMANDS: [(&str, CommandHandler); 1] = [("hello", demo_commands::hello_command)];
+
 #[derive(Debug, Deserialize)]
 pub struct BridgeRequest {
     pub id: String,
@@ -41,25 +49,50 @@ pub fn app_info() -> Value {
     })
 }
 
+fn find_command(command: &str) -> Option<CommandHandler> {
+    COMMANDS
+        .iter()
+        .chain(DEMO_COMMANDS.iter())
+        .find(|(name, _)| *name == command)
+        .map(|(_, handler)| *handler)
+}
+
+pub(crate) fn success_response(id: &str, result: Value) -> BridgeResponse {
+    BridgeResponse::Success { id: id.to_owned(), ok: true, result }
+}
+
+pub(crate) fn failure_response(
+    id: &str,
+    code: &'static str,
+    message: impl Into<String>,
+    details: Option<Value>,
+) -> BridgeResponse {
+    BridgeResponse::Failure {
+        id: id.to_owned(),
+        ok: false,
+        error: BridgeError { code, message: message.into(), details },
+    }
+}
+
+fn ping_command(request: &BridgeRequest) -> BridgeResponse {
+    success_response(&request.id, serde_json::json!({ "pong": ping() }))
+}
+
+fn app_info_command(request: &BridgeRequest) -> BridgeResponse {
+    success_response(&request.id, app_info())
+}
+
 pub fn handle_request(request_json: &str) -> Result<String, serde_json::Error> {
     let request: BridgeRequest = serde_json::from_str(request_json)?;
 
-    let response = match request.command.as_str() {
-        "ping" => BridgeResponse::Success {
-            id: request.id,
-            ok: true,
-            result: serde_json::json!({ "pong": ping() }),
-        },
-        "app.info" => BridgeResponse::Success { id: request.id, ok: true, result: app_info() },
-        other => BridgeResponse::Failure {
-            id: request.id,
-            ok: false,
-            error: BridgeError {
-                code: "UNKNOWN_COMMAND",
-                message: format!("Unknown command: {other}"),
-                details: request.args,
-            },
-        },
+    let response = match find_command(&request.command) {
+        Some(handler) => handler(&request),
+        None => failure_response(
+            &request.id,
+            "UNKNOWN_COMMAND",
+            format!("Unknown command: {}", request.command),
+            request.args.clone(),
+        ),
     };
 
     serde_json::to_string(&response)

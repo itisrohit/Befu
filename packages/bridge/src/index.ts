@@ -1,4 +1,8 @@
 export interface BridgeCommandMap {
+  hello: {
+    args: { name: string }
+    result: { message: string }
+  }
   ping: {
     args: undefined
     result: { pong: 'pong' }

@@ -23,13 +23,15 @@
 - Goal: make Rust functions callable from frontend with near-zero bridge boilerplate.
 - Baseline developer experience:
   - Rust: `#[befu::command] fn hello(name: String) -> String { ... }`
-  - Frontend: `await invoke("hello", { name: "Rohit" })`
+  - Frontend: `await invoke("hello", { name: "Developer" })`
 - MVP implementation:
-  - explicit Rust command registry (name -> handler)
-  - runtime dispatch map lookup by command name
-  - typed argument/result envelope with consistent error responses
-  - one end-to-end example command (`hello`) wired through web bridge and Rust
-  - tests for registration, dispatch, unknown command, and argument validation
+  - [done] explicit Rust command registry (name -> handler)
+  - [done] runtime dispatch map lookup by command name
+  - [done] typed argument/result envelope with consistent error responses
+  - [done] one end-to-end example command (`hello`) wired through web bridge and Rust
+  - [done] tests for registration, dispatch, unknown command, and argument validation
+  - [next] add registry ergonomics for low-boilerplate command registration
+  - [next] add command introspection metadata for tooling/docs generation
 - Follow-up enhancements:
   - procedural macro auto-registration for `#[befu::command]`:
     - generate command metadata (`name`, arg schema, return shape)

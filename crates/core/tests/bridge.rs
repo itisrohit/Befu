@@ -38,3 +38,38 @@ fn handles_unknown_command() {
     assert_eq!(parsed["error"]["code"], "UNKNOWN_COMMAND");
     assert_eq!(parsed["error"]["details"]["foo"], "bar");
 }
+
+#[test]
+fn handles_hello_command() {
+    let response = handle_request(r#"{"id":"4","command":"hello","args":{"name":"Developer"}}"#)
+        .expect("request should serialize to response");
+    let parsed: Value = serde_json::from_str(&response).expect("valid json response");
+
+    assert_eq!(
+        parsed,
+        json!({ "id": "4", "ok": true, "result": { "message": "Hello Developer" } })
+    );
+}
+
+#[test]
+fn rejects_hello_command_without_args() {
+    let response = handle_request(r#"{"id":"5","command":"hello"}"#)
+        .expect("request should serialize to response");
+    let parsed: Value = serde_json::from_str(&response).expect("valid json response");
+
+    assert_eq!(parsed["id"], "5");
+    assert_eq!(parsed["ok"], false);
+    assert_eq!(parsed["error"]["code"], "INVALID_ARGUMENT");
+}
+
+#[test]
+fn rejects_hello_command_with_invalid_args_shape() {
+    let response = handle_request(r#"{"id":"6","command":"hello","args":{"unexpected":true}}"#)
+        .expect("request should serialize to response");
+    let parsed: Value = serde_json::from_str(&response).expect("valid json response");
+
+    assert_eq!(parsed["id"], "6");
+    assert_eq!(parsed["ok"], false);
+    assert_eq!(parsed["error"]["code"], "INVALID_ARGUMENT");
+    assert_eq!(parsed["error"]["details"]["unexpected"], true);
+}
