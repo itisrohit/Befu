@@ -12,7 +12,7 @@ function App() {
   const [bridgeStatus, setBridgeStatus] = createSignal('Checking bridge...')
   const [pingCount, setPingCount] = createSignal(0)
   const [appVersion, setAppVersion] = createSignal('unknown')
-  const [backendMode, setBackendMode] = createSignal<'jni' | 'fallback' | 'unavailable'>(
+  const [backendMode, setBackendMode] = createSignal<'jni' | 'fallback' | 'ios' | 'unavailable'>(
     'unavailable',
   )
 
@@ -95,7 +95,7 @@ function App() {
           App version from bridge: <code>{appVersion()}</code>
         </p>
         <p class="status">
-          Android backend mode: <code>{backendMode()}</code>
+          Native backend mode: <code>{backendMode()}</code>
         </p>
         <div class="actions">
           <button

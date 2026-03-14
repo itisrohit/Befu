@@ -90,6 +90,10 @@ bun run a:logs
 bun run a:down
 ```
 
-## Next step
+Smoke test flow:
 
-- Build and package `libbefu_core.so` for Android ABIs so JNI path is active on-device.
+```bash
+bun run a:smoke
+```
+
+JNI is already integrated; use the backend mode label in the app to confirm runtime mode (`jni` or `fallback`).

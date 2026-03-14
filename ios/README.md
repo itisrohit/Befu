@@ -29,6 +29,7 @@ bun run ios:prepare
 This runs:
 
 - web build and sync to `ios/App/Resources/web`
+- Rust static library build and sync to `ios/App/Libraries/libbefu_core.a`
 - Xcode project generation at `ios/BefuIOS.xcodeproj`
 
 ## Run in Xcode
@@ -54,6 +55,12 @@ One-command flow:
 bun run i:up
 ```
 
+Smoke test flow:
+
+```bash
+bun run i:smoke
+```
+
 ## Debug vs release loading behavior
 
 - Debug: `http://localhost:5173` (requires `bun run dev`)
@@ -63,8 +70,7 @@ For iOS debug mode, `bun run i:dev` is a shorthand for the web dev server.
 
 ## Current status
 
-- iOS bridge currently uses in-process Swift fallback handlers.
-- Next step is wiring Swift bridge calls into Rust FFI entrypoints for full parity with Android JNI path.
+- iOS bridge is wired to Rust FFI (`befu_invoke_raw`) for command handling.
 
 Note: Vite-hashed web asset filenames in the generated Xcode project are expected to change on each web build.
 Re-run `bun run ios:prepare` after web changes so the project stays in sync.
