@@ -54,6 +54,7 @@ Captures/
 build/
 DerivedData/
 ios/App/Resources/web/
+ios/App/Libraries/libbefu_core.a
 *.moved-aside
 *.pbxuser
 !default.pbxuser

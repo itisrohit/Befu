@@ -147,6 +147,12 @@ One-command iOS flow:
 bun run i:up
 ```
 
+Smoke test:
+
+```bash
+bun run i:smoke
+```
+
 For debug server mode on iOS, keep web dev server running:
 
 ```bash
@@ -164,4 +170,10 @@ bun run a:up
 bun run a:restart
 bun run a:logs
 bun run a:down
+```
+
+Android smoke test:
+
+```bash
+bun run a:smoke
 ```

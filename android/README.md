@@ -63,9 +63,9 @@ Debug vs release app loading:
 
 6. Verify bridge mode in UI:
 
-- `Android backend mode: jni` means Rust JNI path is active
-- `Android backend mode: fallback` means Kotlin fallback is active
-- `Android backend mode: unavailable` means native bridge is not present (desktop web/dev browser)
+- `Native backend mode: jni` means Rust JNI path is active
+- `Native backend mode: fallback` means Kotlin fallback is active
+- `Native backend mode: unavailable` means native bridge is not present (desktop web/dev browser)
 
 ## Shortcuts (repo root)
 
@@ -90,6 +90,10 @@ bun run a:logs
 bun run a:down
 ```
 
-## Next step
+Smoke test flow:
 
-- Build and package `libbefu_core.so` for Android ABIs so JNI path is active on-device.
+```bash
+bun run a:smoke
+```
+
+JNI is already integrated; use `Native backend mode` in the app to confirm runtime mode (`jni` or `fallback`).

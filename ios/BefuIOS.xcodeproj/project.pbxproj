@@ -8,9 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		2EA4BF116E52E8963DD29BDE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B532526CAA57F2741CA0F61 /* ViewController.swift */; };
+		4F80C644DA9C3DBD9B161B81 /* index-DMmvIaei.js in Resources */ = {isa = PBXBuildFile; fileRef = 8C97B4DA2E1AA6ECB9A59A68 /* index-DMmvIaei.js */; };
 		7782F65116C68C4BED1E89B9 /* icons.svg in Resources */ = {isa = PBXBuildFile; fileRef = C36404437ECC9348A7683DEE /* icons.svg */; };
 		7C68F51000D20644FD81D702 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 965EB56567CB5E1072CA7E1E /* index.html */; };
-		820A9766C140DE7B2A0E3A33 /* index-Cy37vifl.js in Resources */ = {isa = PBXBuildFile; fileRef = B5A8FC027828EE3ADBA31354 /* index-Cy37vifl.js */; };
 		93033D993284B1C939627930 /* favicon.svg in Resources */ = {isa = PBXBuildFile; fileRef = B031A43FB78A56C2789D7526 /* favicon.svg */; };
 		BD4DC1C9D2BF8E1CED487783 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E134596DA921CD53B917E34A /* AppDelegate.swift */; };
 		D2339390E4772EE3829919B5 /* index-CDHmPV-p.css in Resources */ = {isa = PBXBuildFile; fileRef = 8931C2968F6C515E0A7045D7 /* index-CDHmPV-p.css */; };
@@ -19,12 +19,14 @@
 /* Begin PBXFileReference section */
 		0050361C2922A1989A2612E0 /* .gitkeep */ = {isa = PBXFileReference; path = .gitkeep; sourceTree = "<group>"; };
 		2CA0A4011A9B7622BFDF5A8F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		41C5EA19FDFCA6B272E30A22 /* befu_core.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = befu_core.h; sourceTree = "<group>"; };
+		4FF1E7DBC7DD96C1CD7BF858 /* BridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
 		6B532526CAA57F2741CA0F61 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		80EC7408AD76C96A34F215A6 /* Befu.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Befu.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8931C2968F6C515E0A7045D7 /* index-CDHmPV-p.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "index-CDHmPV-p.css"; sourceTree = "<group>"; };
+		8C97B4DA2E1AA6ECB9A59A68 /* index-DMmvIaei.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "index-DMmvIaei.js"; sourceTree = "<group>"; };
 		965EB56567CB5E1072CA7E1E /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		B031A43FB78A56C2789D7526 /* favicon.svg */ = {isa = PBXFileReference; path = favicon.svg; sourceTree = "<group>"; };
-		B5A8FC027828EE3ADBA31354 /* index-Cy37vifl.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "index-Cy37vifl.js"; sourceTree = "<group>"; };
 		C36404437ECC9348A7683DEE /* icons.svg */ = {isa = PBXFileReference; path = icons.svg; sourceTree = "<group>"; };
 		E134596DA921CD53B917E34A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -54,8 +56,10 @@
 			isa = PBXGroup;
 			children = (
 				E134596DA921CD53B917E34A /* AppDelegate.swift */,
+				4FF1E7DBC7DD96C1CD7BF858 /* BridgingHeader.h */,
 				2CA0A4011A9B7622BFDF5A8F /* Info.plist */,
 				6B532526CAA57F2741CA0F61 /* ViewController.swift */,
+				85FC8A2F9D9CAB8DA597AF96 /* include */,
 				00896623AFCCB78F8B7E66C6 /* Resources */,
 			);
 			path = App;
@@ -67,6 +71,14 @@
 				73778B94B879C83173B80052 /* App */,
 				B111386ACCF0781E4EBB5DE2 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		85FC8A2F9D9CAB8DA597AF96 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				41C5EA19FDFCA6B272E30A22 /* befu_core.h */,
+			);
+			path = include;
 			sourceTree = "<group>";
 		};
 		B111386ACCF0781E4EBB5DE2 /* Products */ = {
@@ -81,7 +93,7 @@
 			isa = PBXGroup;
 			children = (
 				8931C2968F6C515E0A7045D7 /* index-CDHmPV-p.css */,
-				B5A8FC027828EE3ADBA31354 /* index-Cy37vifl.js */,
+				8C97B4DA2E1AA6ECB9A59A68 /* index-DMmvIaei.js */,
 			);
 			path = assets;
 			sourceTree = "<group>";
@@ -148,7 +160,7 @@
 				93033D993284B1C939627930 /* favicon.svg in Resources */,
 				7782F65116C68C4BED1E89B9 /* icons.svg in Resources */,
 				D2339390E4772EE3829919B5 /* index-CDHmPV-p.css in Resources */,
-				820A9766C140DE7B2A0E3A33 /* index-Cy37vifl.js in Resources */,
+				4F80C644DA9C3DBD9B161B81 /* index-DMmvIaei.js in Resources */,
 				7C68F51000D20644FD81D702 /* index.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -176,15 +188,19 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = NO;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/App/include";
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/App/Libraries";
 				MARKETING_VERSION = 0.1.0;
+				OTHER_LDFLAGS = "$(inherited) -lbefu_core";
 				PRODUCT_BUNDLE_IDENTIFIER = dev.befu.ios;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = App/BridgingHeader.h;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -197,16 +213,20 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = NO;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/App/include";
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/App/Libraries";
 				MARKETING_VERSION = 0.1.0;
+				OTHER_LDFLAGS = "$(inherited) -lbefu_core";
 				PRODUCT_BUNDLE_IDENTIFIER = dev.befu.ios;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = App/BridgingHeader.h;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;

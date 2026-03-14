@@ -4,28 +4,6 @@ import WebKit
 
 private let befuBridgeHandler = "befuNative"
 
-private struct BridgeErrorDetail: Encodable {
-    let code: String
-    let message: String
-}
-
-private struct BridgeResponseEnvelope<ResultType: Encodable>: Encodable {
-    let id: String
-    let ok: Bool
-    let result: ResultType?
-    let error: BridgeErrorDetail?
-}
-
-private struct PingResult: Encodable {
-    let pong: String
-}
-
-private struct AppInfoResult: Encodable {
-    let name: String
-    let version: String
-    let runtime: String
-}
-
 @MainActor
 final class ViewController: UIViewController, WKScriptMessageHandler {
     private let webView: WKWebView
@@ -57,6 +35,9 @@ final class ViewController: UIViewController, WKScriptMessageHandler {
                   error: { code: "INVALID_JSON", message: "Invalid payload JSON" },
                 }));
               }
+            },
+            backendMode() {
+              return "ios";
             },
           };
         })();
@@ -117,16 +98,19 @@ final class ViewController: UIViewController, WKScriptMessageHandler {
             return
         }
 
-        let responseJson = handleFallbackInvokeRaw(payloadJson)
         guard let id = requestId(from: payloadJson) else {
             return
         }
 
-        guard let encodedResponseLiteral = jsonStringLiteral(responseJson) else {
+        let responseJson = invokeRustCore(payloadJson)
+
+        guard let encodedIdLiteral = jsonStringLiteral(id),
+              let encodedResponseLiteral = jsonStringLiteral(responseJson)
+        else {
             return
         }
 
-        let js = "window.__befuNativeResolve(\"\(id)\", \(encodedResponseLiteral))"
+        let js = "window.__befuNativeResolve(\(encodedIdLiteral), \(encodedResponseLiteral))"
         webView.evaluateJavaScript(js, completionHandler: nil)
     }
 
@@ -141,51 +125,17 @@ final class ViewController: UIViewController, WKScriptMessageHandler {
         return id
     }
 
-    private func handleFallbackInvokeRaw(_ payloadJson: String) -> String {
-        guard let data = payloadJson.data(using: .utf8),
-              let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-              let id = object["id"] as? String,
-              let command = object["command"] as? String
-        else {
-            return encodeResponse(
-                BridgeResponseEnvelope<EmptyResult>(
-                    id: "",
-                    ok: false,
-                    result: nil,
-                    error: BridgeErrorDetail(code: "INVALID_JSON", message: "Invalid payload JSON")
-                )
-            )
-        }
+    private func invokeRustCore(_ payloadJson: String) -> String {
+        let cStringBytes = payloadJson.utf8CString
+        return cStringBytes.withUnsafeBufferPointer { buffer in
+            guard let payloadPointer = buffer.baseAddress,
+                  let responsePointer = befu_invoke_raw(payloadPointer)
+            else {
+                return "{\"id\":\"\",\"ok\":false,\"error\":{\"code\":\"NATIVE_BRIDGE_FAILURE\",\"message\":\"Rust bridge invocation failed\"}}"
+            }
 
-        switch command {
-        case "ping":
-            return encodeResponse(
-                BridgeResponseEnvelope(
-                    id: id,
-                    ok: true,
-                    result: PingResult(pong: "pong"),
-                    error: nil
-                )
-            )
-        case "app.info":
-            let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.1.0"
-            return encodeResponse(
-                BridgeResponseEnvelope(
-                    id: id,
-                    ok: true,
-                    result: AppInfoResult(name: "Befu", version: version, runtime: "befu"),
-                    error: nil
-                )
-            )
-        default:
-            return encodeResponse(
-                BridgeResponseEnvelope<EmptyResult>(
-                    id: id,
-                    ok: false,
-                    result: nil,
-                    error: BridgeErrorDetail(code: "UNKNOWN_COMMAND", message: "Unknown command: \(command)")
-                )
-            )
+            defer { befu_free_string(responsePointer) }
+            return String(cString: responsePointer)
         }
     }
 
@@ -198,16 +148,4 @@ final class ViewController: UIViewController, WKScriptMessageHandler {
 
         return encoded
     }
-
-    private func encodeResponse<ResponseType: Encodable>(_ response: ResponseType) -> String {
-        guard let data = try? JSONEncoder().encode(response),
-              let json = String(data: data, encoding: .utf8)
-        else {
-            return "{\"id\":\"\",\"ok\":false,\"error\":{\"code\":\"ENCODING_FAILURE\",\"message\":\"Failed to encode response\"}}"
-        }
-
-        return json
-    }
 }
-
-private struct EmptyResult: Encodable {}

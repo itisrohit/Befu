@@ -45,7 +45,7 @@ export type BridgeTransport = (payload: BridgeRequest) => Promise<BridgeResponse
 
 interface NativeBridge {
   invokeRaw(payloadJson: string): string | Promise<string>
-  backendMode?: () => 'jni' | 'fallback'
+  backendMode?: () => 'jni' | 'fallback' | 'ios'
 }
 
 declare global {
@@ -111,13 +111,26 @@ export function createNativeTransport(): BridgeTransport {
   }
 }
 
-export function getNativeBackendMode(): 'jni' | 'fallback' | 'unavailable' {
+export function getNativeBackendMode(): 'jni' | 'fallback' | 'ios' | 'unavailable' {
   const nativeBridge = globalThis.window?.BefuNative
   if (!nativeBridge) {
     return 'unavailable'
   }
 
-  return nativeBridge.backendMode?.() ?? 'fallback'
+  if (typeof nativeBridge.backendMode !== 'function') {
+    return 'fallback'
+  }
+
+  try {
+    const mode = nativeBridge.backendMode()
+    if (mode === 'jni' || mode === 'fallback' || mode === 'ios') {
+      return mode
+    }
+  } catch {
+    return 'fallback'
+  }
+
+  return 'fallback'
 }
 
 export async function invoke<C extends BridgeCommand>(
