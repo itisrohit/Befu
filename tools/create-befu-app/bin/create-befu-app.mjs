@@ -15,7 +15,7 @@ const TEMPLATE_ROOT = resolve(SCRIPT_DIR, '../template')
 const TEMPLATE_ENTRIES = [
   '.coderabbit.yaml',
   '.editorconfig',
-  '.gitignore',
+  'gitignore',
   '.prettierignore',
   '.prettierrc.json',
   'Cargo.toml',
