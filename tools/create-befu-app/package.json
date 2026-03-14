@@ -1,0 +1,12 @@
+{
+  "name": "create-befu-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "create-befu-app": "./bin/create-befu-app.mjs"
+  },
+  "scripts": {
+    "create-befu-app": "node ./bin/create-befu-app.mjs"
+  }
+}
