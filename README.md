@@ -57,6 +57,7 @@ bun run rust:clippy
 - Contribution guide: `CONTRIBUTING.md`
 - PR template: `.github/PULL_REQUEST_TEMPLATE.md`
 - Android CI build: `Android Debug Build` (APK assemble + Rust JNI libs)
+- iOS CI build: `iOS Simulator Build` (asset prep + simulator compile)
 
 Recommended repository settings on GitHub:
 

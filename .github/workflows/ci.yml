@@ -12,6 +12,11 @@ on:
         required: false
         default: true
         type: boolean
+      run_ios:
+        description: 'Run iOS simulator build job'
+        required: false
+        default: true
+        type: boolean
 
 permissions:
   contents: read
@@ -93,3 +98,29 @@ jobs:
         with:
           name: android-debug-apk
           path: android/app/build/outputs/apk/debug/*.apk
+
+  ios_build:
+    name: iOS Simulator Build
+    runs-on: macos-latest
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.run_ios }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.16
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Prepare iOS assets and project
+        run: bun run ios:prepare
+
+      - name: Build iOS app for simulator
+        run: xcodebuild -project ios/BefuIOS.xcodeproj -scheme Befu -destination "platform=iOS Simulator,name=iPhone 17" -derivedDataPath ios/build build

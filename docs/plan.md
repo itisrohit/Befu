@@ -19,6 +19,7 @@ The primary objective is to provide a thin, non-intrusive runtime layer that all
 - Android network policy is now debug-scoped (cleartext dev host only via debug manifest overlays).
 - Android release flow now bundles web assets and serves them through `WebViewAssetLoader` in release mode.
 - iOS shell scaffold added with `WKWebView`, injected JS bridge contract, and bundled asset prep flow.
+- iOS CI build pipeline added for simulator builds.
 
 ---
 
