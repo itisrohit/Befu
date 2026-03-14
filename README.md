@@ -20,6 +20,16 @@ WebView shell
 Rust runtime
 ```
 
+## Demo
+
+Drop a short walkthrough GIF at `docs/assets/befu-hello-demo.gif` and it will render here:
+
+![Befu invoke demo](docs/assets/befu-hello-demo.gif)
+
+Flow shown:
+
+`SolidJS button` → `invoke("hello")` → `Rust` → `response`
+
 ## Why Befu?
 
 - tiny runtime footprint
