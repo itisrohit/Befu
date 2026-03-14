@@ -18,6 +18,8 @@ The primary objective is to provide a thin, non-intrusive runtime layer that all
 - Android CI now includes a debug APK assemble job with Gradle caching and artifact upload.
 - Android network policy is now debug-scoped (cleartext dev host only via debug manifest overlays).
 - Android release flow now bundles web assets and serves them through `WebViewAssetLoader` in release mode.
+- iOS shell scaffold added with `WKWebView`, injected JS bridge contract, and bundled asset prep flow.
+- iOS CI build pipeline added for simulator builds.
 
 ---
 
@@ -114,6 +116,8 @@ Develop the `befu.ts` API to expose Rust functionality to the UI.
 - Use `WKWebView` with `WKScriptMessageHandler`.
 - Route messages from Swift to the Rust library via FFI (Foreign Function Interface).
 
+**Status**: In progress (WKWebView host scaffolded, bridge contract injected, fallback handlers implemented, Xcode project generation automated).
+
 ---
 
 ## Operational Workflows
@@ -126,6 +130,7 @@ During development, the mobile shell points to the Vite dev server for an optima
 - **Features**: Hot Module Replacement (HMR) and Chrome DevTools debugging.
 - **Run**: `bun run dev`
 - **Android Emulator URL**: `http://10.0.2.2:5173`
+- **iOS Simulator URL**: `http://localhost:5173`
 
 ### Production Mode
 

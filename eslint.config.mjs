@@ -14,6 +14,7 @@ export default tseslint.config(
       '**/coverage/**',
       '**/.turbo/**',
       'android/app/src/main/assets/**',
+      'ios/App/Resources/web/**',
       '**/*.d.ts',
       'eslint.config.mjs',
     ],

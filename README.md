@@ -13,6 +13,7 @@ Lightweight runtime experiment for cross-platform mobile apps, with a SolidJS fr
 
 - Bun `>=1.2`
 - Rust toolchain (`rustup`, `cargo`)
+- Xcode `16+` (for iOS shell work)
 
 ## Quick start
 
@@ -57,6 +58,7 @@ bun run rust:clippy
 - Contribution guide: `CONTRIBUTING.md`
 - PR template: `.github/PULL_REQUEST_TEMPLATE.md`
 - Android CI build: `Android Debug Build` (APK assemble + Rust JNI libs)
+- iOS CI build: `iOS Simulator Build` (asset prep + simulator compile)
 
 Recommended repository settings on GitHub:
 
@@ -118,6 +120,37 @@ For emulator dev mode, keep web dev server running from repo root:
 
 ```bash
 bun run dev
+```
+
+## iOS shell (early scaffold)
+
+From repo root:
+
+```bash
+bun run ios:prepare
+```
+
+Then either run from Xcode, or use short Bun commands:
+
+```bash
+bun run i:list
+bun run i:build
+bun run i:install
+bun run i:launch
+```
+
+Use `xcrun simctl list devices available` to choose a simulator that exists on your Xcode version.
+
+One-command iOS flow:
+
+```bash
+bun run i:up
+```
+
+For debug server mode on iOS, keep web dev server running:
+
+```bash
+bun run i:dev
 ```
 
 ## Android shortcuts

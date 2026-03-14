@@ -44,7 +44,7 @@ export type BridgeResponse<T> = BridgeSuccess<T> | BridgeFailure
 export type BridgeTransport = (payload: BridgeRequest) => Promise<BridgeResponse<unknown>>
 
 interface NativeBridge {
-  invokeRaw(payloadJson: string): string
+  invokeRaw(payloadJson: string): string | Promise<string>
   backendMode?: () => 'jni' | 'fallback'
 }
 
@@ -81,21 +81,33 @@ export function configureBridge(nextTransport: BridgeTransport): void {
 }
 
 export function createNativeTransport(): BridgeTransport {
-  return (payload) => {
+  return async (payload) => {
     const nativeBridge = globalThis.window?.BefuNative
     if (!nativeBridge) {
-      return Promise.resolve({
+      return {
         id: payload.id,
         ok: false,
         error: {
           code: 'NATIVE_BRIDGE_UNAVAILABLE',
           message: 'window.BefuNative.invokeRaw is unavailable',
         },
-      })
+      }
     }
 
-    const responseJson = nativeBridge.invokeRaw(JSON.stringify(payload))
-    return Promise.resolve(JSON.parse(responseJson) as BridgeResponse<unknown>)
+    try {
+      const responseJson = await Promise.resolve(nativeBridge.invokeRaw(JSON.stringify(payload)))
+      return JSON.parse(responseJson) as BridgeResponse<unknown>
+    } catch (error) {
+      return {
+        id: payload.id,
+        ok: false,
+        error: {
+          code: 'NATIVE_BRIDGE_ERROR',
+          message: 'Native bridge invocation failed',
+          details: error instanceof Error ? error.message : error,
+        },
+      }
+    }
   }
 }
 
