@@ -56,6 +56,12 @@ bun run create:app
 
 This launches the local `create-befu-app` CLI prototype under `tools/create-befu-app`.
 
+Non-interactive example:
+
+```bash
+node tools/create-befu-app/bin/create-befu-app.mjs --name my-befu-app --platform both --yes
+```
+
 ## Code quality
 
 ```bash
