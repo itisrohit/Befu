@@ -18,6 +18,8 @@ Open `http://localhost:5173`.
 bunx create-befu-app
 ```
 
+Package: [create-befu-app on npm](https://www.npmjs.com/package/create-befu-app)
+
 Non-interactive:
 
 ```bash
