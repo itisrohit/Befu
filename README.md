@@ -27,6 +27,12 @@ Rust runtime
 - Rust ecosystem access
 - minimal bridge surface
 
+## Project Scope (Current)
+
+- Prototype runtime for Android/iOS webview shells + Rust command backend
+- Bun-first developer workflow and `create-befu-app` scaffolder
+- Focused on fast iteration and bridge ergonomics, not production-hardening yet
+
 ## Quick Start
 
 ```bash
