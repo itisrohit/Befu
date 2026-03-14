@@ -4,11 +4,13 @@
   "packageManager": "bun@1.2.16",
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "tools/*"
   ],
   "scripts": {
     "prepare": "lefthook install",
     "hooks:install": "lefthook install",
+    "create:app": "bun run --cwd tools/create-befu-app create-befu-app",
     "doctor": "bash scripts/doctor.sh",
     "bootstrap": "bash scripts/bootstrap.sh",
     "dev": "bun run --cwd apps/web dev",

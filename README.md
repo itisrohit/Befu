@@ -48,6 +48,14 @@ bun run dev:mobile android
 bun run dev:mobile ios
 ```
 
+## Scaffold a new app (WIP)
+
+```bash
+bun run create:app
+```
+
+This launches the local `create-befu-app` CLI prototype under `tools/create-befu-app`.
+
 ## Code quality
 
 ```bash
