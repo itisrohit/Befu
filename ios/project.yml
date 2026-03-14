@@ -15,6 +15,9 @@ targets:
     resources:
       - path: App/Resources
         type: folder
+      - path: App/Libraries
+        excludes:
+          - libbefu_core.a
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.befu.ios

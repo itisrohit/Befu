@@ -98,10 +98,11 @@ final class ViewController: UIViewController, WKScriptMessageHandler {
             return
         }
 
-        let responseJson = invokeRustCore(payloadJson)
         guard let id = requestId(from: payloadJson) else {
             return
         }
+
+        let responseJson = invokeRustCore(payloadJson)
 
         guard let encodedIdLiteral = jsonStringLiteral(id),
               let encodedResponseLiteral = jsonStringLiteral(responseJson)
