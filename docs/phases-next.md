@@ -10,11 +10,11 @@
 
 ## Phase 1 - Tauri-style Scaffolding CLI
 
-- [in progress] Create `tools/create-befu-app` scaffold CLI.
-- [in progress] Support interactive prompts (project name, platforms; CI/hooks next).
-- [next] Ship first full template: Solid + Rust core + bridge + Android/iOS shells.
+- [done] Create `tools/create-befu-app` scaffold CLI.
+- [done] Support interactive prompts and non-interactive flags (`--name`, `--platform`, `--yes`).
+- [done] Generate a full Befu template workspace (Solid + Rust + bridge + Android/iOS shells).
 - [next] Expose command flow similar to Tauri ergonomics (`bun create befu-app`, `bunx create-befu-app`).
-- [next] Generate project with prewired scripts: `dev`, `quality`, `doctor`, `bootstrap`, `a:up`, `i:up`.
+- [next] Add selective template shaping by platform choice (currently full template always generated).
 
 ## Phase 2 - iOS Production Packaging
 

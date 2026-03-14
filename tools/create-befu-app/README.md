@@ -1,6 +1,6 @@
 # create-befu-app
 
-Scaffold a starter Befu workspace.
+Scaffold a full Befu workspace template.
 
 ## Local usage
 
@@ -11,3 +11,9 @@ bun run create:app
 ```
 
 The CLI prompts for app name and target platform (`android`, `ios`, `both`) then creates a starter workspace.
+
+Non-interactive mode:
+
+```bash
+node tools/create-befu-app/bin/create-befu-app.mjs --name my-app --platform both --yes
+```
