@@ -43,12 +43,22 @@
       - save
       - runtime reloads command implementation
       - frontend `invoke(...)` reflects change without full app reinstall/rebuild
+    - technical runtime flow (debug only):
+      - compile Rust command crate as dynamic library (for example `libcommands.so`)
+      - runtime loads library dynamically (`dlopen`/platform equivalent)
+      - command handlers are resolved by exported symbols
+      - file watcher detects rebuilt library and triggers reload cycle
+      - unload old library, load new library, and continue dispatch with new code
     - expected value:
       - dramatically shorter feedback loop than standard native rebuild flow
       - easier experimentation for command APIs and business logic
       - clearer onboarding story: "web UI speed + Rust backend power"
     - Android: reload debug Rust command library without reinstalling the app
+      - feasible path: `cargo build` -> push `.so` -> runtime reload
+      - aligns with Android's dynamic `.so` loading capability
     - iOS simulator: mirror reload flow where toolchain/runtime allows
+      - feasible for simulator workflows
+      - real devices are harder because of code signing constraints
     - keep release builds static and deterministic (no dynamic reload path)
     - show reload status in logs/UI to make iteration behavior explicit
     - safety constraints:
