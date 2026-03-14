@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 
-import { mkdirSync, writeFileSync, existsSync } from 'node:fs'
+import { chmodSync, mkdirSync, writeFileSync, existsSync } from 'node:fs'
 import { resolve, join } from 'node:path'
 import { createInterface } from 'node:readline/promises'
 import { stdin as input, stdout as output } from 'node:process'
 
+/**
+ * Convert input text into a safe folder/package slug.
+ */
 function toSlug(value) {
   return value
     .trim()
@@ -15,14 +18,23 @@ function toSlug(value) {
     .replace(/^-|-$/g, '')
 }
 
+/**
+ * Write JSON content with trailing newline.
+ */
 function writeJson(filePath, obj) {
   writeFileSync(filePath, `${JSON.stringify(obj, null, 2)}\n`)
 }
 
+/**
+ * Write plain text content to file.
+ */
 function writeText(filePath, content) {
   writeFileSync(filePath, content)
 }
 
+/**
+ * Parse supported CLI flags.
+ */
 function parseArgs(argv) {
   const parsed = {
     name: '',
@@ -46,6 +58,9 @@ function parseArgs(argv) {
   return parsed
 }
 
+/**
+ * Scaffold a minimal Befu workspace.
+ */
 async function main() {
   const args = parseArgs(process.argv.slice(2))
   const needsPrompt = args.name.length === 0 || args.platform.length === 0
@@ -118,6 +133,7 @@ async function main() {
       join(projectDir, 'scripts', 'bootstrap.sh'),
       '#!/usr/bin/env bash\nset -euo pipefail\nbun install\n',
     )
+    chmodSync(join(projectDir, 'scripts', 'bootstrap.sh'), 0o755)
 
     console.log('')
     console.log(`Created ${appName} at ${projectDir}`)
