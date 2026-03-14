@@ -53,6 +53,7 @@ Captures/
 # --- iOS ---
 build/
 DerivedData/
+ios/App/Resources/web/
 *.moved-aside
 *.pbxuser
 !default.pbxuser

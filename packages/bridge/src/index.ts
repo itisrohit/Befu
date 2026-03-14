@@ -44,7 +44,7 @@ export type BridgeResponse<T> = BridgeSuccess<T> | BridgeFailure
 export type BridgeTransport = (payload: BridgeRequest) => Promise<BridgeResponse<unknown>>
 
 interface NativeBridge {
-  invokeRaw(payloadJson: string): string
+  invokeRaw(payloadJson: string): string | Promise<string>
   backendMode?: () => 'jni' | 'fallback'
 }
 
@@ -81,7 +81,7 @@ export function configureBridge(nextTransport: BridgeTransport): void {
 }
 
 export function createNativeTransport(): BridgeTransport {
-  return (payload) => {
+  return async (payload) => {
     const nativeBridge = globalThis.window?.BefuNative
     if (!nativeBridge) {
       return Promise.resolve({
@@ -94,8 +94,8 @@ export function createNativeTransport(): BridgeTransport {
       })
     }
 
-    const responseJson = nativeBridge.invokeRaw(JSON.stringify(payload))
-    return Promise.resolve(JSON.parse(responseJson) as BridgeResponse<unknown>)
+    const responseJson = await Promise.resolve(nativeBridge.invokeRaw(JSON.stringify(payload)))
+    return JSON.parse(responseJson) as BridgeResponse<unknown>
   }
 }
 

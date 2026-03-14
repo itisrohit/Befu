@@ -120,6 +120,16 @@ For emulator dev mode, keep web dev server running from repo root:
 bun run dev
 ```
 
+## iOS shell (early scaffold)
+
+From repo root:
+
+```bash
+bun run ios:prepare
+```
+
+Then open `ios/BefuIOS.xcodeproj` in Xcode and run the `Befu` scheme.
+
 ## Android shortcuts
 
 See `android/README.md` for the canonical Android command flow.

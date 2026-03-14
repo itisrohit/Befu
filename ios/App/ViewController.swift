@@ -1,0 +1,134 @@
+import Foundation
+import UIKit
+import WebKit
+
+private let befuBridgeHandler = "befuNative"
+
+final class ViewController: UIViewController, WKScriptMessageHandler {
+    private let webView: WKWebView
+
+    init() {
+        let contentController = WKUserContentController()
+        let bridgeScript = """
+        (function () {
+          const pending = new Map();
+          window.__befuNativeResolve = function (id, payloadJson) {
+            const resolve = pending.get(id);
+            if (!resolve) return;
+            pending.delete(id);
+            resolve(payloadJson);
+          };
+
+          window.BefuNative = {
+            invokeRaw(payloadJson) {
+              try {
+                const payload = JSON.parse(payloadJson);
+                return new Promise((resolve) => {
+                  pending.set(payload.id, resolve);
+                  window.webkit.messageHandlers.befuNative.postMessage(payloadJson);
+                });
+              } catch (_error) {
+                return Promise.resolve(JSON.stringify({
+                  id: "",
+                  ok: false,
+                  error: { code: "INVALID_JSON", message: "Invalid payload JSON" },
+                }));
+              }
+            },
+          };
+        })();
+        """
+        contentController.addUserScript(
+            WKUserScript(source: bridgeScript, injectionTime: .atDocumentStart, forMainFrameOnly: true)
+        )
+
+        let config = WKWebViewConfiguration()
+        config.userContentController = contentController
+
+        self.webView = WKWebView(frame: .zero, configuration: config)
+        super.init(nibName: nil, bundle: nil)
+
+        contentController.add(self, name: befuBridgeHandler)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func loadView() {
+        view = webView
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        #if DEBUG
+            if let url = URL(string: "http://localhost:5173") {
+                webView.load(URLRequest(url: url))
+                return
+            }
+        #endif
+
+        if let fileURL = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "web") {
+            webView.loadFileURL(fileURL, allowingReadAccessTo: fileURL.deletingLastPathComponent())
+            return
+        }
+
+        webView.loadHTMLString(
+            "<html><body><h3>Befu iOS shell</h3><p>Release web assets not found.</p></body></html>",
+            baseURL: nil
+        )
+    }
+
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard message.name == befuBridgeHandler,
+              let payloadJson = message.body as? String
+        else {
+            return
+        }
+
+        let responseJson = handleFallbackInvokeRaw(payloadJson)
+        guard let id = requestId(from: payloadJson) else {
+            return
+        }
+
+        let escapedResponse = responseJson
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "\"", with: "\\\"")
+
+        let js = "window.__befuNativeResolve(\"\(id)\", \"\(escapedResponse)\")"
+        webView.evaluateJavaScript(js)
+    }
+
+    private func requestId(from payloadJson: String) -> String? {
+        guard let data = payloadJson.data(using: .utf8),
+              let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let id = object["id"] as? String
+        else {
+            return nil
+        }
+
+        return id
+    }
+
+    private func handleFallbackInvokeRaw(_ payloadJson: String) -> String {
+        guard let data = payloadJson.data(using: .utf8),
+              let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let id = object["id"] as? String,
+              let command = object["command"] as? String
+        else {
+            return "{\"id\":\"\",\"ok\":false,\"error\":{\"code\":\"INVALID_JSON\",\"message\":\"Invalid payload JSON\"}}"
+        }
+
+        switch command {
+        case "ping":
+            return "{\"id\":\"\(id)\",\"ok\":true,\"result\":{\"pong\":\"pong\"}}"
+        case "app.info":
+            let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.1.0"
+            return "{\"id\":\"\(id)\",\"ok\":true,\"result\":{\"name\":\"Befu\",\"version\":\"\(version)\",\"runtime\":\"befu\"}}"
+        default:
+            return "{\"id\":\"\(id)\",\"ok\":false,\"error\":{\"code\":\"UNKNOWN_COMMAND\",\"message\":\"Unknown command: \(command)\"}}"
+        }
+    }
+}
