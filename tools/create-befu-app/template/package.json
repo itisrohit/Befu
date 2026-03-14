@@ -8,8 +8,8 @@
     "tools/*"
   ],
   "scripts": {
-    "prepare": "lefthook install",
-    "hooks:install": "lefthook install",
+    "prepare": "git rev-parse --is-inside-work-tree >/dev/null 2>&1 && lefthook install || true",
+    "hooks:install": "git rev-parse --is-inside-work-tree >/dev/null 2>&1 && lefthook install || true",
     "create:app": "bun run --cwd tools/create-befu-app create-befu-app",
     "doctor": "bash scripts/doctor.sh",
     "bootstrap": "bash scripts/bootstrap.sh",
