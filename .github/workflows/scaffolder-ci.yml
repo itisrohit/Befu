@@ -1,0 +1,68 @@
+name: Scaffolder CI
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/create-befu-app/**'
+      - '.github/workflows/scaffolder-ci.yml'
+      - 'apps/**'
+      - 'packages/**'
+      - 'crates/**'
+      - 'scripts/**'
+      - 'android/**'
+      - 'ios/**'
+      - 'package.json'
+      - 'bun.lock'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+  push:
+    branches: [main]
+    paths:
+      - 'tools/create-befu-app/**'
+      - '.github/workflows/scaffolder-ci.yml'
+      - 'apps/**'
+      - 'packages/**'
+      - 'crates/**'
+      - 'scripts/**'
+      - 'android/**'
+      - 'ios/**'
+      - 'package.json'
+      - 'bun.lock'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+
+permissions:
+  contents: read
+
+jobs:
+  scaffold_matrix:
+    name: Scaffold ${{ matrix.platform }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [android, ios, both]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.16
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Scaffold app
+        run: node tools/create-befu-app/bin/create-befu-app.mjs --name scaffold-${{ matrix.platform }} --platform ${{ matrix.platform }} --yes
+
+      - name: Install generated dependencies
+        run: bun install
+        working-directory: scaffold-${{ matrix.platform }}
+
+      - name: Validate generated app
+        run: bun run check && bun run test:bridge && bun run test:rust && bun run build
+        working-directory: scaffold-${{ matrix.platform }}

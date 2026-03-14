@@ -15,7 +15,8 @@
 - [done] Generate a full Befu template workspace (Solid + Rust + bridge + Android/iOS shells).
 - [done] Prepare package metadata for publish path (`bun create befu-app`, `bunx create-befu-app`).
 - [done] Add selective platform shaping (`android`, `ios`, `both`) for generated content.
-- [next] Publish `create-befu-app` package and verify public install flows.
+- [done] Publish `create-befu-app` package and verify public install flows.
+- [done] Add dedicated scaffolder CI workflow validating generated templates for `android`, `ios`, and `both`.
 
 ## Phase 2 - iOS Production Packaging
 
