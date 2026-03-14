@@ -18,7 +18,45 @@
 - [done] Publish `create-befu-app` package and verify public install flows.
 - [done] Add dedicated scaffolder CI workflow validating generated templates for `android`, `ios`, and `both`.
 
-## Phase 2 - iOS Production Packaging
+## Phase 2 - Rust Command DX (Priority)
+
+- Goal: make Rust functions callable from frontend with near-zero bridge boilerplate.
+- Baseline developer experience:
+  - Rust: `#[befu::command] fn hello(name: String) -> String { ... }`
+  - Frontend: `await invoke("hello", { name: "Rohit" })`
+- MVP implementation:
+  - explicit Rust command registry (name -> handler)
+  - runtime dispatch map lookup by command name
+  - typed argument/result envelope with consistent error responses
+  - one end-to-end example command (`hello`) wired through web bridge and Rust
+  - tests for registration, dispatch, unknown command, and argument validation
+- Follow-up enhancements:
+  - procedural macro auto-registration for `#[befu::command]`:
+    - generate command metadata (`name`, arg schema, return shape)
+    - auto-register handlers into the runtime registry at compile time
+    - reduce manual map wiring and registration boilerplate
+    - provide compile-time errors for unsupported signatures
+  - debug-only hot command reload for fast Rust iteration on mobile shells:
+    - primary product differentiator (USP): web-like iteration speed for Rust command logic on mobile
+    - target workflow:
+      - edit Rust command
+      - save
+      - runtime reloads command implementation
+      - frontend `invoke(...)` reflects change without full app reinstall/rebuild
+    - expected value:
+      - dramatically shorter feedback loop than standard native rebuild flow
+      - easier experimentation for command APIs and business logic
+      - clearer onboarding story: "web UI speed + Rust backend power"
+    - Android: reload debug Rust command library without reinstalling the app
+    - iOS simulator: mirror reload flow where toolchain/runtime allows
+    - keep release builds static and deterministic (no dynamic reload path)
+    - show reload status in logs/UI to make iteration behavior explicit
+    - safety constraints:
+      - debug-only guardrails at compile/runtime level
+      - explicit kill-switch to disable reload mode instantly
+      - no impact on release signing/package reproducibility
+
+## Phase 3 - iOS Production Packaging
 
 - Add Rust device target build (`aarch64-apple-ios`) to iOS rust prep.
 - Package simulator + device artifacts as XCFramework (or equivalent robust packaging).
@@ -26,7 +64,7 @@
 - Add CI validation for iOS packaging outputs.
 - Document signing/distribution path for TestFlight/App Store.
 
-## Phase 3 - Android Production Hardening
+## Phase 4 - Android Production Hardening
 
 - Expand ABI/device/API coverage for runtime verification.
 - Add deterministic release signing flow and release checklist.
@@ -34,7 +72,7 @@
 - Run final WebView/network security audit for release builds.
 - Add APK/AAB size and startup profiling with optimization targets.
 
-## Phase 4 - CI, Release, and Observability
+## Phase 5 - CI, Release, and Observability
 
 - Add release process (`CHANGELOG`, versioning, tags, release notes).
 - Add optional matrix CI for platform/runtime checks where feasible.
@@ -42,7 +80,7 @@
 - Add troubleshooting docs for common setup/build failures.
 - Add contributor onboarding doc for daily workflow and local cache strategy.
 
-## Phase 5 - Ecosystem Growth
+## Phase 6 - Ecosystem Growth
 
 - Add additional bridge command examples beyond `ping`/`app.info`.
 - Add optional frontend template choices (React/Svelte) in scaffolder.
