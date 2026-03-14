@@ -9,7 +9,10 @@
   "scripts": {
     "prepare": "lefthook install",
     "hooks:install": "lefthook install",
+    "doctor": "bash scripts/doctor.sh",
+    "bootstrap": "bash scripts/bootstrap.sh",
     "dev": "bun run --cwd apps/web dev",
+    "dev:mobile": "bash scripts/dev/mobile.sh",
     "build": "bun run --cwd apps/web build",
     "check": "bun run --cwd apps/web tsc -b",
     "lint": "eslint .",

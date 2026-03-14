@@ -18,7 +18,7 @@ Lightweight runtime experiment for cross-platform mobile apps, with a SolidJS fr
 ## Quick start
 
 ```bash
-bun install
+bun run bootstrap
 bun run dev
 ```
 
@@ -30,6 +30,22 @@ Open `http://localhost:5173`.
 bun run test:bridge
 bun run test:rust
 bun run build
+```
+
+## New machine setup (5 minutes)
+
+```bash
+bun run doctor
+bun run bootstrap
+```
+
+Daily flow:
+
+```bash
+bun run dev
+bun run dev:mobile android
+# or
+bun run dev:mobile ios
 ```
 
 ## Code quality
