@@ -47,5 +47,4 @@ bun run i:up
 
 - Setup and daily workflows: [`docs/getting-started.md`](docs/getting-started.md)
 - Scaffolder usage and troubleshooting: [`docs/scaffolder-cli.md`](docs/scaffolder-cli.md)
-- Project roadmap: [`docs/phases-next.md`](docs/phases-next.md)
-- Architecture plan: [`docs/plan.md`](docs/plan.md)
+- Current roadmap and next priorities: [`docs/phases-next.md`](docs/phases-next.md)

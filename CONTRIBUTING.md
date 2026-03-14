@@ -1,55 +1,67 @@
 # Contributing to Befu
 
-Thanks for contributing.
+Thanks for contributing to Befu.
 
-## Development setup
+## Before You Start
+
+- Review the active roadmap: [`docs/phases-next.md`](docs/phases-next.md)
+- Use `main` as the base branch
+- Keep changes scoped and focused
+
+## Local Setup
 
 Requirements:
 
 - Bun `>=1.2`
 - Rust toolchain (`rustup`, `cargo`)
+- Android/iOS toolchains when touching mobile shell code
 
-Install dependencies and hooks:
+Setup commands:
 
 ```bash
-bun install
-bun run hooks:install
+bun run doctor
+bun run bootstrap
 ```
 
-## Branching and commits
+## Branching And Commits
 
-- Create feature branches from `main`
-- Keep pull requests focused and small when possible
-- Use Conventional Commit style when possible (for example: `feat: ...`, `fix: ...`, `chore: ...`)
+- Create a feature branch from `main`
+- Prefer simple Conventional Commit prefixes:
+  - `feat:`
+  - `fix:`
+  - `docs:`
+  - `chore:`
 
-## Local quality checks (required)
+## Required Local Checks
 
-Before opening a PR, run:
+Run before opening a PR:
 
 ```bash
 bun run quality
 ```
 
-This runs linting, formatting checks, type checks, tests, Rust checks, and web build.
+## Git Hooks
 
-## Git hooks
+Lefthook is configured in `lefthook.yml`.
 
-This repo uses Lefthook (`lefthook.yml`):
-
-- `pre-commit`: format check, lint, type-check, bridge tests, Rust format check
+- `pre-commit`: format check, lint, type-check, bridge tests, rust fmt check
 - `pre-push`: full quality gate (`bun run quality`)
 
-If hooks fail, commit or push is blocked.
+Install hooks if needed:
 
-## Pull requests
+```bash
+bun run hooks:install
+```
 
-- Use the PR template and fill every relevant section
-- Link related issue(s)
-- Add test notes that explain what you validated
-- Update docs when behavior or developer workflow changes
+## Pull Request Expectations
 
-## CI and review policy
+- Use the PR template
+- Explain what changed and why
+- Include validation notes (commands run + outcomes)
+- Update docs for any workflow, command, or behavior changes
 
-- CI `Quality Gate` must pass
-- At least one approving review is required
-- CodeRabbit reviews are enabled and should be addressed before merge
+## CI And Review
+
+- `Quality Gate` must pass
+- Relevant platform/scaffolder CI checks must pass
+- Address CodeRabbit feedback before merge
