@@ -36,6 +36,19 @@ This runs:
 2. Select `Befu` scheme
 3. Run on simulator/device
 
+## Run via CLI (simulator)
+
+```bash
+xcodebuild -project ios/BefuIOS.xcodeproj -scheme Befu -destination "platform=iOS Simulator,name=iPhone 17" -derivedDataPath ios/build build
+xcrun simctl install booted ios/build/Build/Products/Debug-iphonesimulator/Befu.app
+xcrun simctl launch booted dev.befu.ios
+```
+
+## Debug vs release loading behavior
+
+- Debug: `http://localhost:5173` (requires `bun run dev`)
+- Release-style fallback: bundled assets from `ios/App/Resources/web`
+
 ## Current status
 
 - iOS bridge currently uses in-process Swift fallback handlers.

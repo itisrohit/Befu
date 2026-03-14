@@ -128,7 +128,19 @@ From repo root:
 bun run ios:prepare
 ```
 
-Then open `ios/BefuIOS.xcodeproj` in Xcode and run the `Befu` scheme.
+Then either run from Xcode, or use CLI:
+
+```bash
+xcodebuild -project ios/BefuIOS.xcodeproj -scheme Befu -destination "platform=iOS Simulator,name=iPhone 17" -derivedDataPath ios/build build
+xcrun simctl install booted ios/build/Build/Products/Debug-iphonesimulator/Befu.app
+xcrun simctl launch booted dev.befu.ios
+```
+
+For debug server mode on iOS, keep web dev server running:
+
+```bash
+bun run dev
+```
 
 ## Android shortcuts
 

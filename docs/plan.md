@@ -129,6 +129,7 @@ During development, the mobile shell points to the Vite dev server for an optima
 - **Features**: Hot Module Replacement (HMR) and Chrome DevTools debugging.
 - **Run**: `bun run dev`
 - **Android Emulator URL**: `http://10.0.2.2:5173`
+- **iOS Simulator URL**: `http://localhost:5173`
 
 ### Production Mode
 
