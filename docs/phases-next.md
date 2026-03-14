@@ -13,8 +13,9 @@
 - [done] Create `tools/create-befu-app` scaffold CLI.
 - [done] Support interactive prompts and non-interactive flags (`--name`, `--platform`, `--yes`).
 - [done] Generate a full Befu template workspace (Solid + Rust + bridge + Android/iOS shells).
-- [next] Expose command flow similar to Tauri ergonomics (`bun create befu-app`, `bunx create-befu-app`).
+- [done] Prepare package metadata for publish path (`bun create befu-app`, `bunx create-befu-app`).
 - [done] Add selective platform shaping (`android`, `ios`, `both`) for generated content.
+- [next] Publish `create-befu-app` package and verify public install flows.
 
 ## Phase 2 - iOS Production Packaging
 

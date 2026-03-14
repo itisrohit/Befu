@@ -62,6 +62,14 @@ Non-interactive example:
 node tools/create-befu-app/bin/create-befu-app.mjs --name my-befu-app --platform both --yes
 ```
 
+Publish-ready usage target:
+
+```bash
+bun create befu-app
+# or
+bunx create-befu-app
+```
+
 ## Code quality
 
 ```bash
