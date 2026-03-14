@@ -29,7 +29,7 @@
     "access": "public"
   },
   "bin": {
-    "create-befu-app": "./bin/create-befu-app.mjs"
+    "create-befu-app": "bin/create-befu-app.mjs"
   },
   "scripts": {
     "create-befu-app": "node ./bin/create-befu-app.mjs"
