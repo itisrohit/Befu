@@ -5,6 +5,8 @@ import { resolve, join } from 'node:path'
 import { createInterface } from 'node:readline/promises'
 import { stdin as input, stdout as output } from 'node:process'
 
+const DEFAULT_PACKAGE_MANAGER = process.env.BEFU_PACKAGE_MANAGER ?? 'bun@1.2.16'
+
 /**
  * Convert input text into a safe folder/package slug.
  */
@@ -52,6 +54,7 @@ function parseArgs(argv) {
     if (arg === '--platform' && argv[index + 1]) {
       parsed.platform = argv[index + 1]
       index += 1
+      continue
     }
   }
 
@@ -98,7 +101,7 @@ async function main() {
     writeJson(join(projectDir, 'package.json'), {
       name: appName,
       private: true,
-      packageManager: 'bun@1.2.16',
+      packageManager: DEFAULT_PACKAGE_MANAGER,
       workspaces: ['apps/*', 'packages/*'],
       scripts: {
         dev: 'bun run --cwd apps/web dev',
