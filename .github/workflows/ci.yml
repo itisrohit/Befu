@@ -123,4 +123,10 @@ jobs:
         run: bun run ios:prepare
 
       - name: Build iOS app for simulator
-        run: xcodebuild -project ios/BefuIOS.xcodeproj -scheme Befu -destination "platform=iOS Simulator,name=iPhone 17" -derivedDataPath ios/build build
+        run: xcodebuild -project ios/BefuIOS.xcodeproj -scheme Befu -destination "generic/platform=iOS Simulator" -derivedDataPath ios/build build
+
+      - name: Upload iOS simulator app
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-simulator-app
+          path: ios/build/Build/Products/Debug-iphonesimulator/Befu.app

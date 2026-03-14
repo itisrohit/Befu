@@ -4,7 +4,6 @@ options:
 settings:
   base:
     PRODUCT_NAME: Befu
-    IPHONEOS_DEPLOYMENT_TARGET: 16.0
     SWIFT_VERSION: 6.0
 targets:
   Befu:
@@ -24,6 +23,8 @@ targets:
         MARKETING_VERSION: 0.1.0
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         GENERATE_INFOPLIST_FILE: NO
+        # Set a valid Apple Developer Team ID for on-device signing.
+        # Leave empty for simulator-only local runs.
         DEVELOPMENT_TEAM: ''
       configs:
         Debug:

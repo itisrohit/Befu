@@ -84,18 +84,30 @@ export function createNativeTransport(): BridgeTransport {
   return async (payload) => {
     const nativeBridge = globalThis.window?.BefuNative
     if (!nativeBridge) {
-      return Promise.resolve({
+      return {
         id: payload.id,
         ok: false,
         error: {
           code: 'NATIVE_BRIDGE_UNAVAILABLE',
           message: 'window.BefuNative.invokeRaw is unavailable',
         },
-      })
+      }
     }
 
-    const responseJson = await Promise.resolve(nativeBridge.invokeRaw(JSON.stringify(payload)))
-    return JSON.parse(responseJson) as BridgeResponse<unknown>
+    try {
+      const responseJson = await Promise.resolve(nativeBridge.invokeRaw(JSON.stringify(payload)))
+      return JSON.parse(responseJson) as BridgeResponse<unknown>
+    } catch (error) {
+      return {
+        id: payload.id,
+        ok: false,
+        error: {
+          code: 'NATIVE_BRIDGE_ERROR',
+          message: 'Native bridge invocation failed',
+          details: error instanceof Error ? error.message : error,
+        },
+      }
+    }
   }
 }
 

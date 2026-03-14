@@ -13,6 +13,7 @@ Lightweight runtime experiment for cross-platform mobile apps, with a SolidJS fr
 
 - Bun `>=1.2`
 - Rust toolchain (`rustup`, `cargo`)
+- Xcode `16+` (for iOS shell work)
 
 ## Quick start
 
@@ -132,10 +133,13 @@ bun run ios:prepare
 Then either run from Xcode, or use CLI:
 
 ```bash
-xcodebuild -project ios/BefuIOS.xcodeproj -scheme Befu -destination "platform=iOS Simulator,name=iPhone 17" -derivedDataPath ios/build build
+xcrun simctl list devices available
+xcodebuild -project ios/BefuIOS.xcodeproj -scheme Befu -destination "generic/platform=iOS Simulator" -derivedDataPath ios/build build
 xcrun simctl install booted ios/build/Build/Products/Debug-iphonesimulator/Befu.app
 xcrun simctl launch booted dev.befu.ios
 ```
+
+Use `xcrun simctl list devices available` to choose a simulator that exists on your Xcode version.
 
 For debug server mode on iOS, keep web dev server running:
 

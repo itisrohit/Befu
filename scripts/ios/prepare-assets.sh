@@ -13,10 +13,6 @@ rm -rf "$IOS_WEB_DIR"
 mkdir -p "$IOS_WEB_DIR"
 cp -R "$ROOT_DIR/apps/web/dist/." "$IOS_WEB_DIR/"
 
-if command -v git >/dev/null 2>&1; then
-  git -C "$ROOT_DIR" ls-files --error-unmatch "$IOS_WEB_DIR/.gitkeep" >/dev/null 2>&1 || true
-fi
-
 touch "$IOS_WEB_DIR/.gitkeep"
 
 echo "[ios:prepare-assets] Done."

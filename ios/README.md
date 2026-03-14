@@ -15,6 +15,7 @@ Minimal iOS shell scaffold using `WKWebView` with a JavaScript bridge contract c
 ## Prerequisites
 
 - Xcode installed
+- Xcode 16+ (Swift 6)
 - `xcodegen` installed (`brew install xcodegen`)
 
 ## Prepare project and assets
@@ -39,10 +40,13 @@ This runs:
 ## Run via CLI (simulator)
 
 ```bash
-xcodebuild -project ios/BefuIOS.xcodeproj -scheme Befu -destination "platform=iOS Simulator,name=iPhone 17" -derivedDataPath ios/build build
+xcrun simctl list devices available
+xcodebuild -project ios/BefuIOS.xcodeproj -scheme Befu -destination "generic/platform=iOS Simulator" -derivedDataPath ios/build build
 xcrun simctl install booted ios/build/Build/Products/Debug-iphonesimulator/Befu.app
 xcrun simctl launch booted dev.befu.ios
 ```
+
+Use `xcrun simctl list devices available` to pick a simulator present in your local Xcode runtime.
 
 ## Debug vs release loading behavior
 
@@ -53,3 +57,6 @@ xcrun simctl launch booted dev.befu.ios
 
 - iOS bridge currently uses in-process Swift fallback handlers.
 - Next step is wiring Swift bridge calls into Rust FFI entrypoints for full parity with Android JNI path.
+
+Note: Vite-hashed web asset filenames in the generated Xcode project are expected to change on each web build.
+Re-run `bun run ios:prepare` after web changes so the project stays in sync.

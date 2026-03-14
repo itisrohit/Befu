@@ -4,6 +4,29 @@ import WebKit
 
 private let befuBridgeHandler = "befuNative"
 
+private struct BridgeErrorDetail: Encodable {
+    let code: String
+    let message: String
+}
+
+private struct BridgeResponseEnvelope<ResultType: Encodable>: Encodable {
+    let id: String
+    let ok: Bool
+    let result: ResultType?
+    let error: BridgeErrorDetail?
+}
+
+private struct PingResult: Encodable {
+    let pong: String
+}
+
+private struct AppInfoResult: Encodable {
+    let name: String
+    let version: String
+    let runtime: String
+}
+
+@MainActor
 final class ViewController: UIViewController, WKScriptMessageHandler {
     private let webView: WKWebView
 
@@ -51,6 +74,12 @@ final class ViewController: UIViewController, WKScriptMessageHandler {
         contentController.add(self, name: befuBridgeHandler)
     }
 
+    deinit {
+        MainActor.assumeIsolated {
+            webView.configuration.userContentController.removeScriptMessageHandler(forName: befuBridgeHandler)
+        }
+    }
+
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -93,12 +122,12 @@ final class ViewController: UIViewController, WKScriptMessageHandler {
             return
         }
 
-        let escapedResponse = responseJson
-            .replacingOccurrences(of: "\\", with: "\\\\")
-            .replacingOccurrences(of: "\"", with: "\\\"")
+        guard let encodedResponseLiteral = jsonStringLiteral(responseJson) else {
+            return
+        }
 
-        let js = "window.__befuNativeResolve(\"\(id)\", \"\(escapedResponse)\")"
-        webView.evaluateJavaScript(js)
+        let js = "window.__befuNativeResolve(\"\(id)\", \(encodedResponseLiteral))"
+        webView.evaluateJavaScript(js, completionHandler: nil)
     }
 
     private func requestId(from payloadJson: String) -> String? {
@@ -118,17 +147,67 @@ final class ViewController: UIViewController, WKScriptMessageHandler {
               let id = object["id"] as? String,
               let command = object["command"] as? String
         else {
-            return "{\"id\":\"\",\"ok\":false,\"error\":{\"code\":\"INVALID_JSON\",\"message\":\"Invalid payload JSON\"}}"
+            return encodeResponse(
+                BridgeResponseEnvelope<EmptyResult>(
+                    id: "",
+                    ok: false,
+                    result: nil,
+                    error: BridgeErrorDetail(code: "INVALID_JSON", message: "Invalid payload JSON")
+                )
+            )
         }
 
         switch command {
         case "ping":
-            return "{\"id\":\"\(id)\",\"ok\":true,\"result\":{\"pong\":\"pong\"}}"
+            return encodeResponse(
+                BridgeResponseEnvelope(
+                    id: id,
+                    ok: true,
+                    result: PingResult(pong: "pong"),
+                    error: nil
+                )
+            )
         case "app.info":
             let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0.1.0"
-            return "{\"id\":\"\(id)\",\"ok\":true,\"result\":{\"name\":\"Befu\",\"version\":\"\(version)\",\"runtime\":\"befu\"}}"
+            return encodeResponse(
+                BridgeResponseEnvelope(
+                    id: id,
+                    ok: true,
+                    result: AppInfoResult(name: "Befu", version: version, runtime: "befu"),
+                    error: nil
+                )
+            )
         default:
-            return "{\"id\":\"\(id)\",\"ok\":false,\"error\":{\"code\":\"UNKNOWN_COMMAND\",\"message\":\"Unknown command: \(command)\"}}"
+            return encodeResponse(
+                BridgeResponseEnvelope<EmptyResult>(
+                    id: id,
+                    ok: false,
+                    result: nil,
+                    error: BridgeErrorDetail(code: "UNKNOWN_COMMAND", message: "Unknown command: \(command)")
+                )
+            )
         }
     }
+
+    private func jsonStringLiteral(_ value: String) -> String? {
+        guard let data = try? JSONEncoder().encode(value),
+              let encoded = String(data: data, encoding: .utf8)
+        else {
+            return nil
+        }
+
+        return encoded
+    }
+
+    private func encodeResponse<ResponseType: Encodable>(_ response: ResponseType) -> String {
+        guard let data = try? JSONEncoder().encode(response),
+              let json = String(data: data, encoding: .utf8)
+        else {
+            return "{\"id\":\"\",\"ok\":false,\"error\":{\"code\":\"ENCODING_FAILURE\",\"message\":\"Failed to encode response\"}}"
+        }
+
+        return json
+    }
 }
+
+private struct EmptyResult: Encodable {}
