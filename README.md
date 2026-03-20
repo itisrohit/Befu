@@ -38,13 +38,35 @@ Rust runtime
 
 ## Quick Start
 
+### 1. Check Requirements
+
+Befu requires Bun, Rust, and platform-specific tools:
+
 ```bash
 bun run doctor
+```
+
+### 2. Bootstrap Workspace
+
+Install dependencies, git hooks, and prepare platform-specific assets:
+
+```bash
 bun run bootstrap
+```
+
+### 3. Launch Development
+
+Start the web development server:
+
+```bash
 bun run dev
 ```
 
-Open `http://localhost:5173`.
+Or launch directly on mobile (requires emulator/simulator):
+
+```bash
+bun run dev:mobile android  # or ios
+```
 
 ## Scaffold A New App
 

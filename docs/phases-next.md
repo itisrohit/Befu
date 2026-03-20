@@ -2,11 +2,11 @@
 
 ## Phase 0 - Developer Experience Foundation
 
-- Add `bun run doctor` to validate Bun, Rust, Xcode tools, Android SDK/NDK, adb/simctl.
-- Add `bun run bootstrap` to install deps, install Rust targets, prepare iOS project, and verify Android toolchain.
-- Add `bun run dev:mobile` flow to start web dev server and launch Android/iOS in one command.
-- Improve smoke flows (`a:smoke`, `i:smoke`) to assert real bridge responses instead of manual UI-only checks.
-- Add a top-level "5-minute setup" quickstart in `README.md`.
+- [done] Add `bun run doctor` to validate Bun, Rust, Xcode tools, Android SDK/NDK, adb/simctl.
+- [done] Add `bun run bootstrap` to install deps, install Rust targets, prepare iOS project, and verify Android toolchain.
+- [done] Add `bun run dev:mobile` flow to start web dev server and launch Android/iOS in one command.
+- [done] Improve smoke flows (`a:smoke`, `i:smoke`) to assert real bridge responses instead of manual UI-only checks.
+- [done] Add a top-level "5-minute setup" quickstart in `README.md`.
 
 ## Phase 1 - Tauri-style Scaffolding CLI
 
