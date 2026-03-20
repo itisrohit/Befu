@@ -87,8 +87,7 @@ val buildRustAndroidLibs by tasks.registering(Exec::class) {
         rustOutDir.asFile.absolutePath,
         "build",
         "--manifest-path",
-        "crates/core/Cargo.toml",
-        "--release"
+        "crates/core/Cargo.toml"
     )
 }
 

@@ -1,4 +1,8 @@
 export interface BridgeCommandMap {
+  hello: {
+    args: { name: string }
+    result: { message: string }
+  }
   ping: {
     args: undefined
     result: { pong: 'pong' }
@@ -9,7 +13,12 @@ export interface BridgeCommandMap {
       name: string
       version: string
       runtime: 'befu'
+      hot_reload?: boolean
     }
+  }
+  'befu.reload': {
+    args: undefined
+    result: boolean
   }
 }
 
@@ -68,6 +77,7 @@ export class BridgeInvokeError extends Error {
 
 let transport: BridgeTransport | null = null
 
+/** Creates a unique request identifier for each invoke call. */
 function createRequestId(): string {
   if (typeof globalThis.crypto?.randomUUID === 'function') {
     return globalThis.crypto.randomUUID()
@@ -76,10 +86,12 @@ function createRequestId(): string {
   return `req-${Date.now()}-${Math.random().toString(16).slice(2)}`
 }
 
+/** Sets the active bridge transport implementation. */
 export function configureBridge(nextTransport: BridgeTransport): void {
   transport = nextTransport
 }
 
+/** Builds a transport that forwards payloads into the native shell bridge. */
 export function createNativeTransport(): BridgeTransport {
   return async (payload) => {
     const nativeBridge = globalThis.window?.BefuNative
@@ -111,6 +123,7 @@ export function createNativeTransport(): BridgeTransport {
   }
 }
 
+/** Reports native runtime backend mode for diagnostics in UI/tests. */
 export function getNativeBackendMode(): 'jni' | 'fallback' | 'ios' | 'unavailable' {
   const nativeBridge = globalThis.window?.BefuNative
   if (!nativeBridge) {
@@ -133,6 +146,7 @@ export function getNativeBackendMode(): 'jni' | 'fallback' | 'ios' | 'unavailabl
   return 'fallback'
 }
 
+/** Invokes a typed bridge command over the configured transport. */
 export async function invoke<C extends BridgeCommand>(
   command: C,
   args?: BridgeCommandMap[C]['args'],
