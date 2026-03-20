@@ -12,6 +12,7 @@ ARCH="$(uname -m)"
 if [ "$ARCH" == "arm64" ]; then
     TARGET="aarch64-apple-ios-sim"
 else
+    # There is no x86_64-apple-ios-sim, only x86_64-apple-ios (always simulator)
     TARGET="x86_64-apple-ios"
 fi
 

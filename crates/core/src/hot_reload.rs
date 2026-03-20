@@ -2,10 +2,12 @@ use befu_bridge::CommandRegistry;
 use libloading::Library;
 use std::sync::Mutex;
 
-static HOT_LIBRARIES: Mutex<Vec<Library>> = Mutex::new(Vec::new());
+#[cfg(debug_assertions)]
+static HOT_LIBRARY: Mutex<Option<Library>> = Mutex::new(None);
 
 type InitFn = unsafe extern "C" fn(&mut CommandRegistry);
 
+#[cfg(debug_assertions)]
 pub fn load_external_commands(registry: &mut CommandRegistry) {
     let lib_name = if cfg!(target_os = "android") { "libbefu_app.so" } else { "libbefu_app.dylib" };
 
@@ -26,12 +28,15 @@ pub fn load_external_commands(registry: &mut CommandRegistry) {
                         init(registry);
                     }
 
-                    // Keep the library handle alive so symbols remain valid
-                    let mut libs = HOT_LIBRARIES.lock().unwrap();
-                    libs.push(lib);
+                    // Keep only the latest library handle alive
+                    let mut current = HOT_LIBRARY.lock().unwrap_or_else(|e| e.into_inner());
+                    *current = Some(lib);
                     return;
                 }
             }
         }
     }
 }
+
+#[cfg(not(debug_assertions))]
+pub fn load_external_commands(_: &mut CommandRegistry) {}

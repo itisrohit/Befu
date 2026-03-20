@@ -53,10 +53,7 @@ fn rejects_hello_command_without_args() {
 
     assert_eq!(parsed["id"], "5");
     assert_eq!(parsed["ok"], false);
-    assert!(
-        parsed["error"]["code"] == "INVALID_ARGUMENT"
-            || parsed["error"]["code"] == "SERIALIZATION_ERROR"
-    );
+    assert_eq!(parsed["error"]["code"], "INVALID_ARGUMENT");
 }
 
 #[test]

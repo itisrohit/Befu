@@ -42,6 +42,7 @@ fn init_registry() -> CommandRegistry {
     befu_macros::register_commands!(registry, demo_commands::hello);
 
     // Load external hot-reloadable commands (USP)
+    #[cfg(debug_assertions)]
     hot_reload::load_external_commands(&mut registry);
 
     registry
@@ -69,17 +70,17 @@ pub fn app_info() -> Value {
 }
 
 fn find_command(command: &str) -> Option<CommandHandler> {
-    let reg = get_registry_lock().lock().unwrap();
+    let reg = get_registry_lock().lock().unwrap_or_else(|e| e.into_inner());
     reg.find(command).map(|c| c.handler)
 }
 
 fn list_commands_command(request: &BridgeRequest) -> BridgeResponse {
-    let reg = get_registry_lock().lock().unwrap();
+    let reg = get_registry_lock().lock().unwrap_or_else(|e| e.into_inner());
     success_response(&request.id, serde_json::to_value(reg.list_metadata()).unwrap_or_default())
 }
 
 fn reload_commands_command(request: &BridgeRequest) -> BridgeResponse {
-    let mut reg = get_registry_lock().lock().unwrap();
+    let mut reg = get_registry_lock().lock().unwrap_or_else(|e| e.into_inner());
     *reg = init_registry();
     success_response(&request.id, Value::Bool(true))
 }
@@ -104,11 +105,14 @@ pub fn handle_request(payload: &str) -> String {
         failure_response(&req.id, "NOT_FOUND", format!("Command not found: {}", req.command), None)
     };
 
-    serde_json::to_string(&response).unwrap_or_default()
+    serde_json::to_string(&response).unwrap_or_else(|e| {
+        serde_json::to_string(&failure_response("", "SERIALIZATION_ERROR", e.to_string(), None))
+            .unwrap_or_default()
+    })
 }
 
 fn ping_command(req: &BridgeRequest) -> BridgeResponse {
-    success_response(&req.id, serde_json::json!({ "pong": ping() }))
+    success_response(&req.id, serde_json::json!({ "pong": "pong" }))
 }
 
 fn app_info_command(req: &BridgeRequest) -> BridgeResponse {
@@ -122,17 +126,20 @@ fn app_info_command(req: &BridgeRequest) -> BridgeResponse {
 /// for freeing the returned string using `befu_free_raw`.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn befu_invoke_raw(payload: *const c_char) -> *mut c_char {
-    let bus_payload = if payload.is_null() {
+    if payload.is_null() {
         return std::ptr::null_mut();
-    } else {
-        match unsafe { CStr::from_ptr(payload).to_str() } {
-            Ok(s) => s,
-            Err(_) => return std::ptr::null_mut(),
-        }
+    }
+
+    let bus_payload = match unsafe { CStr::from_ptr(payload).to_str() } {
+        Ok(s) => s,
+        Err(_) => return std::ptr::null_mut(),
     };
 
     let out = handle_request(bus_payload);
-    CString::new(out).unwrap().into_raw()
+    match CString::new(out) {
+        Ok(cs) => cs.into_raw(),
+        Err(_) => std::ptr::null_mut(),
+    }
 }
 
 /// Frees a string returned by `befu_invoke_raw`.
@@ -141,7 +148,7 @@ pub unsafe extern "C" fn befu_invoke_raw(payload: *const c_char) -> *mut c_char 
 /// The `ptr` must be a pointer that was previously returned by `befu_invoke_raw`
 /// and has not been freed yet.
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn befu_free_raw(ptr: *mut c_char) {
+pub unsafe extern "C" fn befu_free_string(ptr: *mut c_char) {
     if !ptr.is_null() {
         let _ = unsafe { CString::from_raw(ptr) };
     }
@@ -153,7 +160,15 @@ pub extern "system" fn Java_dev_befu_app_BefuNativeBridge_invokeRawNative(
     _class: JClass,
     payload: JString,
 ) -> jstring {
-    let input: String = env.get_string(&payload).expect("Couldn't get java string!").into();
+    let input: String = match env.get_string(&payload) {
+        Ok(s) => s.into(),
+        Err(_) => return std::ptr::null_mut(),
+    };
+
     let output = handle_request(&input);
-    env.new_string(output).expect("Couldn't create java string!").into_raw()
+
+    match env.new_string(output) {
+        Ok(s) => s.into_raw(),
+        Err(_) => std::ptr::null_mut(),
+    }
 }

@@ -47,9 +47,6 @@ impl CommandRegistry {
 
     pub fn register(&mut self, metadata: CommandMetadata, handler: CommandHandler) {
         let name = metadata.name.to_string();
-        if self.commands.contains_key(&name) {
-            panic!("Duplicate command registration: {}", name);
-        }
         self.commands.insert(name, RegisteredCommand { metadata, handler });
     }
 

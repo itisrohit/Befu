@@ -6,7 +6,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 APP_ID="dev.befu.app"
 
 # Detect device ABI
-ABI=$(adb shell getprop ro.product.cpu.abi)
+ABI=$(adb shell getprop ro.product.cpu.abi | tr -d '[:space:]')
 echo "[android:hot] Detected device ABI: $ABI"
 
 case "$ABI" in
