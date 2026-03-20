@@ -51,7 +51,22 @@ fn init_registry() -> CommandRegistry {
 static REGISTRY: OnceLock<Mutex<CommandRegistry>> = OnceLock::new();
 
 fn get_registry_lock() -> &'static Mutex<CommandRegistry> {
-    REGISTRY.get_or_init(|| Mutex::new(init_registry()))
+    REGISTRY.get_or_init(|| {
+        #[cfg(debug_assertions)]
+        {
+            std::thread::spawn(|| {
+                loop {
+                    std::thread::sleep(std::time::Duration::from_millis(1000));
+                    if hot_reload::check_for_library_updates() {
+                        println!("[befu:hot] Auto-reload triggered by file change");
+                        let mut reg = get_registry_lock().lock().unwrap_or_else(|e| e.into_inner());
+                        *reg = init_registry();
+                    }
+                }
+            });
+        }
+        Mutex::new(init_registry())
+    })
 }
 
 /// Lightweight health command used for connectivity checks.

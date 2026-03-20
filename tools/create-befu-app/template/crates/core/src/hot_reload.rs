@@ -70,5 +70,43 @@ pub fn load_external_commands(registry: &mut CommandRegistry) {
     }
 }
 
+#[cfg(debug_assertions)]
+use std::time::SystemTime;
+
+#[cfg(debug_assertions)]
+static LAST_VERSION: Mutex<Option<SystemTime>> = Mutex::new(None);
+
+#[cfg(debug_assertions)]
+pub fn check_for_library_updates() -> bool {
+    // Determine the sentinel file to watch
+    let watchdog = if cfg!(target_os = "android") {
+        "/data/data/dev.befu.app/code_cache/libbefu_app.so".into()
+    } else if let Ok(exe) = std::env::current_exe()
+        && let Some(parent) = exe.parent()
+    {
+        parent.join("befu_hot_version")
+    } else {
+        return false;
+    };
+
+    if let Ok(meta) = std::fs::metadata(watchdog) {
+        if let Ok(mtime) = meta.modified() {
+            let mut last = LAST_VERSION.lock().unwrap_or_else(|e| e.into_inner());
+            if let Some(prev) = *last {
+                if mtime > prev {
+                    *last = Some(mtime);
+                    return true;
+                }
+            } else {
+                *last = Some(mtime);
+            }
+        }
+    }
+    false
+}
+
 #[cfg(not(debug_assertions))]
 pub fn load_external_commands(_: &mut CommandRegistry) {}
+
+#[cfg(not(debug_assertions))]
+pub fn check_for_library_updates() -> bool { false }
