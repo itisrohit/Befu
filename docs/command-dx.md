@@ -72,3 +72,14 @@ You can test this using the standard test suite:
 ```bash
 bun run test:rust
 ```
+
+---
+
+## 5. Hot Reloading (Debug Only)
+
+For a faster developer iteration loop, you can implement commands in the `befu-app` crate (`crates/app/src/lib.rs`) instead of `befu-core`.
+
+- **`befu-core` commands**: Shipped with the main binary. Require a full app build/reinstall. Best for stable, core bridge functionality.
+- **`befu-app` commands**: Dynamically loaded at runtime in debug mode. Support **Hot Reloading** without app re-installation. Best for active development of business logic.
+
+See the [Hot Command Reload guide](hot-reload.md) for the sync workflow.

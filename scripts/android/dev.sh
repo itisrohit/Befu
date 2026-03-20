@@ -49,5 +49,5 @@ echo "[android:dev] Launching app..."
 bun run android:app:restart
 
 echo "[android:dev] Ready."
-echo "[android:dev] Dev server logs: /tmp/befu-dev.log"
-echo "[android:dev] Emulator logs: /tmp/befu-emulator.log"
+echo "[android:dev] Tailing app logs (Ctrl+C to exit)..."
+adb logcat -v time | rg -i "befu|WebView|chromium|ERR_"

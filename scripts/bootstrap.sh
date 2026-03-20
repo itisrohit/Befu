@@ -20,4 +20,8 @@ echo "[bootstrap] Done."
 echo "Next:"
 echo "  - bun run dev"
 echo "  - bun run a:up"
+echo "  - bun run a:hot (Hot reload Android - requires cargo-watch)"
 echo "  - bun run i:up"
+echo "  - bun run i:hot (Hot reload iOS - requires cargo-watch)"
+echo
+echo "Tip: Run 'cargo install cargo-watch' for the best hot-reload experience."

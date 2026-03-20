@@ -13,7 +13,12 @@ export interface BridgeCommandMap {
       name: string
       version: string
       runtime: 'befu'
+      hot_reload?: boolean
     }
+  }
+  'befu.reload': {
+    args: undefined
+    result: boolean
   }
 }
 
