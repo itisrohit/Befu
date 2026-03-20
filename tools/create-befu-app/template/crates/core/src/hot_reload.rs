@@ -14,9 +14,17 @@ pub fn load_external_commands(registry: &mut CommandRegistry) {
     let mut paths = vec![
         format!("./{}", lib_name),
         format!("/data/local/tmp/{}", lib_name),
-        format!("/data/data/dev.befu.app/code_cache/{}", lib_name),
-        format!("/data/data/dev.befu.app/files/{}", lib_name),
-    ];
+        // On Android, we search the app's internal code_cache
+        let lib_dir = "/data/data/dev.befu.app/code_cache";
+        let version_file = format!("{}/befu_hot_version", lib_dir);
+        if let Ok(versioned_name) = std::fs::read_to_string(&version_file) {
+            let versioned_name = versioned_name.trim();
+            if !versioned_name.is_empty() {
+                paths.push(format!("{}/{}", lib_dir, versioned_name));
+            }
+        }
+        paths.push(format!("{}/{}", lib_dir, lib_name));
+    } else {
 
     if let Ok(exe) = std::env::current_exe()
         && let Some(parent) = exe.parent()
@@ -80,7 +88,7 @@ static LAST_VERSION: Mutex<Option<SystemTime>> = Mutex::new(None);
 pub fn check_for_library_updates() -> bool {
     // Determine the sentinel file to watch
     let watchdog = if cfg!(target_os = "android") {
-        "/data/data/dev.befu.app/code_cache/libbefu_app.so".into()
+        "/data/data/dev.befu.app/code_cache/befu_hot_version".into()
     } else if let Ok(exe) = std::env::current_exe()
         && let Some(parent) = exe.parent()
     {
@@ -89,17 +97,17 @@ pub fn check_for_library_updates() -> bool {
         return false;
     };
 
-    if let Ok(meta) = std::fs::metadata(watchdog) {
-        if let Ok(mtime) = meta.modified() {
-            let mut last = LAST_VERSION.lock().unwrap_or_else(|e| e.into_inner());
-            if let Some(prev) = *last {
-                if mtime > prev {
-                    *last = Some(mtime);
-                    return true;
-                }
-            } else {
+    if let Ok(meta) = std::fs::metadata(watchdog)
+        && let Ok(mtime) = meta.modified()
+    {
+        let mut last = LAST_VERSION.lock().unwrap_or_else(|e| e.into_inner());
+        if let Some(prev) = *last {
+            if mtime > prev {
                 *last = Some(mtime);
+                return true;
             }
+        } else {
+            *last = Some(mtime);
         }
     }
     false
@@ -109,4 +117,6 @@ pub fn check_for_library_updates() -> bool {
 pub fn load_external_commands(_: &mut CommandRegistry) {}
 
 #[cfg(not(debug_assertions))]
-pub fn check_for_library_updates() -> bool { false }
+pub fn check_for_library_updates() -> bool {
+    false
+}

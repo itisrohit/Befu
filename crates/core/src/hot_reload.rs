@@ -11,14 +11,20 @@ type InitFn = unsafe extern "C" fn(*mut CommandRegistry);
 pub fn load_external_commands(registry: &mut CommandRegistry) {
     let lib_name = if cfg!(target_os = "android") { "libbefu_app.so" } else { "libbefu_app.dylib" };
 
-    let mut paths = vec![
-        format!("./{}", lib_name),
-        format!("/data/local/tmp/{}", lib_name),
-        format!("/data/data/dev.befu.app/code_cache/{}", lib_name),
-        format!("/data/data/dev.befu.app/files/{}", lib_name),
-    ];
+    let mut paths = vec![format!("./{}", lib_name), format!("/data/local/tmp/{}", lib_name)];
 
-    if let Ok(exe) = std::env::current_exe()
+    if cfg!(target_os = "android") {
+        // On Android, we search the app's internal code_cache
+        let lib_dir = "/data/data/dev.befu.app/code_cache";
+        let version_file = format!("{}/befu_hot_version", lib_dir);
+        if let Ok(versioned_name) = std::fs::read_to_string(&version_file) {
+            let versioned_name = versioned_name.trim();
+            if !versioned_name.is_empty() {
+                paths.push(format!("{}/{}", lib_dir, versioned_name));
+            }
+        }
+        paths.push(format!("{}/{}", lib_dir, lib_name));
+    } else if let Ok(exe) = std::env::current_exe()
         && let Some(parent) = exe.parent()
     {
         // On iOS, sync-rust.sh writes a versioned dylib name to 'befu_hot_version'
@@ -80,7 +86,7 @@ static LAST_VERSION: Mutex<Option<SystemTime>> = Mutex::new(None);
 pub fn check_for_library_updates() -> bool {
     // Determine the sentinel file to watch
     let watchdog = if cfg!(target_os = "android") {
-        "/data/data/dev.befu.app/code_cache/libbefu_app.so".into()
+        "/data/data/dev.befu.app/code_cache/befu_hot_version".into()
     } else if let Ok(exe) = std::env::current_exe()
         && let Some(parent) = exe.parent()
     {
