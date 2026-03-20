@@ -31,20 +31,42 @@ Rust runtime
 
 - Prototype runtime for Android/iOS webview shells + Rust command backend
 - Bun-first developer workflow and `create-befu-app` scaffolder
-- Current priority: Rust command registry DX (`invoke("name", args)`) with minimal boilerplate
-- Current status: registry dispatch foundation is implemented with typed `hello` command example
+- Current status: `#[command]` macro and `register_commands!` automation implemented.
+- Current status: Registry dispatch and command introspection (`befu.commands`) fully functional.
 - Planned differentiator (debug-only): hot Rust command reload on Android and iOS simulator for faster iteration
 - Focused on bridge ergonomics and iteration speed, not full production hardening yet
 
 ## Quick Start
 
+### 1. Check Requirements
+
+Befu requires Bun, Rust, and platform-specific tools:
+
 ```bash
 bun run doctor
+```
+
+### 2. Bootstrap Workspace
+
+Install dependencies, git hooks, and prepare platform-specific assets:
+
+```bash
 bun run bootstrap
+```
+
+### 3. Launch Development
+
+Start the web development server:
+
+```bash
 bun run dev
 ```
 
-Open `http://localhost:5173`.
+Or launch directly on mobile (requires emulator/simulator):
+
+```bash
+bun run dev:mobile android  # or ios
+```
 
 ## Scaffold A New App
 
@@ -69,6 +91,7 @@ Experimental prototype.
 - Setup and daily workflows: [`docs/getting-started.md`](docs/getting-started.md)
 - Scaffolder usage and troubleshooting: [`docs/scaffolder-cli.md`](docs/scaffolder-cli.md)
 - Current roadmap and priorities: [`docs/phases-next.md`](docs/phases-next.md)
+- Rust Command DX guide: [`docs/command-dx.md`](docs/command-dx.md)
 
 ---
 

@@ -2,11 +2,11 @@
 
 ## Phase 0 - Developer Experience Foundation
 
-- Add `bun run doctor` to validate Bun, Rust, Xcode tools, Android SDK/NDK, adb/simctl.
-- Add `bun run bootstrap` to install deps, install Rust targets, prepare iOS project, and verify Android toolchain.
-- Add `bun run dev:mobile` flow to start web dev server and launch Android/iOS in one command.
-- Improve smoke flows (`a:smoke`, `i:smoke`) to assert real bridge responses instead of manual UI-only checks.
-- Add a top-level "5-minute setup" quickstart in `README.md`.
+- [done] Add `bun run doctor` to validate Bun, Rust, Xcode tools, Android SDK/NDK, adb/simctl.
+- [done] Add `bun run bootstrap` to install deps, install Rust targets, prepare iOS project, and verify Android toolchain.
+- [done] Add `bun run dev:mobile` flow to start web dev server and launch Android/iOS in one command.
+- [done] Improve smoke flows (`a:smoke`, `i:smoke`) to assert real bridge responses instead of manual UI-only checks.
+- [done] Add a top-level "5-minute setup" quickstart in `README.md`.
 
 ## Phase 1 - Tauri-style Scaffolding CLI
 
@@ -30,14 +30,14 @@
   - [done] typed argument/result envelope with consistent error responses
   - [done] one end-to-end example command (`hello`) wired through web bridge and Rust
   - [done] tests for registration, dispatch, unknown command, and argument validation
-  - [next] add registry ergonomics for low-boilerplate command registration
-  - [next] add command introspection metadata for tooling/docs generation
+  - [done] add registry ergonomics for low-boilerplate command registration
+  - [done] add command introspection metadata for tooling/docs generation
 - Follow-up enhancements:
-  - procedural macro auto-registration for `#[befu::command]`:
-    - generate command metadata (`name`, arg schema, return shape)
-    - auto-register handlers into the runtime registry at compile time
-    - reduce manual map wiring and registration boilerplate
-    - provide compile-time errors for unsupported signatures
+  - [done] procedural macro auto-registration for `#[befu::command]`:
+    - [done] generate command metadata (`name`, arg schema, return shape)
+    - [done] auto-register handlers into the runtime registry at compile time
+    - [done] reduce manual map wiring and registration boilerplate
+    - [done] provide compile-time errors for unsupported signatures
   - debug-only hot command reload for fast Rust iteration on mobile shells:
     - primary product differentiator (USP): web-like iteration speed for Rust command logic on mobile
     - target workflow:

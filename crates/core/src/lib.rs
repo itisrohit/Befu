@@ -1,3 +1,4 @@
+pub use befu_macros::command;
 use jni::JNIEnv;
 use jni::objects::{JClass, JString};
 use jni::sys::jstring;
@@ -10,9 +11,77 @@ mod demo_commands;
 
 type CommandHandler = fn(&BridgeRequest) -> BridgeResponse;
 
-const COMMANDS: [(&str, CommandHandler); 2] =
-    [("ping", ping_command), ("app.info", app_info_command)];
-const DEMO_COMMANDS: [(&str, CommandHandler); 1] = [("hello", demo_commands::hello_command)];
+#[derive(Debug, Clone, Serialize)]
+pub struct CommandMetadata {
+    pub name: &'static str,
+    pub description: &'static str,
+}
+
+pub struct RegisteredCommand {
+    pub metadata: CommandMetadata,
+    pub handler: CommandHandler,
+}
+
+pub struct CommandRegistry {
+    commands: std::collections::HashMap<String, RegisteredCommand>,
+}
+
+impl Default for CommandRegistry {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl CommandRegistry {
+    pub fn new() -> Self {
+        let mut registry = Self { commands: std::collections::HashMap::new() };
+
+        // Register default commands
+        registry.register(
+            CommandMetadata { name: "ping", description: "Connectivity check" },
+            ping_command,
+        );
+        registry.register(
+            CommandMetadata { name: "app.info", description: "Get application metadata" },
+            app_info_command,
+        );
+
+        registry.register(
+            CommandMetadata { name: "befu.commands", description: "List all registered commands" },
+            list_commands_command,
+        );
+
+        // Register demo commands
+        befu_macros::register_commands!(registry, demo_commands::hello);
+
+        registry
+    }
+
+    pub fn register(&mut self, metadata: CommandMetadata, handler: CommandHandler) {
+        let name = metadata.name.to_string();
+        if self.commands.contains_key(&name) {
+            panic!("Duplicate command registration: {}", name);
+        }
+        self.commands.insert(name, RegisteredCommand { metadata, handler });
+    }
+
+    pub fn find(&self, name: &str) -> Option<&RegisteredCommand> {
+        self.commands.get(name)
+    }
+
+    pub fn list_metadata(&self) -> Vec<CommandMetadata> {
+        let mut meta: Vec<_> = self.commands.values().map(|c| c.metadata.clone()).collect();
+        meta.sort_by(|a, b| a.name.cmp(b.name));
+        meta
+    }
+}
+
+use std::sync::OnceLock;
+static REGISTRY: OnceLock<CommandRegistry> = OnceLock::new();
+
+fn get_registry() -> &'static CommandRegistry {
+    REGISTRY.get_or_init(CommandRegistry::new)
+}
 
 #[derive(Debug, Deserialize)]
 /// Incoming bridge request payload from web/native shells.
@@ -55,11 +124,14 @@ pub fn app_info() -> Value {
 }
 
 fn find_command(command: &str) -> Option<CommandHandler> {
-    COMMANDS
-        .iter()
-        .chain(DEMO_COMMANDS.iter())
-        .find(|(name, _)| *name == command)
-        .map(|(_, handler)| *handler)
+    get_registry().find(command).map(|c| c.handler)
+}
+
+fn list_commands_command(request: &BridgeRequest) -> BridgeResponse {
+    success_response(
+        &request.id,
+        serde_json::to_value(get_registry().list_metadata()).unwrap_or_default(),
+    )
 }
 
 pub(crate) fn success_response(id: &str, result: Value) -> BridgeResponse {

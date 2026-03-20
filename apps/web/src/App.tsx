@@ -71,9 +71,12 @@ function App() {
         const appInfo = await invoke('app.info')
         setBridgeStatus(`Bridge is live (${pingResult.pong})`)
         setAppVersion(appInfo.version)
+        console.log(`[befu:bridge:ok] bridge initialized with version: ${appInfo.version}`)
+        console.log(`[befu:bridge:ping] ${pingResult.pong}`)
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unknown error'
         setBridgeStatus(`Bridge failed: ${message}`)
+        console.error(`[befu:bridge:error] ${message}`)
       }
     })()
   })
