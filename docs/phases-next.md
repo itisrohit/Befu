@@ -30,14 +30,14 @@
   - [done] typed argument/result envelope with consistent error responses
   - [done] one end-to-end example command (`hello`) wired through web bridge and Rust
   - [done] tests for registration, dispatch, unknown command, and argument validation
-  - [next] add registry ergonomics for low-boilerplate command registration
-  - [next] add command introspection metadata for tooling/docs generation
+  - [done] add registry ergonomics for low-boilerplate command registration
+  - [done] add command introspection metadata for tooling/docs generation
 - Follow-up enhancements:
-  - procedural macro auto-registration for `#[befu::command]`:
-    - generate command metadata (`name`, arg schema, return shape)
-    - auto-register handlers into the runtime registry at compile time
-    - reduce manual map wiring and registration boilerplate
-    - provide compile-time errors for unsupported signatures
+  - [done] procedural macro auto-registration for `#[befu::command]`:
+    - [done] generate command metadata (`name`, arg schema, return shape)
+    - [done] auto-register handlers into the runtime registry at compile time
+    - [done] reduce manual map wiring and registration boilerplate
+    - [done] provide compile-time errors for unsupported signatures
   - debug-only hot command reload for fast Rust iteration on mobile shells:
     - primary product differentiator (USP): web-like iteration speed for Rust command logic on mobile
     - target workflow:
