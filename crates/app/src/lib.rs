@@ -10,7 +10,7 @@ pub struct AppInfo {
 /// The main command that demonstrates hot reloading.
 #[command(name = "hello")]
 pub fn hello_from_app(name: String) -> AppInfo {
-    AppInfo { message: format!("Hello {name} from HOT RELOAD") }
+    AppInfo { message: format!("Hello {name} from HOT RELOAD TO Live🔥") }
 }
 
 #[unsafe(no_mangle)]

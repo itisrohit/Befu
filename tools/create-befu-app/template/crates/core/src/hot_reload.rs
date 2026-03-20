@@ -21,6 +21,16 @@ pub fn load_external_commands(registry: &mut CommandRegistry) {
     if let Ok(exe) = std::env::current_exe()
         && let Some(parent) = exe.parent()
     {
+        // On iOS, sync-rust.sh writes a versioned dylib name to 'befu_hot_version'
+        // so dlopen is forced past its cache and loads fresh code.
+        let version_file = parent.join("befu_hot_version");
+        if let Ok(versioned_name) = std::fs::read_to_string(&version_file) {
+            let versioned_name = versioned_name.trim();
+            if !versioned_name.is_empty() {
+                paths.push(format!("{}/{}", parent.to_string_lossy(), versioned_name));
+            }
+        }
+        // Always include the canonical name as fallback (initial load)
         paths.push(format!("{}/{}", parent.to_string_lossy(), lib_name));
     }
 

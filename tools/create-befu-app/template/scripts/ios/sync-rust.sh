@@ -30,9 +30,21 @@ if [ -z "$CONTAINER_DIR" ]; then
 fi
 
 DEST_DIR="$CONTAINER_DIR" # App-bundle root for fast ./ lookup
-echo "[ios:hot] Copying library to $DEST_DIR/$LIB_NAME..."
-cp "$LIB_PATH" "$DEST_DIR/$LIB_NAME"
-# Ad-hoc sign for the simulator (mandatory for M1/M2)
-codesign -f -s - "$DEST_DIR/$LIB_NAME"
 
-echo "[ios:hot] [ok] Library synced. Call 'befu.reload' from the bridge to apply."
+# Use a versioned filename so dlopen is forced to load fresh code.
+# Without this, dlopen caches the old library handle even after the file changes.
+VERSION=$(date +%s)
+VERSIONED_NAME="libbefu_app_${VERSION}.dylib"
+
+echo "[ios:hot] Copying library as $VERSIONED_NAME..."
+cp "$LIB_PATH" "$DEST_DIR/$VERSIONED_NAME"
+# Ad-hoc sign for the simulator (mandatory for M1/M2)
+codesign -f -s - "$DEST_DIR/$VERSIONED_NAME"
+
+# Write the current version to a sentinel file the Rust engine reads
+echo "$VERSIONED_NAME" > "$DEST_DIR/befu_hot_version"
+
+# Clean up old versioned libraries (keep only the latest)
+find "$DEST_DIR" -name "libbefu_app_*.dylib" ! -name "$VERSIONED_NAME" -delete 2>/dev/null || true
+
+echo "[ios:hot] [ok] Library synced as $VERSIONED_NAME. Call 'befu.reload' to apply."
