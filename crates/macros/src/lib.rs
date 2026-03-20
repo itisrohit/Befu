@@ -76,6 +76,7 @@ pub fn command(attr: TokenStream, item: TokenStream) -> TokenStream {
     let args_parsing = if has_args {
         quote! {
             #[derive(serde::Deserialize)]
+            #[serde(deny_unknown_fields)]
             struct #args_struct_name {
                 #(#args_fields),*
             }
@@ -87,7 +88,15 @@ pub fn command(attr: TokenStream, item: TokenStream) -> TokenStream {
         }
     } else {
         quote! {
-            struct #args_struct_name;
+            let args_val = req.args.clone().unwrap_or(serde_json::Value::Null);
+            if !args_val.is_null() && !args_val.as_object().map_or(false, |o| o.is_empty()) {
+                return befu_bridge::failure_response(
+                    &req.id,
+                    "INVALID_ARGUMENT",
+                    "This command does not accept arguments".to_owned(),
+                    Some(args_val),
+                );
+            }
         }
     };
 

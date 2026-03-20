@@ -23,7 +23,7 @@ Supported platforms:
 Use explicit versions in CI or debugging:
 
 ```bash
-bunx create-befu-app@0.1.2 --name my-befu-app --platform both --yes
+bunx create-befu-app@0.1.3 --name my-befu-app --platform both --yes
 ```
 
 ## Next Steps In Generated Project
@@ -37,6 +37,6 @@ bun run dev
 ## Troubleshooting
 
 - `bunx create-befu-app` pulls an older build:
-  - pin version once (`@0.1.2`) or clear local bunx cache.
+  - pin version once (`@0.1.3`) or clear local bunx cache.
 - `bun install` in generated folder fails on hook install:
   - run inside a git repository, or initialize git first with `git init`.

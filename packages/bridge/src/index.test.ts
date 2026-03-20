@@ -108,4 +108,15 @@ describe('bridge invoke', () => {
       expect(response.error.code).toBe('NATIVE_BRIDGE_ERROR')
     }
   })
+
+  it('returns jni mode when native backendMode returns jni', () => {
+    globalThis.window = {
+      BefuNative: {
+        invokeRaw: () => '',
+        backendMode: () => 'jni',
+      },
+    } as unknown as Window & typeof globalThis
+
+    expect(getNativeBackendMode()).toBe('jni')
+  })
 })

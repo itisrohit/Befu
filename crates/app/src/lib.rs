@@ -14,6 +14,7 @@ pub fn hello_from_app(name: String) -> AppInfo {
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn befu_init_app(registry: &mut CommandRegistry) {
+pub extern "C" fn befu_init_app(registry: *mut CommandRegistry) {
+    let registry = unsafe { &mut *registry };
     befu_macros::register_commands!(registry, hello_from_app);
 }

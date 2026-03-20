@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- Bun `>=1.2`
+- Bun `>=1.3`
 - Rust toolchain (`rustup`, `cargo`)
 - Android Studio SDK/NDK + `adb` (for Android work)
 - Xcode `16+` + command-line tools (for iOS work)
