@@ -64,9 +64,9 @@ adb shell "run-as $APP_ID mkdir -p code_cache"
 adb shell "run-as $APP_ID cp $DEST_PATH $APP_FILES_DIR/code_cache/$VERSIONED_NAME"
 
 # 3. Write the VERSION sentinel (ATOMIC update for the watcher thread)
-adb shell "run-as $APP_ID \"echo $VERSIONED_NAME > $APP_FILES_DIR/code_cache/befu_hot_version\""
+adb shell "run-as $APP_ID sh -c \"echo $VERSIONED_NAME > code_cache/befu_hot_version\""
 
 # 4. Cleanup old versions
-adb shell "run-as $APP_ID \"find $APP_FILES_DIR/code_cache -name 'libbefu_app_*.so' ! -name '$VERSIONED_NAME' -delete 2>/dev/null || true\""
+adb shell "run-as $APP_ID sh -c \"find code_cache -name 'libbefu_app_*.so' ! -name '$VERSIONED_NAME' -delete\"" 2>/dev/null || true
 
 echo "[android:hot] [ok] Library synced as $VERSIONED_NAME. Auto-reload triggered."
