@@ -1,10 +1,46 @@
 # Befu
 
-Befu is a mobile runtime for building Rust-backed applications. It is dedicated to developer iteration velocity, combining standard Web UIs (SolidJS/Vite) with the raw performance and ecosystem of Rust.
+Hot reload Rust backend logic inside mobile apps — no rebuilds, no reinstalls.
 
-## Hot Rust Command Reload
+Edit Rust → save → your app updates instantly (~1s).
 
-The core feature of Befu is **Hot Rust Command Reloading** (Debug Only). Sync Rust code changes to your mobile device or simulator in near real-time without full builds or app reinstalls.
+## Demo
+
+Edit a Rust command → save → app updates instantly (no rebuild, no reinstall).
+
+![Befu Hot-Reload Demo](./assets/demo.gif)
+
+## Why Befu?
+
+Traditional mobile development requires rebuilding and reinstalling apps every time you change backend logic.
+
+Befu eliminates that loop:
+
+- **Save Rust → Instant effect** in your app.
+- **No rebuilds** (no waiting for Gradle/Xcode).
+- **No reinstalls** (keep your app state).
+- **No context switching**.
+
+**Install your app once. Iterate forever.**
+
+## Example
+
+**Rust Backend:**
+
+```rust
+#[befu::command]
+fn hello() -> String {
+    "Hello v2".into()
+}
+```
+
+**Frontend (SolidJS/TS):**
+
+```typescript
+const result = await invoke('hello')
+```
+
+Change Rust → save → **app updates instantly**.
 
 ## Architecture
 
@@ -13,14 +49,14 @@ graph TD
     UI[Web UI / SolidJS] -->|invoke| Bridge[Befu Bridge / TS]
     Bridge -->|WebView Messaging| Core[Befu Core / Rust]
     Core -->|Hot Dispatch| App[Befu App / Rust Logic]
-    Watcher[Rust Watcher / Scripts] -->|Sync .dylib| Files[App Sandbox]
+    Watcher[Rust Watcher / Scripts] -->|Sync Binaries| Files[App Sandbox]
 ```
 
 ## Project Status
 
 **Phase 2 Stable**: Procedural macro command registry and dynamic hot-reloading are fully functional.
 
-We are currently looking for builders to help with **Phase 3 (iOS device support)** and **Phase 4 (Android Production Hardening)**. Help us take Befu from a prototype to a production-ready release.
+We are currently looking for builders to help with **Phase 3 (iOS device support)** and **Phase 4 (Android Production Hardening)**.
 
 ## Quick Start
 
@@ -50,16 +86,8 @@ bun run a:dev  # Launch everything for Android
 bun run i:dev  # Launch everything for iOS
 ```
 
-Or start individual components manually if you prefer separate terminal tabs:
-
-```bash
-bun run dev    # Just the Web UI server
-bun run a:up   # Just launch/install Android
-bun run a:hot  # Just the Rust watcher
-```
-
-**Hot Reloading:**
-Once the watcher is running (manually or via `a:dev`), click the **🔄 Reload Rust** button in the app to apply logic changes instantly.
+**Zero-Click Hot Reloading:**
+Once the watcher is running (manually or via `a:dev`), simply **Save** your Rust code. The app will detect the change and swap the command registry automatically within ~1 second. No reload button required!
 
 ## Scaffold A New App
 
@@ -74,10 +102,6 @@ If your local `bunx` cache is stale, pin explicitly:
 ```bash
 bunx create-befu-app@0.1.3 --name my-befu-app --platform both --yes
 ```
-
-## Status
-
-Experimental prototype.
 
 ## Docs
 

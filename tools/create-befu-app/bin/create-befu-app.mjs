@@ -104,7 +104,7 @@ function copyTemplate(destinationDir) {
 /**
  * Apply project-specific metadata updates after copying template.
  */
-function applyProjectMetadata(projectDir, appName) {
+function applyProjectMetadata(projectDir, appName, applicationId) {
   const packageJsonPath = join(projectDir, 'package.json')
   const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'))
 
@@ -124,6 +124,20 @@ function applyProjectMetadata(projectDir, appName) {
     '## Code quality\n',
   )
   writeText(readmePath, withoutScaffoldSection.replace(/^# Befu$/m, `# ${appName}`))
+
+  // Replace hardcoded application ID in all necessary files
+  const filesToUpdate = [
+    join(projectDir, 'crates', 'core', 'src', 'hot_reload.rs'),
+    join(projectDir, 'scripts', 'android', 'sync-rust.sh'),
+    join(projectDir, 'package.json'),
+  ]
+
+  for (const file of filesToUpdate) {
+    if (existsSync(file)) {
+      const content = readFileSync(file, 'utf8')
+      writeText(file, content.replace(/dev\.befu\.app/g, applicationId))
+    }
+  }
 }
 
 /**
@@ -369,6 +383,11 @@ async function main() {
 
     const appName = toSlug(nameInput || 'my-befu-app') || 'my-befu-app'
 
+    const appIdInput = rl
+      ? await rl.question(`Application ID [e.g. com.example.${appName}] (default: dev.befu.app): `)
+      : 'dev.befu.app'
+    const applicationId = appIdInput.trim() || 'dev.befu.app'
+
     const platformInput =
       args.platform.length > 0
         ? args.platform
@@ -389,7 +408,7 @@ async function main() {
 
     mkdirSync(projectDir, { recursive: true })
     copyTemplate(projectDir)
-    applyProjectMetadata(projectDir, appName)
+    applyProjectMetadata(projectDir, appName, applicationId)
     applyPlatformSelection(projectDir, platform)
 
     console.log('')

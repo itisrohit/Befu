@@ -55,7 +55,7 @@ adb push "$LIB_PATH" "$DEST_PATH"
 
 echo "[android:hot] Moving library to app-internal directory as $VERSIONED_NAME..."
 # Use run-as to discover the app sandbox and copy the library
-APP_FILES_DIR=$(adb shell "run-as $APP_ID sh -c 'echo \$HOME'" | tr -d '\r')
+APP_FILES_DIR=$(adb shell "run-as $APP_ID pwd" | tr -d '\r')
 
 # 1. Ensure code_cache exists
 adb shell "run-as $APP_ID mkdir -p code_cache"

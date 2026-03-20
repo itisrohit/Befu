@@ -12,7 +12,7 @@ ensure_simulator() {
   if ! xcrun simctl list devices available | grep -q " (Booted)"; then
     echo "[ios:dev] No booted simulators found. Attempting to start one..."
     # Choose a recent iPhone model
-    ID=$(xcrun simctl list devices available | grep "iPhone 1" | head -1 | grep -oE "([0-9A-F-]+)")
+    ID=$(xcrun simctl list devices available | grep "iPhone 1" | head -1 | grep -oEi "([0-9A-Fa-f-]{36})")
     if [ -z "$ID" ]; then
         echo "[ios:dev] Could not find a suitable iOS simulator ID."
         exit 1

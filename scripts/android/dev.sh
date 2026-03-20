@@ -6,7 +6,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
 start_emulator_if_needed() {
-  if adb devices | grep -q "[0-9]	device$"; then
+  if adb devices | grep -qE $'[0-9]\\tdevice$'; then
     echo "[android:dev] Device/emulator already connected."
   elif emulator -list-avds | grep -q "^Pixel_7$"; then
     echo "[android:dev] Starting emulator Pixel_7..."
@@ -22,8 +22,15 @@ start_emulator_if_needed() {
 
   # WAIT FOR FULL BOOT (Crucial for Gradle installDebug)
   echo "[android:dev] Waiting for system boot to complete (this may take 20s)..."
+  TIMEOUT=120
+  ELAPSED=0
   while [ "$(adb shell getprop sys.boot_completed | tr -d '\r')" != "1" ]; do
     sleep 2
+    ELAPSED=$((ELAPSED + 2))
+    if [ "$ELAPSED" -ge "$TIMEOUT" ]; then
+      echo "[android:dev] Timeout waiting for boot. Proceeding anyway..."
+      break
+    fi
   done
   echo "[android:dev] Android is ready."
 }

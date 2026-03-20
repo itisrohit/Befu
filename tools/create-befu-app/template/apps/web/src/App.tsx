@@ -25,6 +25,7 @@ function App() {
   )
   const [helloResult, setHelloResult] = createSignal<string | null>(null)
   const [helloLoading, setHelloLoading] = createSignal(false)
+  const [reloadLoading, setReloadLoading] = createSignal(false)
 
   onMount(() => {
     const mockTransport: BridgeTransport = (payload) => {
@@ -97,6 +98,8 @@ function App() {
   }
 
   const handleReload = async () => {
+    if (reloadLoading()) return
+    setReloadLoading(true)
     setBridgeStatus('RELOADING...')
     setHelloResult(null)
     try {
@@ -107,6 +110,8 @@ function App() {
     } catch (e) {
       console.error('[Befu] Bridge reload failed:', e)
       setBridgeStatus(`RELOAD FAILED`)
+    } finally {
+      setReloadLoading(false)
     }
   }
 
@@ -155,12 +160,14 @@ function App() {
         </div>
       </section>
 
-      <Show when={helloResult() !== null}>
-        <div class="result-card">
-          <span class="result-label">Hello Result</span>
-          <span class="result-value">{helloResult()}</span>
-        </div>
-      </Show>
+      <div role="status" aria-live="polite">
+        <Show when={helloResult() !== null}>
+          <div class="result-card">
+            <span class="result-label">Hello Result</span>
+            <span class="result-value">{helloResult()}</span>
+          </div>
+        </Show>
+      </div>
 
       <div class="actions">
         <button onClick={() => void handlePing()}>Ping Native Bridge ({pingCount()})</button>
@@ -170,8 +177,8 @@ function App() {
         </button>
 
         {appInfo().hot_reload && (
-          <button class="secondary" onClick={() => void handleReload()}>
-            🔄 Reload Rust Module
+          <button class="secondary" onClick={() => void handleReload()} disabled={reloadLoading()}>
+            {reloadLoading() ? 'Reloading...' : '🔄 Reload Rust Module'}
           </button>
         )}
       </div>

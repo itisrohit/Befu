@@ -52,3 +52,7 @@ case "$PLATFORM" in
     exit 1
     ;;
 esac
+
+# 4. Wait for background workers (Server + Watcher)
+# They will keep running until the user hits Ctrl+C
+wait

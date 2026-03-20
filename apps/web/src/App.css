@@ -1,80 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
+
 :root {
-  --bg: #0f172a;
-  --panel: rgba(30, 41, 59, 0.7);
-  --accent: #6366f1;
-  --accent-glow: rgba(99, 102, 241, 0.3);
-  --text: #f8fafc;
-  --text-muted: #94a3b8;
-  --border: rgba(255, 255, 255, 0.08);
+  /* High-end Dark Palette */
+  --bg-color: #0b0e14;
+  --panel-bg: rgba(22, 27, 34, 0.7);
+  --accent: #8b5cf6;
+  --accent-glow: rgba(139, 92, 246, 0.4);
+  --text-primary: #f0f6fc;
+  --text-muted: #8b949e;
+  --border: rgba(255, 255, 255, 0.1);
   --success: #10b981;
 }
 
+/* Base resets & Mobile Optimizations */
 * {
   box-sizing: border-box;
-  /* Prevent double-tap zoom on iOS */
-  touch-action: manipulation;
+  margin: 0;
+  padding: 0;
+  touch-action: manipulation; /* Prevents double-tap zoom on iOS */
 }
 
 body {
-  margin: 0;
-  background: var(--bg);
+  background-color: var(--bg-color);
+  background-image:
+    radial-gradient(circle at 50% -20%, rgba(139, 92, 246, 0.15), transparent 50%),
+    radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.05), transparent 40%);
+  background-attachment: fixed;
+  color: var(--text-primary);
   font-family:
-    -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  color: var(--text);
+    Inter,
+    -apple-system,
+    system-ui,
+    sans-serif;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  /* Prevent iOS text size adjustment and selection */
   -webkit-text-size-adjust: 100%;
-  -webkit-user-select: none;
   user-select: none;
 }
 
 .app-shell {
   max-width: 480px;
   margin: 0 auto;
-  padding: 48px 24px;
+  padding: 64px 24px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 header {
-  margin-bottom: 40px;
-  text-align: center;
+  margin-bottom: 48px;
+  text-align: left;
 }
 
 h1 {
-  font-size: 24px;
+  font-size: 32px;
   font-weight: 800;
-  letter-spacing: -0.02em;
-  margin: 0 0 8px 0;
-  background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+  letter-spacing: -0.05em;
+  margin-bottom: 8px;
+  background: linear-gradient(to bottom right, #fff 40%, rgba(255, 255, 255, 0.4) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .subtitle {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--text-muted);
-  margin: 0;
 }
 
+/* Main Status Card (Glassmorphism) */
 .status-card {
-  background: var(--panel);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: var(--panel-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border);
   border-radius: 20px;
-  padding: 24px;
+  padding: 12px 24px;
   margin-bottom: 32px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.05);
 }
 
 .status-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 0;
+  padding: 16px 0;
   border-bottom: 1px solid var(--border);
 }
 
@@ -82,22 +94,37 @@ h1 {
   border-bottom: none;
 }
 
-.result-card {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(99, 102, 241, 0.08));
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  border-radius: 16px;
-  padding: 20px 24px;
-  margin-bottom: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  animation: fadeSlideIn 0.3s ease;
+.status-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  color: var(--text-muted);
 }
 
-@keyframes fadeSlideIn {
+.status-value {
+  font-size: 13px;
+  font-family:
+    JetBrains Mono,
+    monospace;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Result Card Component */
+.result-card {
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 32px;
+  animation: slide-in 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slide-in {
   from {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -108,120 +135,120 @@ h1 {
 .result-label {
   font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 700;
-  color: var(--success);
+  letter-spacing: 0.15em;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 12px;
+  display: block;
 }
 
 .result-value {
   font-size: 16px;
-  font-family: ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace;
+  line-height: 1.5;
+  font-family:
+    JetBrains Mono,
+    monospace;
   font-weight: 600;
-  color: var(--text);
+  color: #fff;
   word-break: break-all;
 }
 
-.status-label {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 700;
-  color: var(--text-muted);
-}
-
-.status-value {
-  font-size: 13px;
-  font-family: ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace;
-  font-weight: 500;
-}
-
+/* Hot Reload Status Dot */
 .dot-box {
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 
 .dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  margin-right: 10px;
-  background-color: #334155;
-  transition: all 0.3s ease;
+  background: #30363d;
+  transition: background 0.3s ease;
 }
 
 .dot-active {
-  background-color: var(--success);
+  background: var(--success);
   box-shadow: 0 0 12px var(--success);
-  animation: breathe 2s infinite ease-in-out;
+  animation: pulse 2s infinite;
 }
 
-@keyframes breathe {
+@keyframes pulse {
   0% {
-    transform: scale(1);
-    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
   }
-  50% {
-    transform: scale(1.4);
-    opacity: 0.6;
+  70% {
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
   }
   100% {
-    transform: scale(1);
-    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
   }
 }
 
+/* Interactive Buttons */
 .actions {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 button {
-  appearance: none;
-  background: var(--accent);
-  color: white;
+  background: #fff;
+  color: #0b0e14;
   border: none;
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 14px;
+  padding: 18px;
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px var(--accent-glow);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-button:hover {
+button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px var(--accent-glow);
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+  filter: brightness(1.05);
 }
 
-button:active {
+button:active:not(:disabled) {
   transform: translateY(0);
 }
 
+button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
 button.secondary {
-  background: rgba(255, 255, 255, 0.03);
-  color: var(--text);
+  background: var(--panel-bg);
+  color: var(--text-primary);
   border: 1px solid var(--border);
-  box-shadow: none;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
 }
 
-button.secondary:hover {
-  background: rgba(255, 255, 255, 0.08);
+button.secondary:hover:not(:disabled) {
+  background: rgba(33, 38, 45, 0.9);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
+/* Note style */
 .footer-note {
   margin-top: auto;
-  padding-top: 32px;
+  padding-top: 48px;
   text-align: center;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-muted);
-  line-height: 1.6;
 }
 
-.footer-note code {
-  color: var(--accent);
-  background: rgba(99, 102, 241, 0.1);
-  padding: 2px 4px;
+code {
+  font-family:
+    JetBrains Mono,
+    monospace;
+  font-size: 11px;
+  background: rgba(139, 92, 246, 0.1);
+  padding: 3px 6px;
   border-radius: 4px;
+  color: var(--accent);
 }

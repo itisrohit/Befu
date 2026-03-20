@@ -18,9 +18,9 @@
 - [done] Publish `create-befu-app` package and verify public install flows.
 - [done] Add dedicated scaffolder CI workflow validating generated templates for `android`, `ios`, and `both`.
 
-## Phase 2 - Rust Command DX (Priority)
-
 - Goal: make Rust functions callable from frontend with near-zero bridge boilerplate.
+- **Feature**: Hot reload Rust backend logic.
+- **Efficiency**: No-reinstall development loop (**Install once, iterate forever**).
 - Baseline developer experience:
   - Rust: `#[befu::command] fn hello(name: String) -> String { ... }`
   - Frontend: `await invoke("hello", { name: "Developer" })`
@@ -61,6 +61,7 @@
 
 ## Phase 3 - iOS Production Packaging
 
+- **Next Step**: Investigate **State-preserving reload** (support reloading logic without losing in-memory Rust app state).
 - Add Rust device target build (`aarch64-apple-ios`) to iOS rust prep.
 - Package simulator + device artifacts as XCFramework (or equivalent robust packaging).
 - Add device build/archive scripts (`ios:build:device`, optional `ios:archive`).
