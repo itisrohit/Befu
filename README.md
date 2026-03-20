@@ -1,40 +1,26 @@
 # Befu
 
-Befu is a lightweight runtime for building cross-platform mobile apps with:
+Befu is a mobile runtime for building Rust-backed applications. It is dedicated to developer iteration velocity, combining standard Web UIs (SolidJS/Vite) with the raw performance and ecosystem of Rust.
 
-- Rust backend
-- WebView runtime (Android/iOS)
-- modern web UI (SolidJS and beyond)
+## Hot Rust Command Reload
 
-The goal is to keep apps small, fast, and simple while letting developers use the full JavaScript (Bun/npm) and Rust ecosystems.
+The core feature of Befu is **Hot Rust Command Reloading** (Debug Only). Sync Rust code changes to your mobile device or simulator in near real-time without full builds or app reinstalls.
 
 ## Architecture
 
-```text
-Frontend (SolidJS)
-      ↓
-invoke() bridge
-      ↓
-WebView shell
-      ↓
-Rust runtime
+```mermaid
+graph TD
+    UI[Web UI / SolidJS] -->|invoke| Bridge[Befu Bridge / TS]
+    Bridge -->|WebView Messaging| Core[Befu Core / Rust]
+    Core -->|Hot Dispatch| App[Befu App / Rust Logic]
+    Watcher[Rust Watcher / Scripts] -->|Sync .dylib| Files[App Sandbox]
 ```
 
-## Why Befu?
+## Project Status
 
-- tiny runtime footprint
-- web-framework flexibility
-- Rust ecosystem access
-- minimal bridge surface
+**Phase 2 Stable**: Procedural macro command registry and dynamic hot-reloading are fully functional.
 
-## Project Scope (Current)
-
-- Prototype runtime for Android/iOS webview shells + Rust command backend
-- Bun-first developer workflow and `create-befu-app` scaffolder
-- Core status: `#[command]` macro and `register_commands!` automation implemented.
-- Core status: Registry dispatch and command introspection (`befu.commands`) fully functional.
-- Core USP (debug-only): **Hot Rust command reload** on Android and iOS simulator for faster iteration.
-- Focused on bridge ergonomics and iteration speed, not full production hardening yet.
+We are currently looking for builders to help with **Phase 3 (iOS device support)** and **Phase 4 (Android Production Hardening)**. Help us take Befu from a prototype to a production-ready release.
 
 ## Quick Start
 

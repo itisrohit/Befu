@@ -1,65 +1,95 @@
-# My Befu App
+# Befu
 
-Welcome to your new Befu application! This workspace is set up with a SolidJS frontend and a modular Rust backend.
+Befu is a mobile runtime for building Rust-backed applications. It is dedicated to developer iteration velocity, combining standard Web UIs (SolidJS/Vite) with the raw performance and ecosystem of Rust.
 
-## Workspace layout
+## Hot Rust Command Reload
 
-- `apps/web`: SolidJS + Vite frontend
-- `crates/app`: Your hot-reloadable Rust logic (commands live here)
-- `crates/core`: Rust backend core and native bridge integration
-- `crates/bridge`: Rust type definitions for the bridge protocol
-- `packages/bridge`: TypeScript API for calling Rust from JS
-- `android/`: Android native shell project
-- `ios/`: iOS native shell project
+The core feature of Befu is **Hot Rust Command Reloading** (Debug Only). Sync Rust code changes to your mobile device or simulator in near real-time without full builds or app reinstalls.
 
-## Requirements
+## Architecture
 
-- Bun `>=1.3`
-- Rust toolchain (`rustup`, `cargo`)
-- Xcode `16+` (for iOS)
-- Android Studio / NDK (for Android)
+```mermaid
+graph TD
+    UI[Web UI / SolidJS] -->|invoke| Bridge[Befu Bridge / TS]
+    Bridge -->|WebView Messaging| Core[Befu Core / Rust]
+    Core -->|Hot Dispatch| App[Befu App / Rust Logic]
+    Watcher[Rust Watcher / Scripts] -->|Sync .dylib| Files[App Sandbox]
+```
+
+## Project Status
+
+**Phase 2 Stable**: Procedural macro command registry and dynamic hot-reloading are fully functional.
+
+We are currently looking for builders to help with **Phase 3 (iOS device support)** and **Phase 4 (Android Production Hardening)**. Help us take Befu from a prototype to a production-ready release.
 
 ## Quick Start
 
-1. **Bootstrap the project**:
+### 1. Check Requirements
 
-   ```bash
-   bun run bootstrap
-   ```
-
-2. **Start the web dev server**:
-
-   ```bash
-   bun run dev
-   ```
-
-3. **Launch mobile**:
-   - Android: `bun run a:up`
-   - iOS: `bun run i:up`
-
-## Hot Reloading (USP) 🚀
-
-Befu supports instant Rust hot-reloading for mobile.
-
-1. Install `cargo-watch`: `cargo install cargo-watch`
-2. Run the hot-reload watcher:
-   - Android: `bun run a:hot`
-   - iOS: `bun run i:hot`
-
-Any changes you make in `crates/app/src/lib.rs` will be compiled and synced to the running app immediately!
-
-## Code Quality
-
-Maintain your app with these commands:
+Befu requires Bun, Rust, and platform-specific tools:
 
 ```bash
-bun run quality  # runs all checks
-bun run lint
-bun run format
-bun run test:bridge
-bun run test:rust
+bun run doctor
 ```
 
-## Learn More
+### 2. Bootstrap Workspace
 
-Check out the `docs/` folder for deeper architectural details.
+Install dependencies, git hooks, and prepare platform-specific assets:
+
+```bash
+bun run bootstrap
+```
+
+### 3. Launch Development
+
+Start the web development server:
+
+```bash
+bun run dev
+```
+
+Or launch directly on mobile (requires emulator/simulator):
+
+```bash
+bun run dev:mobile android  # or ios
+```
+
+**Hot Reloading (Debug Only):**
+Sync Rust code changes to your device in real-time without full rebuilds:
+
+```bash
+bun run a:hot   # For Android (watcher)
+bun run i:hot   # For iOS (watcher)
+```
+
+Then click the **🔄 Reload Rust** button in the app.
+
+## Scaffold A New App
+
+Package: [create-befu-app on npm](https://www.npmjs.com/package/create-befu-app)
+
+```bash
+bunx create-befu-app --name my-befu-app --platform both --yes
+```
+
+If your local `bunx` cache is stale, pin explicitly:
+
+```bash
+bunx create-befu-app@0.1.3 --name my-befu-app --platform both --yes
+```
+
+## Status
+
+Experimental prototype.
+
+## Docs
+
+- Setup and daily workflows: [`docs/getting-started.md`](docs/getting-started.md)
+- Scaffolder usage and troubleshooting: [`docs/scaffolder-cli.md`](docs/scaffolder-cli.md)
+- Current roadmap and priorities: [`docs/phases-next.md`](docs/phases-next.md)
+- Rust Command DX guide: [`docs/command-dx.md`](docs/command-dx.md)
+- Hot Command Reload guide: [`docs/hot-reload.md`](docs/hot-reload.md)
+
+---
+
+Built with love ❤️
