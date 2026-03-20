@@ -38,8 +38,7 @@
     - [done] auto-register handlers into the runtime registry at compile time
     - [done] reduce manual map wiring and registration boilerplate
     - [done] provide compile-time errors for unsupported signatures
-  - [done] debug-only hot command reload for fast Rust iteration on mobile shells:
-    - [done] primary product differentiator (USP): web-like iteration speed for Rust command logic on mobile
+  - [done] Hot Rust Command Reload: web-like iteration speed for Rust command logic on mobile.
     - [done] target workflow:
       - [done] edit Rust command
       - [done] save (automatic or manual sync)
@@ -78,11 +77,11 @@
 
 ## Phase 5 - CI, Release, and Observability
 
-- Add release process (`CHANGELOG`, versioning, tags, release notes).
-- Add optional matrix CI for platform/runtime checks where feasible.
-- Add structured native bridge logs and failure diagnostics.
-- Add troubleshooting docs for common setup/build failures.
-- Add contributor onboarding doc for daily workflow and local cache strategy.
+- [done] Add release process (`CHANGELOG`, versioning, tags, release notes).
+- [done] Add optional matrix CI for platform/runtime checks where feasible.
+- [done] Add structured native bridge logs and failure diagnostics.
+- [done] Add troubleshooting docs for common setup/build failures.
+- [done] Add contributor onboarding doc for daily workflow and local cache strategy.
 
 ## Phase 6 - Ecosystem Growth
 

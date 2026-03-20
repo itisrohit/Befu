@@ -1,4 +1,4 @@
-# Hot Command Reload (USP)
+# Hot Command Reload
 
 Befu supports near-instant Rust command updates on mobile devices and simulators. This allows you to iterate on your core logic without waiting for full Gradle/Xcode builds.
 
@@ -36,8 +36,8 @@ Modify functions in `crates/app/src/lib.rs`. For example, change a return messag
 
 ```rust
 #[command(name = "hello")]
-pub fn hello(name: String) -> AppInfo {
-    AppInfo { message: format!("New hot logic for {name}!") }
+pub fn hello_from_app(name: String) -> AppInfo {
+    AppInfo { message: format!("Hello {name} from HOT RELOAD") }
 }
 ```
 

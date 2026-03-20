@@ -1,4 +1,4 @@
-# Hot Command Reload (USP)
+# Hot Command Reload
 
 Befu supports near-instant Rust command updates on mobile devices and simulators. This allows you to iterate on your core logic without waiting for full Gradle/Xcode builds.
 
