@@ -42,27 +42,24 @@ bun run bootstrap
 
 ### 3. Launch Development
 
-Start the web development server:
+Start the full development cycle in **one command** (includes Web UI, Rust watcher, and app launch):
 
 ```bash
-bun run dev
+bun run a:dev  # Launch everything for Android
+# OR
+bun run i:dev  # Launch everything for iOS
 ```
 
-Or launch directly on mobile (requires emulator/simulator):
+Or start individual components manually if you prefer separate terminal tabs:
 
 ```bash
-bun run dev:mobile android  # or ios
+bun run dev    # Just the Web UI server
+bun run a:up   # Just launch/install Android
+bun run a:hot  # Just the Rust watcher
 ```
 
-**Hot Reloading (Debug Only):**
-Sync Rust code changes to your device in real-time without full rebuilds:
-
-```bash
-bun run a:hot   # For Android (watcher)
-bun run i:hot   # For iOS (watcher)
-```
-
-Then click the **🔄 Reload Rust** button in the app.
+**Hot Reloading:**
+Once the watcher is running (manually or via `a:dev`), click the **🔄 Reload Rust** button in the app to apply logic changes instantly.
 
 ## Scaffold A New App
 

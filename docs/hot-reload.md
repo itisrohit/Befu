@@ -10,6 +10,20 @@ Befu supports near-instant Rust command updates on mobile devices and simulators
 
 ## Developer Workflow
 
+Befu provides a unified command that starts the web development server, the Rust watcher, and launches the app with live log tailing in **one terminal tab**:
+
+```bash
+bun run a:dev  # Launch everything for Android
+# OR
+bun run i:dev  # Launch everything for iOS
+```
+
+---
+
+## Developer Workflow (Manual / Advanced)
+
+If you prefer to see build logs and app logs in separate tabs:
+
 ### 1. Start the App
 
 Launch the app normally on your emulator or simulator:

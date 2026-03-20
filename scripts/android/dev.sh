@@ -6,20 +6,26 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
 start_emulator_if_needed() {
-  if adb devices | rg -q "\tdevice$"; then
+  if adb devices | grep -q "[0-9]	device$"; then
     echo "[android:dev] Device/emulator already connected."
-    return
-  fi
-
-  if emulator -list-avds | rg -q "^Pixel_7$"; then
+  elif emulator -list-avds | grep -q "^Pixel_7$"; then
     echo "[android:dev] Starting emulator Pixel_7..."
-    nohup emulator -avd Pixel_7 >/tmp/befu-emulator.log 2>&1 &
+    # Start emulator in background with UI
+    nohup emulator -avd Pixel_7 -gpu host >/tmp/befu-emulator.log 2>&1 &
+    echo "[android:dev] Waiting for ADB connection..."
     adb wait-for-device
   else
     echo "[android:dev] No connected device and Pixel_7 AVD not found."
     echo "[android:dev] Start a device manually and rerun this command."
     exit 1
   fi
+
+  # WAIT FOR FULL BOOT (Crucial for Gradle installDebug)
+  echo "[android:dev] Waiting for system boot to complete (this may take 20s)..."
+  while [ "$(adb shell getprop sys.boot_completed | tr -d '\r')" != "1" ]; do
+    sleep 2
+  done
+  echo "[android:dev] Android is ready."
 }
 
 start_dev_server_if_needed() {

@@ -11,11 +11,23 @@ type InitFn = unsafe extern "C" fn(*mut CommandRegistry);
 pub fn load_external_commands(registry: &mut CommandRegistry) {
     let lib_name = if cfg!(target_os = "android") { "libbefu_app.so" } else { "libbefu_app.dylib" };
 
-    let paths = [
+    let mut paths = vec![
         format!("./{}", lib_name),
         format!("/data/local/tmp/{}", lib_name),
-        format!("/tmp/{}", lib_name),
+        format!("/data/data/dev.befu.app/code_cache/{}", lib_name),
+        format!("/data/data/dev.befu.app/files/{}", lib_name),
     ];
+
+    if let Ok(exe) = std::env::current_exe()
+        && let Some(parent) = exe.parent()
+    {
+        paths.push(format!("{}/{}", parent.to_string_lossy(), lib_name));
+    }
+
+    if let Ok(temp) = std::env::var("TMPDIR") {
+        paths.push(format!("{}/{}", temp, lib_name));
+    }
+    paths.push(format!("/tmp/{}", lib_name));
 
     for path in paths {
         if std::path::Path::new(&path).exists() {

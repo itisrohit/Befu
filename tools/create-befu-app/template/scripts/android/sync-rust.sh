@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
 # Sync Rust commands to a running Android emulator for hot reloading.
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -27,9 +27,9 @@ esac
 
 echo "[android:hot] Building befu-app for Android ($TARGET)..."
 if command -v cargo-ndk &> /dev/null; then
-  cargo ndk -t "$ABI" build --package befu-app
+  cargo ndk -t "$ABI" build --package befu-app --manifest-path "$ROOT_DIR/Cargo.toml"
 else
-  cargo build --package befu-app --target "$TARGET"
+  cargo build --package befu-app --target "$TARGET" --manifest-path "$ROOT_DIR/Cargo.toml"
 fi
 
 LIB_NAME="libbefu_app.so"
@@ -49,7 +49,9 @@ echo "[android:hot] Pushing library to device staging ($DEST_PATH)..."
 adb push "$LIB_PATH" "$DEST_PATH"
 
 echo "[android:hot] Moving library to app-internal directory..."
-# Use run-as to get into the app's private sandbox
-adb shell "run-as $APP_ID cp $DEST_PATH /data/user/0/$APP_ID/files/$LIB_NAME"
+# Use run-as to discover the app sandbox and copy the library
+APP_FILES_DIR=$(adb shell "run-as $APP_ID sh -c 'echo \$HOME'" | tr -d '\r')
+adb shell "run-as $APP_ID mkdir -p code_cache"
+adb shell "run-as $APP_ID cp $DEST_PATH $APP_FILES_DIR/code_cache/$LIB_NAME"
 
 echo "[android:hot] [ok] Library synced. Call 'befu.reload' from the bridge to apply."

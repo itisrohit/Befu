@@ -51,6 +51,7 @@ adb push "$LIB_PATH" "$DEST_PATH"
 echo "[android:hot] Moving library to app-internal directory..."
 # Use run-as to discover the app sandbox and copy the library
 APP_FILES_DIR=$(adb shell "run-as $APP_ID sh -c 'echo \$HOME'" | tr -d '\r')
-adb shell "run-as $APP_ID cp $DEST_PATH $APP_FILES_DIR/files/$LIB_NAME"
+adb shell "run-as $APP_ID mkdir -p code_cache"
+adb shell "run-as $APP_ID cp $DEST_PATH $APP_FILES_DIR/code_cache/$LIB_NAME"
 
 echo "[android:hot] [ok] Library synced. Call 'befu.reload' from the bridge to apply."

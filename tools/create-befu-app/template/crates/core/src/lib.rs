@@ -41,7 +41,7 @@ fn init_registry() -> CommandRegistry {
     // Register local demo commands (fallback)
     befu_macros::register_commands!(registry, demo_commands::hello);
 
-    // Load external hot-reloadable commands (USP)
+    // Load external hot-reloadable commands
     #[cfg(debug_assertions)]
     hot_reload::load_external_commands(&mut registry);
 
