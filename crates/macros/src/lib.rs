@@ -1,17 +1,37 @@
 use proc_macro::TokenStream;
 use quote::{format_ident, quote};
-use syn::parse::{Parse, ParseStream};
+use syn::parse::{Parse, ParseStream, Parser};
 use syn::punctuated::Punctuated;
-use syn::{parse_macro_input, Expr, ExprPath, FnArg, ItemFn, Pat, ReturnType, Token};
+use syn::{parse_macro_input, Expr, ExprPath, FnArg, ItemFn, Meta, Pat, ReturnType, Token};
 
 #[proc_macro_attribute]
-pub fn command(_attr: TokenStream, item: TokenStream) -> TokenStream {
+pub fn command(attr: TokenStream, item: TokenStream) -> TokenStream {
     let input = parse_macro_input!(item as ItemFn);
     let original_fn = input.clone();
     let name = &input.sig.ident;
     let vis = &input.vis;
     let wrapper_name = format_ident!("__befu_wrapper_{}", name);
     let metadata_name = format_ident!("__befu_metadata_{}", name);
+
+    // Parse attribute for custom name: #[command(name = "custom.command")]
+    let mut custom_name = None;
+    if !attr.is_empty() {
+        let attr_parser = syn::punctuated::Punctuated::<Meta, Token![,]>::parse_terminated;
+        let attrs = attr_parser.parse(attr).expect("Failed to parse command attributes");
+        for meta in attrs {
+            if let Meta::NameValue(nv) = meta {
+                if nv.path.is_ident("name") {
+                    if let Expr::Lit(expr_lit) = nv.value {
+                        if let syn::Lit::Str(lit) = expr_lit.lit {
+                            custom_name = Some(lit.value());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    let command_name_str = custom_name.unwrap_or_else(|| name.to_string());
 
     // Extract doc comments for metadata description
     let mut description = String::new();
@@ -73,11 +93,14 @@ pub fn command(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
     let call_args = args_names.iter().map(|name| quote! { args.#name });
 
-    let return_type = match &input.sig.output {
-        ReturnType::Default => quote! { serde_json::Value::Null },
-        ReturnType::Type(_, _) => {
-            quote! { serde_json::to_value(result).unwrap_or(serde_json::Value::Null) }
-        }
+    let return_response = match &input.sig.output {
+        ReturnType::Default => quote! { success_response(&req.id, serde_json::Value::Null) },
+        ReturnType::Type(_, _) => quote! {
+            match serde_json::to_value(result) {
+                Ok(val) => success_response(&req.id, val),
+                Err(e) => failure_response(&req.id, "SERIALIZATION_ERROR", e.to_string(), None),
+            }
+        },
     };
 
     let result_assignment = if let ReturnType::Default = &input.sig.output {
@@ -94,13 +117,13 @@ pub fn command(_attr: TokenStream, item: TokenStream) -> TokenStream {
             #[allow(non_camel_case_types)]
             #args_parsing
             #result_assignment
-            success_response(&req.id, #return_type)
+            #return_response
         }
 
         #[allow(non_camel_case_types)]
         #vis fn #metadata_name() -> CommandMetadata {
             CommandMetadata {
-                name: stringify!(#name),
+                name: #command_name_str,
                 description: #description_lit,
             }
         }

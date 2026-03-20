@@ -58,7 +58,11 @@ impl CommandRegistry {
     }
 
     pub fn register(&mut self, metadata: CommandMetadata, handler: CommandHandler) {
-        self.commands.insert(metadata.name.to_string(), RegisteredCommand { metadata, handler });
+        let name = metadata.name.to_string();
+        if self.commands.contains_key(&name) {
+            panic!("Duplicate command registration: {}", name);
+        }
+        self.commands.insert(name, RegisteredCommand { metadata, handler });
     }
 
     pub fn find(&self, name: &str) -> Option<&RegisteredCommand> {
@@ -66,7 +70,9 @@ impl CommandRegistry {
     }
 
     pub fn list_metadata(&self) -> Vec<CommandMetadata> {
-        self.commands.values().map(|c| c.metadata.clone()).collect()
+        let mut meta: Vec<_> = self.commands.values().map(|c| c.metadata.clone()).collect();
+        meta.sort_by(|a, b| a.name.cmp(b.name));
+        meta
     }
 }
 
