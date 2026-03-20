@@ -37,7 +37,7 @@ pub struct RegisteredCommand {
 
 #[derive(Default)]
 pub struct CommandRegistry {
-    commands: std::collections::HashMap<String, RegisteredCommand>,
+    pub commands: std::collections::HashMap<String, RegisteredCommand>,
 }
 
 impl CommandRegistry {

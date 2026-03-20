@@ -80,7 +80,8 @@ function App() {
         const info = await invoke('app.info')
         setBridgeStatus(`Bridge is live (${pingResult.pong})`)
         setAppInfo({ version: info.version, hot_reload: info.hot_reload === true })
-      } catch {
+      } catch (e) {
+        console.error('[Befu] Bridge initialization failed:', e)
         setBridgeStatus(`Bridge disconnected`)
       }
     })()
@@ -98,7 +99,8 @@ function App() {
     try {
       await invoke('befu.reload')
       setBridgeStatus('Bridge reloaded')
-    } catch {
+    } catch (e) {
+      console.error('[Befu] Bridge reload failed:', e)
       setBridgeStatus(`Reload failed`)
     }
   }

@@ -6,29 +6,23 @@ import { dirname, join, resolve } from 'node:path'
 import { createInterface } from 'node:readline/promises'
 import { stdin as input, stdout as output } from 'node:process'
 
-const DEFAULT_PACKAGE_MANAGER = process.env.BEFU_PACKAGE_MANAGER ?? 'bun@1.2.16'
+const DEFAULT_PACKAGE_MANAGER = process.env.BEFU_PACKAGE_MANAGER ?? 'bun@1.3.11'
 const DEFAULT_PLATFORM = 'both'
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url))
 const TEMPLATE_ROOT = resolve(SCRIPT_DIR, '../template')
 
 const TEMPLATE_ENTRIES = [
-  '.coderabbit.yaml',
   '.editorconfig',
   'gitignore',
   '.prettierignore',
   '.prettierrc.json',
   'Cargo.toml',
-  'Cargo.lock',
   'clippy.toml',
   'rustfmt.toml',
-  'lefthook.yml',
   'eslint.config.mjs',
-  'CONTRIBUTING.md',
   'README.md',
   'package.json',
-  'bun.lock',
-  '.github',
   'docs',
   'apps',
   'packages',
@@ -363,7 +357,7 @@ async function main() {
   const rl = needsPrompt ? createInterface({ input, output }) : null
 
   try {
-    console.log('create-befu-app v0.1.0')
+    console.log('create-befu-app v0.1.3')
     console.log('Scaffold a full Befu workspace template.')
 
     const nameInput =

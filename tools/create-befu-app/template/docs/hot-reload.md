@@ -36,8 +36,8 @@ Modify functions in `crates/app/src/lib.rs`. For example, change a return messag
 
 ```rust
 #[command(name = "hello")]
-pub fn hello_from_app(name: String) -> AppInfo {
-    AppInfo { message: format!("Hello {name} from HOT RELOAD") }
+pub fn hello(name: String) -> AppInfo {
+    AppInfo { message: format!("New hot logic for {name}!") }
 }
 ```
 
