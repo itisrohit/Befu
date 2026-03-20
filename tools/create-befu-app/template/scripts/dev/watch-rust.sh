@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+# intentionally no set -e: command -v returning 1 should not kill the script
 
 # Watcher for Rust hot reloading.
 # Detects changes in crates/bridge, crates/macros, and crates/app.
@@ -14,7 +14,7 @@ echo "[watch:rust] Starting interactive watcher for $PLATFORM..."
 
 # Use 'cargo-watch' if available, or a simple loop
 if command -v cargo-watch &> /dev/null; then
-  cargo watch -w "$ROOT_DIR/crates/app" -w "$ROOT_DIR/crates/bridge" -s "bash \"$ROOT_DIR/scripts/$PLATFORM/sync-rust.sh\""
+  cargo watch -w "$ROOT_DIR/crates/app" -w "$ROOT_DIR/crates/bridge" -w "$ROOT_DIR/crates/macros" -x "build --package befu-app" -s "bash \"$ROOT_DIR/scripts/$PLATFORM/sync-rust.sh\""
 else
   echo "[watch:rust] cargo-watch not found. Falling back to simple loop (less efficient)."
   echo "[watch:rust] For the best experience, run: cargo install cargo-watch"
@@ -23,7 +23,7 @@ else
   GET_HASH() {
     # Combine find output (modification times + names)
     local FILE_LIST
-    FILE_LIST=$(find "$ROOT_DIR/crates/app/src" "$ROOT_DIR/crates/bridge/src" -type f -name "*.rs" 2>/dev/null | sort)
+    FILE_LIST=$(find "$ROOT_DIR/crates/app/src" "$ROOT_DIR/crates/bridge/src" "$ROOT_DIR/crates/macros/src" -type f -name "*.rs" 2>/dev/null | sort)
     
     if [ -z "$FILE_LIST" ]; then
       echo "empty"

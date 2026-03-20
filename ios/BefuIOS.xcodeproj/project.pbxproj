@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D84D65C2EB0F99F523F7356 /* index-C8dwOgm9.css in Resources */ = {isa = PBXBuildFile; fileRef = C6EBB73ABEA873397743CDC5 /* index-C8dwOgm9.css */; };
 		2EA4BF116E52E8963DD29BDE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B532526CAA57F2741CA0F61 /* ViewController.swift */; };
-		4F80C644DA9C3DBD9B161B81 /* index-DMmvIaei.js in Resources */ = {isa = PBXBuildFile; fileRef = 8C97B4DA2E1AA6ECB9A59A68 /* index-DMmvIaei.js */; };
 		7782F65116C68C4BED1E89B9 /* icons.svg in Resources */ = {isa = PBXBuildFile; fileRef = C36404437ECC9348A7683DEE /* icons.svg */; };
 		7C68F51000D20644FD81D702 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 965EB56567CB5E1072CA7E1E /* index.html */; };
 		93033D993284B1C939627930 /* favicon.svg in Resources */ = {isa = PBXBuildFile; fileRef = B031A43FB78A56C2789D7526 /* favicon.svg */; };
 		BD4DC1C9D2BF8E1CED487783 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E134596DA921CD53B917E34A /* AppDelegate.swift */; };
-		D2339390E4772EE3829919B5 /* index-CDHmPV-p.css in Resources */ = {isa = PBXBuildFile; fileRef = 8931C2968F6C515E0A7045D7 /* index-CDHmPV-p.css */; };
+		C830A3A9F889AEC0FCB7CFF1 /* index-udmtWYB1.js in Resources */ = {isa = PBXBuildFile; fileRef = B6252CF5BC81065ED8A97FC6 /* index-udmtWYB1.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,11 +23,11 @@
 		4FF1E7DBC7DD96C1CD7BF858 /* BridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
 		6B532526CAA57F2741CA0F61 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		80EC7408AD76C96A34F215A6 /* Befu.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Befu.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		8931C2968F6C515E0A7045D7 /* index-CDHmPV-p.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "index-CDHmPV-p.css"; sourceTree = "<group>"; };
-		8C97B4DA2E1AA6ECB9A59A68 /* index-DMmvIaei.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "index-DMmvIaei.js"; sourceTree = "<group>"; };
 		965EB56567CB5E1072CA7E1E /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		B031A43FB78A56C2789D7526 /* favicon.svg */ = {isa = PBXFileReference; path = favicon.svg; sourceTree = "<group>"; };
+		B6252CF5BC81065ED8A97FC6 /* index-udmtWYB1.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "index-udmtWYB1.js"; sourceTree = "<group>"; };
 		C36404437ECC9348A7683DEE /* icons.svg */ = {isa = PBXFileReference; path = icons.svg; sourceTree = "<group>"; };
+		C6EBB73ABEA873397743CDC5 /* index-C8dwOgm9.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "index-C8dwOgm9.css"; sourceTree = "<group>"; };
 		E134596DA921CD53B917E34A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -92,8 +92,8 @@
 		BE3C71FFBD2D4BFDEA65E950 /* assets */ = {
 			isa = PBXGroup;
 			children = (
-				8931C2968F6C515E0A7045D7 /* index-CDHmPV-p.css */,
-				8C97B4DA2E1AA6ECB9A59A68 /* index-DMmvIaei.js */,
+				C6EBB73ABEA873397743CDC5 /* index-C8dwOgm9.css */,
+				B6252CF5BC81065ED8A97FC6 /* index-udmtWYB1.js */,
 			);
 			path = assets;
 			sourceTree = "<group>";
@@ -159,8 +159,8 @@
 			files = (
 				93033D993284B1C939627930 /* favicon.svg in Resources */,
 				7782F65116C68C4BED1E89B9 /* icons.svg in Resources */,
-				D2339390E4772EE3829919B5 /* index-CDHmPV-p.css in Resources */,
-				4F80C644DA9C3DBD9B161B81 /* index-DMmvIaei.js in Resources */,
+				2D84D65C2EB0F99F523F7356 /* index-C8dwOgm9.css in Resources */,
+				C830A3A9F889AEC0FCB7CFF1 /* index-udmtWYB1.js in Resources */,
 				7C68F51000D20644FD81D702 /* index.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -51,11 +51,11 @@
     "ios:sim:install": "xcrun simctl install booted ios/build/Build/Products/Debug-iphonesimulator/Befu.app",
     "ios:sim:launch": "xcrun simctl launch booted dev.befu.ios",
     "ios:smoke": "bash scripts/ios/smoke.sh",
-    "ios:up": "bun run ios:prepare && bun run ios:build:sim && bun run ios:sim:install && bun run ios:sim:launch",
-    "ios:dev": "bun run dev",
     "watch:rust": "bash scripts/dev/watch-rust.sh",
     "a:hot": "bun run watch:rust android",
+    "a:dev": "bun run dev:mobile android",
     "i:hot": "bun run watch:rust ios",
+    "i:dev": "bun run dev:mobile ios",
     "a:up": "bun run android:up",
     "a:down": "bun run android:down",
     "a:logs": "bun run android:logs",
@@ -65,9 +65,8 @@
     "i:build": "bun run ios:build:sim",
     "i:install": "bun run ios:sim:install",
     "i:launch": "bun run ios:sim:launch",
-    "i:up": "bun run ios:up",
-    "i:dev": "bun run ios:dev",
-    "i:smoke": "bun run ios:smoke"
+    "i:up": "bash scripts/ios/dev.sh",
+    "i:smoke": "bash scripts/ios/smoke.sh"
   },
   "devDependencies": {
     "@eslint/js": "^9",

@@ -45,12 +45,28 @@ fi
 
 DEST_PATH="/data/local/tmp/$LIB_NAME"
 
+# Use a versioned filename so dlopen is forced to load fresh code
+# and to avoid reading a partial file during copy.
+VERSION=$(date +%s)
+VERSIONED_NAME="libbefu_app_${VERSION}.so"
+
 echo "[android:hot] Pushing library to device staging ($DEST_PATH)..."
 adb push "$LIB_PATH" "$DEST_PATH"
 
-echo "[android:hot] Moving library to app-internal directory..."
+echo "[android:hot] Moving library to app-internal directory as $VERSIONED_NAME..."
 # Use run-as to discover the app sandbox and copy the library
-APP_FILES_DIR=$(adb shell "run-as $APP_ID sh -c 'echo \$HOME'" | tr -d '\r')
-adb shell "run-as $APP_ID cp $DEST_PATH $APP_FILES_DIR/files/$LIB_NAME"
+APP_FILES_DIR=$(adb shell "run-as $APP_ID pwd" | tr -d '\r')
 
-echo "[android:hot] [ok] Library synced. Call 'befu.reload' from the bridge to apply."
+# 1. Ensure code_cache exists
+adb shell "run-as $APP_ID mkdir -p code_cache"
+
+# 2. Copy the versioned file
+adb shell "run-as $APP_ID cp $DEST_PATH $APP_FILES_DIR/code_cache/$VERSIONED_NAME"
+
+# 3. Write the VERSION sentinel (ATOMIC update for the watcher thread)
+adb shell "run-as $APP_ID sh -c \"echo $VERSIONED_NAME > code_cache/befu_hot_version\""
+
+# 4. Cleanup old versions
+adb shell "run-as $APP_ID sh -c \"find code_cache -name 'libbefu_app_*.so' ! -name '$VERSIONED_NAME' -delete\"" 2>/dev/null || true
+
+echo "[android:hot] [ok] Library synced as $VERSIONED_NAME. Auto-reload triggered."

@@ -11,11 +11,47 @@ type InitFn = unsafe extern "C" fn(*mut CommandRegistry);
 pub fn load_external_commands(registry: &mut CommandRegistry) {
     let lib_name = if cfg!(target_os = "android") { "libbefu_app.so" } else { "libbefu_app.dylib" };
 
-    let paths = [
-        format!("./{}", lib_name),
-        format!("/data/local/tmp/{}", lib_name),
-        format!("/tmp/{}", lib_name),
-    ];
+    let mut paths = vec![format!("./{}", lib_name)];
+
+    if cfg!(target_os = "android") {
+        let app_id = option_env!("BEFU_APP_ID").unwrap_or("dev.befu.app");
+        // On Android, we search the app's internal code_cache.
+        // NOTE: We cannot use /data/local/tmp because SELinux denies execution from there.
+        let lib_dirs = vec![
+            format!("/data/data/{}/code_cache", app_id),
+            format!("/data/user/0/{}/code_cache", app_id),
+        ];
+
+        for lib_dir in lib_dirs {
+            let version_file = format!("{}/befu_hot_version", lib_dir);
+            if let Ok(versioned_name) = std::fs::read_to_string(&version_file) {
+                let versioned_name = versioned_name.trim();
+                if !versioned_name.is_empty() {
+                    paths.push(format!("{}/{}", lib_dir, versioned_name));
+                }
+            }
+            paths.push(format!("{}/{}", lib_dir, lib_name));
+        }
+    } else if let Ok(exe) = std::env::current_exe()
+        && let Some(parent) = exe.parent()
+    {
+        // On iOS, sync-rust.sh writes a versioned dylib name to 'befu_hot_version'
+        // so dlopen is forced past its cache and loads fresh code.
+        let version_file = parent.join("befu_hot_version");
+        if let Ok(versioned_name) = std::fs::read_to_string(&version_file) {
+            let versioned_name = versioned_name.trim();
+            if !versioned_name.is_empty() {
+                paths.push(format!("{}/{}", parent.to_string_lossy(), versioned_name));
+            }
+        }
+        // Always include the canonical name as fallback (initial load)
+        paths.push(format!("{}/{}", parent.to_string_lossy(), lib_name));
+    }
+
+    if let Ok(temp) = std::env::var("TMPDIR") {
+        paths.push(format!("{}/{}", temp, lib_name));
+    }
+    paths.push(format!("/tmp/{}", lib_name));
 
     for path in paths {
         if std::path::Path::new(&path).exists() {
@@ -48,5 +84,51 @@ pub fn load_external_commands(registry: &mut CommandRegistry) {
     }
 }
 
+#[cfg(debug_assertions)]
+use std::time::SystemTime;
+
+#[cfg(debug_assertions)]
+static LAST_VERSION: Mutex<Option<SystemTime>> = Mutex::new(None);
+
+#[cfg(debug_assertions)]
+pub fn check_for_library_updates() -> bool {
+    // Determine the sentinel file to watch
+    let watchdog_paths = if cfg!(target_os = "android") {
+        let app_id = option_env!("BEFU_APP_ID").unwrap_or("dev.befu.app");
+        vec![
+            format!("/data/data/{}/code_cache/befu_hot_version", app_id),
+            format!("/data/user/0/{}/code_cache/befu_hot_version", app_id),
+        ]
+    } else if let Ok(exe) = std::env::current_exe()
+        && let Some(parent) = exe.parent()
+    {
+        vec![parent.join("befu_hot_version").to_string_lossy().to_string()]
+    } else {
+        return false;
+    };
+
+    for watchdog in watchdog_paths {
+        if let Ok(meta) = std::fs::metadata(watchdog)
+            && let Ok(mtime) = meta.modified()
+        {
+            let mut last = LAST_VERSION.lock().unwrap_or_else(|e| e.into_inner());
+            if let Some(prev) = *last {
+                if mtime > prev {
+                    *last = Some(mtime);
+                    return true;
+                }
+            } else {
+                *last = Some(mtime);
+            }
+        }
+    }
+    false
+}
+
 #[cfg(not(debug_assertions))]
 pub fn load_external_commands(_: &mut CommandRegistry) {}
+
+#[cfg(not(debug_assertions))]
+pub fn check_for_library_updates() -> bool {
+    false
+}

@@ -5,10 +5,24 @@ Befu supports near-instant Rust command updates on mobile devices and simulators
 ## How it Works
 
 1.  **Dynamic Library (`befu-app`)**: In debug mode, `befu-core` looks for a dynamic library (`.so` or `.dylib`) in the app's internal filesystem.
-2.  **Runtime Linking**: The `befu.reload` command triggers `libloading` to link the external library and override the command registry with new implementations.
-3.  **Cross-Platform Sync**: Automated scripts build the `befu-app` crate for the target architecture and push it to the device sandbox.
+2.  **Background Registry Watcher**: A low-priority thread in `befu-core` polls for binary updates every 1 second using an atomic **Sentinel File** (`befu_hot_version`).
+3.  **Zero-Click Sync**: The `sync-rust.sh` scripts build the `befu-app` crate and push it to the device sandbox. Once the write is complete, the sentinel is updated, and the app swaps the command registry automatically.
 
 ## Developer Workflow
+
+Befu provides a unified command that starts the web development server, the Rust watcher, and launches the app with live log tailing in **one terminal tab**:
+
+```bash
+bun run a:dev  # Launch everything for Android
+# OR
+bun run i:dev  # Launch everything for iOS
+```
+
+---
+
+## Developer Workflow (Manual / Advanced)
+
+If you prefer to see build logs and app logs in separate tabs:
 
 ### 1. Start the App
 
@@ -41,9 +55,9 @@ pub fn hello_from_app(name: String) -> AppInfo {
 }
 ```
 
-### 4. Click "Reload Rust Module"
+### 4. Zero-Click Apply
 
-Once the watcher finishes syncing (usually < 2s), click the **🔄 Reload Rust Module** button in the mobile app. The **Hot Reloading** indicator should show a pulsing green dot when active.
+Once the watcher finishes syncing (usually < 1.5s), the app will detect the change and apply the new logic **automatically**. The **Hot Reloading** indicator should show a pulsing green dot when active. You do **not** need to click the "Reload" button (it remains as a manual fallback).
 
 ---
 

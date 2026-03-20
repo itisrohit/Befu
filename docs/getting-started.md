@@ -17,17 +17,16 @@ bun run doctor
 bun run bootstrap
 ```
 
-## Daily Workflow
+## Daily Workflow: **Install Once, Iterate Forever**
+
+Traditional mobile development requires a full build and reinstall for every Rust change. Befu eliminates this loop by letting you sync logic directly into the running app.
+
+### 1. Launch the Runtime
 
 ```bash
-bun run dev
-```
-
-Optional mobile launch helpers:
-
-```bash
-bun run dev:mobile android
-bun run dev:mobile ios
+bun run dev:mobile android  # Launch everything for Android
+# OR
+bun run dev:mobile ios      # Launch everything for iOS
 ```
 
 ## Verification

@@ -5,7 +5,7 @@ import WebKit
 private let befuBridgeHandler = "befuNative"
 
 @MainActor
-final class ViewController: UIViewController, WKScriptMessageHandler {
+final class ViewController: UIViewController, WKScriptMessageHandler, WKUIDelegate {
     private let webView: WKWebView
 
     init() {
@@ -53,6 +53,8 @@ final class ViewController: UIViewController, WKScriptMessageHandler {
         super.init(nibName: nil, bundle: nil)
 
         contentController.add(self, name: befuBridgeHandler)
+        // Required so JS alert(), confirm(), prompt() work inside WKWebView
+        self.webView.uiDelegate = self
     }
 
     deinit {
@@ -147,5 +149,46 @@ final class ViewController: UIViewController, WKScriptMessageHandler {
         }
 
         return encoded
+    }
+
+    // MARK: - WKUIDelegate (enables JS alert/confirm/prompt)
+
+    func webView(
+        _ webView: WKWebView,
+        runJavaScriptAlertPanelWithMessage message: String,
+        initiatedByFrame frame: WKFrameInfo,
+        completionHandler: @escaping () -> Void
+    ) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in completionHandler() })
+        present(alert, animated: true)
+    }
+
+    func webView(
+        _ webView: WKWebView,
+        runJavaScriptConfirmPanelWithMessage message: String,
+        initiatedByFrame frame: WKFrameInfo,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in completionHandler(false) })
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in completionHandler(true) })
+        present(alert, animated: true)
+    }
+
+    func webView(
+        _ webView: WKWebView,
+        runJavaScriptTextInputPanelWithPrompt prompt: String,
+        defaultText: String?,
+        initiatedByFrame frame: WKFrameInfo,
+        completionHandler: @escaping (String?) -> Void
+    ) {
+        let alert = UIAlertController(title: nil, message: prompt, preferredStyle: .alert)
+        alert.addTextField { tf in tf.text = defaultText }
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in completionHandler(nil) })
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+            completionHandler(alert.textFields?.first?.text)
+        })
+        present(alert, animated: true)
     }
 }
