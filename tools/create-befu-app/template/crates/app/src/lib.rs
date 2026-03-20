@@ -14,6 +14,7 @@ pub fn hello_from_app(name: String) -> AppInfo {
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn befu_init_app(registry: &mut CommandRegistry) {
+#[allow(clippy::missing_safety_doc)]
+pub unsafe extern "C" fn befu_init_app(registry: &mut CommandRegistry) {
     befu_macros::register_commands!(registry, hello_from_app);
 }
