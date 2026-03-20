@@ -8,10 +8,18 @@ import {
 } from '@befu/bridge'
 import './App.css'
 
+interface AppInfo {
+  version: string
+  hot_reload: boolean
+}
+
 function App() {
   const [bridgeStatus, setBridgeStatus] = createSignal('Checking bridge...')
   const [pingCount, setPingCount] = createSignal(0)
-  const [appVersion, setAppVersion] = createSignal('unknown')
+  const [appInfo, setAppInfo] = createSignal<AppInfo>({
+    version: '...',
+    hot_reload: false,
+  })
   const [backendMode, setBackendMode] = createSignal<'jni' | 'fallback' | 'ios' | 'unavailable'>(
     'unavailable',
   )
@@ -34,6 +42,7 @@ function App() {
             name: 'Befu',
             version: '0.1.0-dev',
             runtime: 'befu' as const,
+            hot_reload: false,
           },
         })
       }
@@ -68,15 +77,11 @@ function App() {
     void (async () => {
       try {
         const pingResult = await invoke('ping')
-        const appInfo = await invoke('app.info')
+        const info = await invoke('app.info')
         setBridgeStatus(`Bridge is live (${pingResult.pong})`)
-        setAppVersion(appInfo.version)
-        console.log(`[befu:bridge:ok] bridge initialized with version: ${appInfo.version}`)
-        console.log(`[befu:bridge:ping] ${pingResult.pong}`)
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error'
-        setBridgeStatus(`Bridge failed: ${message}`)
-        console.error(`[befu:bridge:error] ${message}`)
+        setAppInfo({ version: info.version, hot_reload: info.hot_reload === true })
+      } catch {
+        setBridgeStatus(`Bridge disconnected`)
       }
     })()
   })
@@ -84,43 +89,81 @@ function App() {
   const handlePing = async () => {
     const result = await invoke('ping')
     if (result.pong === 'pong') {
-      setPingCount((value) => value + 1)
+      setPingCount((v) => v + 1)
+    }
+  }
+
+  const handleReload = async () => {
+    setBridgeStatus('Reloading Rust...')
+    try {
+      await invoke('befu.reload')
+      setBridgeStatus('Bridge reloaded')
+    } catch {
+      setBridgeStatus(`Reload failed`)
+    }
+  }
+
+  const handleTestHello = async () => {
+    try {
+      const res = await invoke('hello', { name: 'Befu' })
+      alert(res.message)
+    } catch (e) {
+      alert(`Error calling hello: ${String(e)}`)
     }
   }
 
   return (
     <main class="app-shell">
-      <section class="card">
-        <p class="eyebrow">Befu Runtime</p>
-        <h1>Solid + Bridge + Rust scaffold</h1>
-        <p class="status">{bridgeStatus()}</p>
-        <p class="status">
-          App version from bridge: <code>{appVersion()}</code>
-        </p>
-        <p class="status">
-          Native backend mode: <code>{backendMode()}</code>
-        </p>
-        <div class="actions">
-          <button
-            class="counter"
-            onClick={() => {
-              void handlePing()
-            }}
-          >
-            Ping bridge ({pingCount()})
-          </button>
+      <header>
+        <h1>Befu Native</h1>
+        <p class="subtitle">Next-generation cross-platform mobile runtime</p>
+      </header>
+
+      <section class="status-grid">
+        <div class="status-row">
+          <span class="status-label">Runtime Connection</span>
+          <span class="status-value">{bridgeStatus()}</span>
+        </div>
+
+        <div class="status-row">
+          <span class="status-label">Core Version</span>
+          <span class="status-value">{appInfo().version}</span>
+        </div>
+
+        <div class="status-row">
+          <span class="status-label">Backend</span>
+          <span class="status-value">{backendMode()}</span>
+        </div>
+
+        <div class="status-row">
+          <span class="status-label">Hot Reloading</span>
+          <span class="status-value">
+            <span class={`dot ${appInfo().hot_reload ? 'dot-active' : ''}`} />
+            {appInfo().hot_reload ? 'Active' : 'Offline'}
+          </span>
         </div>
       </section>
-      <section class="notes">
+
+      <div class="actions">
+        <button onClick={() => void handlePing()}>Ping Bridge ({pingCount()})</button>
+
+        <button class="secondary" onClick={() => void handleTestHello()}>
+          Test Hello Command ⚡️
+        </button>
+
+        {appInfo().hot_reload && (
+          <button class="secondary" onClick={() => void handleReload()}>
+            🔄 Reload Rust
+          </button>
+        )}
+      </div>
+
+      <footer class="footer-note">
         <p>
-          Frontend calls <code>invoke('ping')</code> and <code>invoke('app.info')</code> through{' '}
-          <code>@befu/bridge</code>.
+          Befu uses a JNI/FFI binary bridge to native Rust crates for maximum performance and low
+          memory footprint.
         </p>
-        <p>
-          Rust crate exposes protocol handlers in <code>crates/core</code> as the backend
-          counterpart contract.
-        </p>
-      </section>
+      </footer>
     </main>
   )
 }

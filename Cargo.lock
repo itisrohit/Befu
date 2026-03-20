@@ -3,11 +3,31 @@
 version = 4
 
 [[package]]
+name = "befu-app"
+version = "0.1.0"
+dependencies = [
+ "befu-bridge",
+ "befu-macros",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "befu-bridge"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "befu-core"
 version = "0.1.0"
 dependencies = [
+ "befu-bridge",
  "befu-macros",
  "jni",
+ "libloading",
  "serde",
  "serde_json",
 ]
@@ -76,6 +96,16 @@ name = "jni-sys"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8eaf4bc02d17cbdd7ff4c7438cafcdf7fb9a4613313ad11b4f8fefe7d3fa0130"
+
+[[package]]
+name = "libloading"
+version = "0.8.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d7c4b02199fee7c5d21a5ae7d8cfa79a6ef5bb2fc834d6e9058e89c825efdc55"
+dependencies = [
+ "cfg-if",
+ "windows-link",
+]
 
 [[package]]
 name = "log"

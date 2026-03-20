@@ -82,7 +82,7 @@ pub fn command(attr: TokenStream, item: TokenStream) -> TokenStream {
             let args_val = req.args.clone().unwrap_or(serde_json::Value::Null);
             let args: #args_struct_name = match serde_json::from_value(args_val.clone()) {
                 Ok(a) => a,
-                Err(e) => return failure_response(&req.id, "INVALID_ARGUMENT", e.to_string(), Some(args_val)),
+                Err(e) => return befu_bridge::failure_response(&req.id, "INVALID_ARGUMENT", e.to_string(), Some(args_val)),
             };
         }
     } else {
@@ -94,11 +94,13 @@ pub fn command(attr: TokenStream, item: TokenStream) -> TokenStream {
     let call_args = args_names.iter().map(|name| quote! { args.#name });
 
     let return_response = match &input.sig.output {
-        ReturnType::Default => quote! { success_response(&req.id, serde_json::Value::Null) },
+        ReturnType::Default => {
+            quote! { befu_bridge::success_response(&req.id, serde_json::Value::Null) }
+        }
         ReturnType::Type(_, _) => quote! {
             match serde_json::to_value(result) {
-                Ok(val) => success_response(&req.id, val),
-                Err(e) => failure_response(&req.id, "SERIALIZATION_ERROR", e.to_string(), None),
+                Ok(val) => befu_bridge::success_response(&req.id, val),
+                Err(e) => befu_bridge::failure_response(&req.id, "SERIALIZATION_ERROR", e.to_string(), None),
             }
         },
     };
@@ -113,7 +115,7 @@ pub fn command(attr: TokenStream, item: TokenStream) -> TokenStream {
         #original_fn
 
         #[allow(non_camel_case_types)]
-        #vis fn #wrapper_name(req: &BridgeRequest) -> BridgeResponse {
+        #vis fn #wrapper_name(req: &befu_bridge::BridgeRequest) -> befu_bridge::BridgeResponse {
             #[allow(non_camel_case_types)]
             #args_parsing
             #result_assignment
@@ -121,8 +123,8 @@ pub fn command(attr: TokenStream, item: TokenStream) -> TokenStream {
         }
 
         #[allow(non_camel_case_types)]
-        #vis fn #metadata_name() -> CommandMetadata {
-            CommandMetadata {
+        #vis fn #metadata_name() -> befu_bridge::CommandMetadata {
+            befu_bridge::CommandMetadata {
                 name: #command_name_str,
                 description: #description_lit,
             }

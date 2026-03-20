@@ -31,10 +31,10 @@ Rust runtime
 
 - Prototype runtime for Android/iOS webview shells + Rust command backend
 - Bun-first developer workflow and `create-befu-app` scaffolder
-- Current status: `#[command]` macro and `register_commands!` automation implemented.
-- Current status: Registry dispatch and command introspection (`befu.commands`) fully functional.
-- Planned differentiator (debug-only): hot Rust command reload on Android and iOS simulator for faster iteration
-- Focused on bridge ergonomics and iteration speed, not full production hardening yet
+- Core status: `#[command]` macro and `register_commands!` automation implemented.
+- Core status: Registry dispatch and command introspection (`befu.commands`) fully functional.
+- Core USP (debug-only): **Hot Rust command reload** on Android and iOS simulator for faster iteration.
+- Focused on bridge ergonomics and iteration speed, not full production hardening yet.
 
 ## Quick Start
 
@@ -68,6 +68,16 @@ Or launch directly on mobile (requires emulator/simulator):
 bun run dev:mobile android  # or ios
 ```
 
+**Hot Reloading (Debug Only):**
+Sync Rust code changes to your device in real-time without full rebuilds:
+
+```bash
+bun run a:hot   # For Android (watcher)
+bun run i:hot   # For iOS (watcher)
+```
+
+Then click the **🔄 Reload Rust** button in the app.
+
 ## Scaffold A New App
 
 Package: [create-befu-app on npm](https://www.npmjs.com/package/create-befu-app)
@@ -92,6 +102,7 @@ Experimental prototype.
 - Scaffolder usage and troubleshooting: [`docs/scaffolder-cli.md`](docs/scaffolder-cli.md)
 - Current roadmap and priorities: [`docs/phases-next.md`](docs/phases-next.md)
 - Rust Command DX guide: [`docs/command-dx.md`](docs/command-dx.md)
+- Hot Command Reload guide: [`docs/hot-reload.md`](docs/hot-reload.md)
 
 ---
 

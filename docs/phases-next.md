@@ -38,35 +38,27 @@
     - [done] auto-register handlers into the runtime registry at compile time
     - [done] reduce manual map wiring and registration boilerplate
     - [done] provide compile-time errors for unsupported signatures
-  - debug-only hot command reload for fast Rust iteration on mobile shells:
-    - primary product differentiator (USP): web-like iteration speed for Rust command logic on mobile
-    - target workflow:
-      - edit Rust command
-      - save
-      - runtime reloads command implementation
-      - frontend `invoke(...)` reflects change without full app reinstall/rebuild
-    - technical runtime flow (debug only):
-      - compile Rust command crate as dynamic library (for example `libcommands.so`)
-      - runtime loads library dynamically (`dlopen`/platform equivalent)
-      - command handlers are resolved by exported symbols
-      - file watcher detects rebuilt library and triggers reload cycle
-      - unload old library, load new library, and continue dispatch with new code
-    - expected value:
-      - dramatically shorter feedback loop than standard native rebuild flow
-      - easier experimentation for command APIs and business logic
-      - clearer onboarding story: "web UI speed + Rust backend power"
-    - Android: reload debug Rust command library without reinstalling the app
-      - feasible path: `cargo build` -> push `.so` -> runtime reload
-      - aligns with Android's dynamic `.so` loading capability
-    - iOS simulator: mirror reload flow where toolchain/runtime allows
-      - feasible for simulator workflows
-      - real devices are harder because of code signing constraints
-    - keep release builds static and deterministic (no dynamic reload path)
-    - show reload status in logs/UI to make iteration behavior explicit
-    - safety constraints:
-      - debug-only guardrails at compile/runtime level
-      - explicit kill-switch to disable reload mode instantly
-      - no impact on release signing/package reproducibility
+  - [done] debug-only hot command reload for fast Rust iteration on mobile shells:
+    - [done] primary product differentiator (USP): web-like iteration speed for Rust command logic on mobile
+    - [done] target workflow:
+      - [done] edit Rust command
+      - [done] save (automatic or manual sync)
+      - [done] runtime reloads command implementation
+      - [done] frontend `invoke(...)` reflects change without full app reinstall/rebuild
+    - [done] technical runtime flow (debug only):
+      - [done] compile Rust command crate as dynamic library (`befu-app`)
+      - [done] runtime loads library dynamically (`libloading`)
+      - [done] command handlers are resolved by exported symbols (`befu_init_app`)
+      - [done] file watcher detects rebuilt library and triggers reload cycle
+      - [done] reload command in bridge replaces registry
+    - [done] expected value:
+      - [done] dramatically shorter feedback loop than standard native rebuild flow
+    - [done] Android: reload debug Rust command library without reinstalling the app
+    - [done] iOS simulator: mirror reload flow where toolchain/runtime allows
+    - [done] keep release builds static and deterministic (no dynamic reload path)
+    - [done] safety constraints:
+      - [done] debug-only guardrails at compile/runtime level
+      - [done] explicit kill-switch (mode flag in `app.info`)
 
 ## Phase 3 - iOS Production Packaging
 

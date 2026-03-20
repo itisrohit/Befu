@@ -1,6 +1,4 @@
-use crate::{
-    BridgeRequest, BridgeResponse, CommandMetadata, command, failure_response, success_response,
-};
+use befu_macros::command;
 use serde::Serialize;
 
 #[derive(Serialize)]

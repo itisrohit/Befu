@@ -21,6 +21,7 @@ echo "[Core]"
 check_cmd bun "Bun"
 check_cmd rustup "rustup"
 check_cmd cargo "cargo"
+check_cmd cargo-watch "cargo-watch (recommended for hot reload)"
 check_cmd rg "ripgrep (rg)"
 
 echo

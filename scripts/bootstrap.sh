@@ -20,4 +20,7 @@ echo "[bootstrap] Done."
 echo "Next:"
 echo "  - bun run dev"
 echo "  - bun run a:up"
+echo "  - bun run a:hot (Hot reload - requires cargo-watch)"
 echo "  - bun run i:up"
+echo
+echo "Tip: Run 'cargo install cargo-watch' for the best hot-reload experience."
