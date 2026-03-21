@@ -37,6 +37,26 @@ fn init_registry() -> CommandRegistry {
         reload_commands_command,
     );
 
+    registry.register(
+        CommandMetadata { name: "hello", description: "Default hello command (shadowable by app)" },
+        |req| {
+            let name = req.args.as_ref().and_then(|a| a.get("name")).and_then(|v| v.as_str());
+
+            match name {
+                Some(n) => success_response(
+                    &req.id,
+                    serde_json::json!({ "message": format!("Hello {n} from Befu!") }),
+                ),
+                None => failure_response(
+                    &req.id,
+                    "INVALID_ARGUMENT",
+                    "Missing required argument 'name'".to_string(),
+                    None,
+                ),
+            }
+        },
+    );
+
     // Load external hot-reloadable commands
     #[cfg(debug_assertions)]
     hot_reload::load_external_commands(&mut registry);
