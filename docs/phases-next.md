@@ -32,16 +32,23 @@ Befu is currently in intensive development. This roadmap outlines the evolution 
 - React-native style bridge integration.
 - React template in `create-befu-app`.
 
-## 🛠️ Phase 6: Ecosystem & Advanced DX
+## 🛠️ Phase 6: Production Hardening & Safety
 
-- [ ] Add Svelte template option.
-- [ ] Integrated SQLite storage bridge.
-- [ ] Shared state management patterns (Rust-First).
-- [ ] Automated release automation for dylibs.
-- [ ] State-preserving hot-reload (Rust-side persistence during swaps).
+- [ ] **Strict Security Boundary**: Implemented compile-time gating for hot-reload logic (Zero-RCE in Production).
+- [ ] **Type Parity**: Robust serialization for complex structs and arrays across the bridge.
+- [ ] **Android Side-loading Stability**: Finalizing the FFI boundary for zero-panic module swaps.
+- [ ] **Documentation**: Complete internal architecture guide for contributors.
 
-## 🚀 Phase 7: Production Release
+## 🚀 Phase 7: v1.0 Production Release
 
+- Official `befu-cli` for version management.
+- Initial SQLite & Preferences plugins.
+- Showcase: High-performance data-processing sample app.
+- iOS Strategy: Finalize "Bundled-Only" vs "Dev-Side-loading" paths.
 - Public npm publishing of all tools.
 - Documentation site (Docusaurus).
-- Showcase sample applications.
+
+## 🔮 Phase 8: v2.0 & Beyond
+
+- [ ] **Unified Logic (WASM)**: Running the Rust core in browsers via WebAssembly.
+- [ ] **Desktop Support**: Porting the Befu container to macOS/Windows.

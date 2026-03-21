@@ -50,6 +50,15 @@ function App() {
         })
       }
 
+      if (payload.command === 'hello') {
+        const name = (payload.args as { name: string }).name || 'Befu'
+        return Promise.resolve({
+          id: payload.id,
+          ok: true,
+          result: { message: `Hello ${name} (Web Mock)` as const },
+        })
+      }
+
       return Promise.resolve({
         id: payload.id,
         ok: false,

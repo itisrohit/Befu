@@ -9,7 +9,7 @@
 
 **Hot reload Rust backend logic inside mobile apps — no rebuilds, no reinstalls.**
 
-[Getting Started](docs/getting-started.md) • [Documentation](docs/) • [Roadmap](docs/phases-next.md) • [Contributing](CONTRIBUTING.md)
+[Getting Started](docs/getting-started.md) • [Architecture](docs/architecture.md) • [Documentation](docs/) • [Roadmap](docs/phases-next.md) • [Contributing](CONTRIBUTING.md)
 
 </div>
 
@@ -75,7 +75,19 @@ const result = await invoke('calculate_fast', { id: 1 })
 console.log(result.score) // 100
 ```
 
-## Architecture
+## Platform Support & Status
+
+| Feature        | Android           | iOS               | Web           |
+| :------------- | :---------------- | :---------------- | :------------ |
+| **Bridge UI**  | ✅                | ✅                | ✅            |
+| **Hot Reload** | ✅ (Side-loading) | ⚠️ (Bundled Only) | ✅ (Vite HMR) |
+| **Production** | 🚧 Beta           | 🚧 Alpha          | ✅ Stable     |
+
+_Note: iOS hot-reloading is currently limited to bundled logic due to App Store dynamic loading restrictions. We are prioritizing Android-first high-frequency DX._
+
+## Security Model
+
+Befu is designed with a strict "Dev vs Prod" boundary. The dynamic library loading required for hot-reloading is gated behind feature flags and is intended to be stripped from production binaries to eliminate remote code execution vectors.
 
 Befu utilizes a dynamic-loading registry to swap logic at the binary boundary.
 

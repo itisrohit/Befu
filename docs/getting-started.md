@@ -1,85 +1,86 @@
-# Getting Started
+# Getting Started with Befu
 
-## Requirements
+Befu is a high-performance framework for building cross-platform applications using Rust for business logic and React or SolidJS for the user interface. This guide provides instructions for setting up your environment and creating your first project.
 
-- Bun `>=1.2`
-- Rust toolchain (`rustup`, `cargo`)
-- Android Studio SDK/NDK + `adb` (for Android work)
-- Xcode `16+` + command-line tools (for iOS work)
+## Prerequisites
 
-> [!TIP]
-> Install `cargo install cargo-watch` for significantly better performance and lower latency during Hot Command Reload sessions.
+Before using Befu, ensure your development machine meets the following requirements:
 
-## New Machine Setup
+- **Runtime**: Bun >= 1.2
+- **Compiler**: Rust toolchain (stable edition)
+- **Android Support**: Android Studio, SDK/NDK, and `adb`
+- **iOS Support**: Xcode 16+ and command-line tools
+- **Utility**: `cargo-watch` (recommended for low-latency hot reloading)
+
+## 1. Project Initialization
+
+Create a new Befu project using the official scaffolder. This command sets up a complete monorepo with the required native containers and frontend workspace.
 
 ```bash
+bunx create-befu-app --name my-app --framework react --platform both --yes
+```
+
+If you prefer a manual setup, you can omit the flags to enter an interactive configuration mode.
+
+## 2. Environment Verification
+
+Once the project is created, navigate to the project directory and run the diagnostic tools to ensure all native dependencies are correctly configured.
+
+```bash
+# Verify system dependencies
 bun run doctor
+
+# Install internal dependencies and prepare native assets
 bun run bootstrap
 ```
 
-## Scaffold a New Project
+## 3. Development Workflow
 
-If you are starting from scratch, use the Befu CLI to set up a fresh monorepo:
+Befu is designed around an "Install Once, Iterate Forever" philosophy. After the initial installation on a device or simulator, business logic changes can be synced instantly without full rebuilds.
+
+### Launching for Android
+
+Start the unified development process which includes the Web UI server, the Rust watcher, and the Android application launcher:
 
 ```bash
-bunx create-befu-app --name my-visionary-app --framework react
+bun run a:dev
 ```
 
-The CLI will guide you through the setup. If flags are provided (like `--name` or `--framework`), those specific steps will be skipped. Otherwise, you'll be prompted for:
+### Launching for iOS
 
-1. **Project Name**: The directory name for your workspace.
-2. **Frontend Framework**: Choose between **SolidJS** (default) or **React**.
-3. **Application ID**: The package name for Android/iOS (e.g., `com.yourname.app`).
-4. **Target Platform**: Android, iOS, or both.
-5. **Framework**: React or SolidJS.
-
-## Daily Workflow: **Install Once, Iterate Forever**
-
-Traditional mobile development requires a full build and reinstall for every Rust change. Befu eliminates this loop by letting you sync logic directly into the running app.
-
-### 1. Launch the Runtime
+Execute the following to start the development cycle for iOS simulators:
 
 ```bash
-bun run dev:mobile android  # Launch everything for Android
-# OR
-bun run dev:mobile ios      # Launch everything for iOS
+bun run i:dev
 ```
 
-## Verification
+## 4. Project Structure
+
+A standard Befu project is organized as follows:
+
+| Directory      | Purpose                                          |
+| :------------- | :----------------------------------------------- |
+| `apps/web/`    | The frontend application (React or SolidJS).     |
+| `crates/app/`  | The Rust business logic and command definitions. |
+| `crates/core/` | The internal Befu runtime and bridge core.       |
+| `android/`     | The Android native project and JNI bridge.       |
+| `ios/`         | The iOS native project and FFI bridge.           |
+
+## 5. Quality Assurance
+
+Maintain project health by running the integrated testing and formatting suites.
 
 ```bash
+# Run all frontend and backend tests
 bun run test:bridge
 bun run test:rust
-bun run build
-```
 
-## Quality Gate
-
-```bash
+# Execute the full quality gate (format, lint, and type check)
 bun run quality
 ```
 
-## Android Commands
+## Next Steps
 
-```bash
-bun run a:up       # Launch app + tail logs
-bun run a:hot      # Watch and sync Rust changes
-bun run a:restart  # Force restart app
-bun run a:logs     # View adb logcat
-bun run a:down     # Stop everything
-bun run a:smoke    # Automated health check
-```
-
-## iOS Commands
-
-```bash
-bun run i:up       # Launch app (sim)
-bun run i:hot      # Watch and sync Rust changes
-bun run i:list     # List simulators
-bun run i:build    # Build simulator target
-bun run i:install  # Install into simulator
-bun run i:launch   # Launch on simulator
-bun run i:smoke    # Automated health check
-```
-
-For platform-specific details, see `android/README.md` and `ios/README.md`.
+- **Command DX**: Learn how to define Rust commands in [command-dx.md](command-dx.md).
+- **Architecture**: Understand the execution model in [architecture.md](architecture.md).
+- **Hot Reload**: Deep dive into the side-loading system in [hot-reload.md](hot-reload.md).
