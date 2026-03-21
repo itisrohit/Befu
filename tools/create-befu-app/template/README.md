@@ -1,6 +1,6 @@
 # Befu
 
-Befu is a mobile runtime for building Rust-backed applications. It is dedicated to developer iteration velocity, combining standard Web UIs (SolidJS/Vite) with the raw performance and ecosystem of Rust.
+Befu is a mobile runtime for building Rust-backed applications. It is dedicated to developer iteration velocity, combining standard Web UIs (React/SolidJS/Vite) with the raw performance and ecosystem of Rust.
 
 ## Hot Rust Command Reload
 
@@ -10,7 +10,7 @@ The core feature of Befu is **Hot Rust Command Reloading** (Debug Only). Sync Ru
 
 ```mermaid
 graph TD
-    UI[Web UI / SolidJS] -->|invoke| Bridge[Befu Bridge / TS]
+    UI[Web UI / React or SolidJS] -->|invoke| Bridge[Befu Bridge / TS]
     Bridge -->|WebView Messaging| Core[Befu Core / Rust]
     Core -->|Hot Dispatch| App[Befu App / Rust Logic]
     Watcher[Rust Watcher / Scripts] -->|Sync .dylib| Files[App Sandbox]

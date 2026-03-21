@@ -59,9 +59,17 @@
       - [done] debug-only guardrails at compile/runtime level
       - [done] explicit kill-switch (mode flag in `app.info`)
 
-## Phase 3 - iOS Production Packaging
+## Phase 2.5 - Universal Reach & Scaling (ACTIVE)
+
+- [ ] Add **React + Vite + TS** template to the scaffolder (allows targeting 90% of the frontend ecosystem).
+- [ ] Add interactive framework selection to `create-befu-app`.
+- [ ] Record high-fidelity demo video showing **Rust + React + Android** zero-click hot reload.
+- [ ] Finalize "Launch Package" (Blog post, README polish, social media assets).
+
+## Phase 3 - iOS Production Packaging & Community Handover
 
 - **Next Step**: Investigate **State-preserving reload** (support reloading logic without losing in-memory Rust app state).
+- **Hard Call**: Open call for **iOS Core Maintainer** (physical hardware support).
 - Add Rust device target build (`aarch64-apple-ios`) to iOS rust prep.
 - Package simulator + device artifacts as XCFramework (or equivalent robust packaging).
 - Add device build/archive scripts (`ios:build:device`, optional `ios:archive`).

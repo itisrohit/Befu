@@ -9,21 +9,26 @@ bunx create-befu-app
 Non-interactive mode:
 
 ```bash
-bunx create-befu-app --name my-befu-app --platform both --yes
+bunx create-befu-app --name my-app --platform both --framework react --yes
 ```
 
 Supported platforms:
 
 - `android`
 - `ios`
-- `both`
+- `both` (default)
+
+### Supported Frameworks:
+
+- `solid` (default)
+- `react`
 
 ## Deterministic Version Pinning
 
 Use explicit versions in CI or debugging:
 
 ```bash
-bunx create-befu-app@0.1.3 --name my-befu-app --platform both --yes
+bunx create-befu-app@0.1.4 --name my-app --platform both --framework solid --yes
 ```
 
 ## Next Steps In Generated Project
