@@ -1,76 +1,105 @@
-# Befu
+![Befu Banner](./assets/banner.png)
 
-Hot reload Rust backend logic inside mobile apps — no rebuilds, no reinstalls.
+<div align="center">
 
-Edit Rust → save → your app updates instantly (~1s).
+[![CI](https://github.com/itisrohit/Befu/actions/workflows/ci.yml/badge.svg)](https://github.com/itisrohit/Befu/actions)
+[![npm version](https://img.shields.io/npm/v/create-befu-app.svg?style=flat-square)](https://www.npmjs.com/package/create-befu-app)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![Rust](https://img.shields.io/badge/rust-2024-orange.svg?style=flat-square)](https://www.rust-lang.org)
+
+**Hot reload Rust backend logic inside mobile apps — no rebuilds, no reinstalls.**
+
+[Getting Started](docs/getting-started.md) • [Documentation](docs/) • [Roadmap](docs/phases-next.md) • [Contributing](CONTRIBUTING.md)
+
+</div>
+
+---
+
+Befu is a high-performance cross-platform framework for building mobile and web applications using React or SolidJS for the UI and Rust for business logic. It features a custom, low-latency bridge and a dynamic hot-reload system for native code.
+
+## Key Features
+
+- **Zero-Click Hot Reload**: Update native Rust logic on-device in approximately 1 second without full app rebuilds or reinstalls.
+- **Framework Agnostic**: Native support for React and SolidJS.
+- **Typed Bridge**: High-performance communication layer between WebView and Rust.
+- **Modern Scaffolding**: Create complete cross-platform monorepos instantly via `create-befu-app`.
+- **Engineering Tools**: Built-in `doctor` and `bootstrap` scripts to automate environment management.
 
 ## Demo
 
-Edit a Rust command → save → app updates instantly (no rebuild, no reinstall).
+Edit a Rust command and save; the application updates instantly without losing internal state.
 
 ![Befu Hot-Reload Demo](./assets/demo.gif)
 
+## Table of Contents
+
+- [Why Befu?](#why-befu)
+- [Example Usage](#example-usage)
+- [Architecture](#architecture)
+- [Quick Start](#quick-start)
+- [Scaffold A New App](#scaffold-a-new-app)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Why Befu?
 
-Traditional mobile development requires rebuilding and reinstalling apps every time you change backend logic.
+Traditional mobile development involves significant wait times for Gradle or Xcode builds following every backend or business logic change. Befu eliminates this friction:
 
-Befu eliminates that loop:
+- **Save Rust to update the application instantly**.
+- **Unified development across platforms**.
+- **Persistent mobile app environment during logic swaps**.
+- **Native performance with web-like iteration speeds**.
 
-- **Save Rust → Instant effect** in your app.
-- **No rebuilds** (no waiting for Gradle/Xcode).
-- **No reinstalls** (keep your app state).
-- **No context switching**.
+## Example Usage
 
-**Install your app once. Iterate forever.**
+### Rust Backend
 
-## Example
-
-**Rust Backend:**
+Define high-performance logic using procedural macros:
 
 ```rust
 #[befu::command]
-fn hello() -> String {
-    "Hello v2".into()
+fn calculate_fast(args: MyArgs) -> MyResult {
+    // Rust computation logic
+    MyResult { score: 100 }
 }
 ```
 
-**Frontend (SolidJS/TS):**
+### Frontend (React/Solid)
+
+Invoke native code with a typed promise API:
 
 ```typescript
-const result = await invoke('hello')
-```
+import { invoke } from '@befu/bridge'
 
-Change Rust → save → **app updates instantly**.
+const result = await invoke('calculate_fast', { id: 1 })
+console.log(result.score) // 100
+```
 
 ## Architecture
 
+Befu utilizes a dynamic-loading registry to swap logic at the binary boundary.
+
 ```mermaid
 graph TD
-    UI[Web UI / SolidJS] -->|invoke| Bridge[Befu Bridge / TS]
+    UI[Web UI / React & Solid] -->|invoke| Bridge[Befu Bridge / TS]
     Bridge -->|WebView Messaging| Core[Befu Core / Rust]
     Core -->|Hot Dispatch| App[Befu App / Rust Logic]
     Watcher[Rust Watcher / Scripts] -->|Sync Binaries| Files[App Sandbox]
 ```
 
-## Project Status
-
-**Phase 2 Stable**: Procedural macro command registry and dynamic hot-reloading are fully functional.
-
-We are currently looking for builders to help with **Phase 3 (iOS device support)** and **Phase 4 (Android Production Hardening)**.
-
 ## Quick Start
 
-### 1. Check Requirements
+### 1. Environment Audit
 
-Befu requires Bun, Rust, and platform-specific tools:
+Verify your system configuration for native Rust and mobile development:
 
 ```bash
 bun run doctor
 ```
 
-### 2. Bootstrap Workspace
+### 2. Bootstrap
 
-Install dependencies, git hooks, and prepare platform-specific assets:
+Initialize dependencies and prepare platform-specific assets:
 
 ```bash
 bun run bootstrap
@@ -78,39 +107,33 @@ bun run bootstrap
 
 ### 3. Launch Development
 
-Start the full development cycle in **one command** (includes Web UI, Rust watcher, and app launch):
+Start the full development cycle for your target platform:
 
 ```bash
-bun run a:dev  # Launch everything for Android
+bun run a:dev  # Android Development
 # OR
-bun run i:dev  # Launch everything for iOS
+bun run i:dev  # iOS Development
 ```
-
-**Zero-Click Hot Reloading:**
-Once the watcher is running (manually or via `a:dev`), simply **Save** your Rust code. The app will detect the change and swap the command registry automatically within ~1 second. No reload button required!
 
 ## Scaffold A New App
 
-Package: [create-befu-app on npm](https://www.npmjs.com/package/create-befu-app)
+Automated project initialization using the official scaffolder:
 
 ```bash
-bunx create-befu-app --name my-befu-app --platform both --yes
+bunx create-befu-app --name my-app --framework react --platform both --yes
 ```
 
-If your local `bunx` cache is stale, pin explicitly:
+> [!TIP]
+> If your local environment cache is stale, pin the latest release: `bunx create-befu-app@0.1.5 [...]`
 
-```bash
-bunx create-befu-app@0.1.4 --name my-befu-app --platform both --yes
-```
+## Contributing
 
-## Docs
+Contributions from the community are encouraged. Refer to the [Contributing Guide](CONTRIBUTING.md) to begin.
 
-- Setup and daily workflows: [`docs/getting-started.md`](docs/getting-started.md)
-- Scaffolder usage and troubleshooting: [`docs/scaffolder-cli.md`](docs/scaffolder-cli.md)
-- Current roadmap and priorities: [`docs/phases-next.md`](docs/phases-next.md)
-- Rust Command DX guide: [`docs/command-dx.md`](docs/command-dx.md)
-- Hot Command Reload guide: [`docs/hot-reload.md`](docs/hot-reload.md)
+## License
+
+Befu is open-source software licensed under the [MIT License](LICENSE).
 
 ---
 
-Built with love ❤️
+<p align="center">Made with love ❤️</p>

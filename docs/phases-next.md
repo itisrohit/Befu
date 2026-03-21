@@ -38,6 +38,7 @@ Befu is currently in intensive development. This roadmap outlines the evolution 
 - [ ] Integrated SQLite storage bridge.
 - [ ] Shared state management patterns (Rust-First).
 - [ ] Automated release automation for dylibs.
+- [ ] State-preserving hot-reload (Rust-side persistence during swaps).
 
 ## 🚀 Phase 7: Production Release
 
