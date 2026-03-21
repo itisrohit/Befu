@@ -1,53 +1,59 @@
 # Contributing to Befu
 
-Befu has moved into stable **Phase 2**, focusing on zero-click hot-reloading for Rust-backed mobile apps. We welcome contributions to help stabilize the bridge and move into physical device support (Phase 3+).
+Befu is a high-performance framework for building cross-platform applications with Rust and modern web technologies. We welcome contributions that prioritize technical excellence, performance, and developer experience.
 
-## Tech Stack Overview
+## Technical Architecture
 
-- **Core (Rust)**: JNI/FFI-based bridge with a modular crate structure.
-- **Frontend (TS/JS)**: SolidJS + Vite (current default).
-- **Transport**: WebView-to-Native protocol using serialized JSON bundles.
-- **Tooling**: Bun-first scripts for low setup friction.
+Befu is organized as a monorepo with specialized crates and packages. Understanding this structure is essential for contributors:
 
-## Developer Environment
+| Component       | Path                     | Language | Purpose                                                      |
+| :-------------- | :----------------------- | :------- | :----------------------------------------------------------- |
+| **Befu Core**   | `crates/core/`           | Rust     | The internal runtime, dynamic loader, and JNI/FFI bridge.    |
+| **Befu Bridge** | `packages/bridge/`       | TS       | The frontend client library used to invoke Rust commands.    |
+| **Befu Hub**    | `crates/app/`            | Rust     | The default business logic crate where commands are defined. |
+| **Scaffolder**  | `tools/create-befu-app/` | JS       | The CLI tool for initializing new Befu projects.             |
 
-1.  **Doctor Check**: Ensure your Bun, Rust, and SDK paths are valid:
-    ```bash
-    bun run doctor
-    ```
-2.  **Bootstrap**: Install dependencies and initialize git hooks:
-    ```bash
-    bun run bootstrap
-    ```
-3.  **Unified Dev Cycle**: Launch the full stack (web server + Rust watcher + app logs) in **one command**:
-    ```bash
-    bun run a:dev  # Android
-    bun run i:dev  # iOS
-    ```
+## Development Standards
 
-**Zero-Click Hot Reloading:**
-Once `a:dev` or `i:dev` is running, simply save your Rust code in `crates/app/src/lib.rs`. The watcher will rebuild the library and the bridge will automatically swap the registry within ~1 second—no app reinstall required.
+### Prerequisites
 
-## Template Synchronization
+All contributors must ensure their environment passes the automated diagnostic check:
 
-> [!IMPORTANT]
-> If you modify **core scripts**, **bridge logic**, or **app logic**, you **MUST** ensure these changes are synchronized to the template in `tools/create-befu-app/template`. This ensures that all future projects scaffolded with `create-befu-app` benefit from your improvements.
+```bash
+bun run doctor
+```
 
-## Mission & Priority Areas
+### Quality Assurance
 
-Currently, we are looking for builders to help with:
+Before submitting a pull request, your changes must pass the unified quality gate:
 
-- **iOS Physical Device Support**: Moving beyond simulator-only artifacts to robust `aarch64-apple-ios` XCFrameworks.
-- **State-Preserving Reload**: Designing a mechanism to maintain Rust global state across hot-swaps.
-- **Ecosystem Expansion**: Supporting more frontend frameworks (React, Svelte) and improved project scaffolding.
-- **Android Hardening**: Finalizing release-signing flows and optimizing application binary size.
+```bash
+bun run quality
+```
 
-## House Rules
+This command executes:
 
-- **Rust Formatting**: Run `cargo fmt --all` before committing.
-- **Quality Gate**: Changes should pass `bun run quality` (combines linting, type-check, and bridge tests).
-- **Branch Strategy**: Open a feature branch from `main` and create a PR with a description of the "why" behind the change.
+1.  **TypeScript Verification**: Type-checking and linting for all packages.
+2.  **Rust Integrity**: `cargo fmt` check and `clippy` analysis.
+3.  **Bridge Testing**: Vitest suite for the communication protocol.
+
+## Contribution Workflow
+
+1.  **Identify or Create an Issue**: Check the GitHub issue tracker for "Help Wanted" tasks or create a new issue to discuss proposed architectural changes.
+2.  **Branching**: Create a feature branch from the `main` branch.
+3.  **Implementation**: adhere to the established naming conventions and formatting rules.
+4.  **Template Synchronization**: If your changes affect the core bridge or runtime, you **must** apply the corresponding updates to the project template in `tools/create-befu-app/template/`.
+5.  **Quality Check**: Run `bun run quality` locally.
+6.  **Pull Request**: Submit your PR with a technical description of the implementation and the problem it addresses.
+
+## Template Synchronization Policy
+
+Befu maintains a project template that serves as the foundation for all new applications. Ensuring this template is synchronized with the core crates is critical for ecosystem health. Pull requests that modify bridge or runtime logic without updating the template will be requested to do so before merging.
+
+## Community Standards
+
+Befu follows a professional engineering culture. For behavioral expectations, please refer to our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ---
 
-Befu is a next-generation mobile runtime. Break stuff, improve the bridge, and have fun!
+Thank you for helping build the future of high-performance mobile development.
