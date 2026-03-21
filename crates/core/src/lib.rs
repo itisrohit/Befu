@@ -41,23 +41,19 @@ fn init_registry() -> CommandRegistry {
     #[cfg(debug_assertions)]
     hot_reload::load_external_commands(&mut registry);
 
-    // In tests, register hello directly from befu-app so integration tests
-    // can exercise the command without requiring the hot-reload dylib mechanism.
+    // In tests, register a mock hello command so integration tests
+    // can exercise the command registry validation and bridge flow.
     #[cfg(test)]
     registry.register(
-        CommandMetadata { name: "hello", description: "Say hello (test registration)" },
+        CommandMetadata { name: "hello", description: "Mock hello for testing" },
         |req| {
-            let name = req
-                .args
-                .as_ref()
-                .and_then(|a| a.get("name"))
-                .and_then(|v| v.as_str())
-                .map(|s| s.to_string());
+            let name = req.args.as_ref().and_then(|a| a.get("name")).and_then(|v| v.as_str());
+
             match name {
-                Some(n) => {
-                    let result = befu_app::hello_from_app(n);
-                    success_response(&req.id, serde_json::to_value(result).unwrap_or_default())
-                }
+                Some(n) => success_response(
+                    &req.id,
+                    serde_json::json!({ "message": format!("Hello {n} from test mock") }),
+                ),
                 None => failure_response(
                     &req.id,
                     "INVALID_ARGUMENT",

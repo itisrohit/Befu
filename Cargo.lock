@@ -24,7 +24,6 @@ dependencies = [
 name = "befu-core"
 version = "0.1.0"
 dependencies = [
- "befu-app",
  "befu-bridge",
  "befu-macros",
  "jni",
