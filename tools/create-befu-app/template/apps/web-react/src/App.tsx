@@ -82,7 +82,18 @@ function App(): React.JSX.Element {
         const pingResult = (await invoke('ping')) as { pong: string }
         const info = (await invoke('app.info')) as { version: string; hot_reload: boolean }
         setBridgeStatus(pingResult.pong === 'pong' ? 'BRIDGE LIVE' : 'DISCONNECTED')
-        setAppInfo({ version: info.version, hot_reload: info.hot_reload === true })
+        const hotReload = info.hot_reload === true
+        setAppInfo({ version: info.version, hot_reload: hotReload })
+
+        // Auto-reload the dynamic module on startup so fresh library is
+        // picked up without requiring the user to press the button.
+        if (hotReload) {
+          try {
+            await invoke('befu.reload')
+          } catch {
+            // Not fatal — app commands may not be ready yet on first cold boot
+          }
+        }
       } catch (e) {
         console.error('[Befu] Bridge initialization failed:', e)
         setBridgeStatus(`ERROR`)

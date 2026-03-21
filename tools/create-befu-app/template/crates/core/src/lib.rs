@@ -12,7 +12,6 @@ use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 use std::sync::{Mutex, OnceLock};
 
-mod demo_commands;
 mod hot_reload;
 
 fn init_registry() -> CommandRegistry {
@@ -37,9 +36,6 @@ fn init_registry() -> CommandRegistry {
         CommandMetadata { name: "befu.reload", description: "Reload hot-reloadable components" },
         reload_commands_command,
     );
-
-    // Register local demo commands (fallback)
-    befu_macros::register_commands!(registry, demo_commands::hello);
 
     // Load external hot-reloadable commands
     #[cfg(debug_assertions)]
