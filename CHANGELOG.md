@@ -1,6 +1,25 @@
-# Changelog
-
 All notable changes to the Befu project will be documented in this file.
+
+## [1.5.0] - 2026-03-21 (Git Tag: v1.5)
+
+### Added
+
+- **Universal React Support**: First-class support for React in `create-befu-app` with the `--framework react` flag.
+- **React Foundation Library**: Standard hooks and bridge integration presets optimized for React.
+- **Automated Rust Module Reloading**: Mobile shells now automatically perform a `befu.reload` on startup if hot-reload is enabled, ensuring the latest Rust library is active without manual intervention.
+- **Shadow-Safe Built-ins**: The core registry now provides a default `hello` command to satisfy integration tests, while allowing user-provided logic to seamlessly shadow it.
+
+### Changed
+
+- **Ecosystem Synchronization**: Unified all internal packages (CLI, Bridge, Crates) and template versions to **0.1.5**.
+- **Hardened Scaffolder**: Added defensive file existence checks and improved manifest injection logic.
+- **Robust State Management**: Updated standard templates with `disposed` flag checks and `useRef` based mutexes to prevent memory leaks and race conditions during async bridge calls.
+
+### Fixed
+
+- **CodeRabbit Review 2.0**: Resolved multiple quality issues including keyword case-sensitivity in CSS and type-mismatches in failure responses.
+- **CLI Inconsistency**: Fixed mismatched project name examples in documentation.
+- **Linter Parity**: Unified `cargo fmt` and `prettier` rules across the monorepo and its templates.
 
 ## [0.1.4] - 2026-03-21
 
