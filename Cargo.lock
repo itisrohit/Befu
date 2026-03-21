@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "befu-app"
-version = "0.1.0"
+version = "0.1.5"
 dependencies = [
  "befu-bridge",
  "befu-macros",
@@ -14,7 +14,7 @@ dependencies = [
 
 [[package]]
 name = "befu-bridge"
-version = "0.1.0"
+version = "0.1.5"
 dependencies = [
  "serde",
  "serde_json",
@@ -22,7 +22,7 @@ dependencies = [
 
 [[package]]
 name = "befu-core"
-version = "0.1.0"
+version = "0.1.5"
 dependencies = [
  "befu-bridge",
  "befu-macros",
@@ -34,7 +34,7 @@ dependencies = [
 
 [[package]]
 name = "befu-macros"
-version = "0.1.0"
+version = "0.1.5"
 dependencies = [
  "proc-macro2",
  "quote",
