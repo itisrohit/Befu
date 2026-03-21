@@ -100,7 +100,7 @@ bunx create-befu-app --name my-befu-app --platform both --yes
 If your local `bunx` cache is stale, pin explicitly:
 
 ```bash
-bunx create-befu-app@0.1.3 --name my-befu-app --platform both --yes
+bunx create-befu-app@0.1.4 --name my-befu-app --platform both --yes
 ```
 
 ## Docs

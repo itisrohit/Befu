@@ -371,7 +371,7 @@ async function main() {
   const rl = needsPrompt ? createInterface({ input, output }) : null
 
   try {
-    console.log('create-befu-app v0.1.3')
+    console.log('create-befu-app v0.1.4')
     console.log('Scaffold a full Befu workspace template.')
 
     const nameInput =
