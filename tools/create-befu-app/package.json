@@ -1,6 +1,6 @@
 {
   "name": "create-befu-app",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Scaffold a Befu app workspace",
   "license": "MIT",
   "type": "module",
