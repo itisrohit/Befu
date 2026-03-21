@@ -25,12 +25,13 @@ If you are starting from scratch, use the Befu CLI to set up a fresh monorepo:
 bunx create-befu-app --name my-visionary-app --framework react
 ```
 
-You will be asked for:
+The CLI will guide you through the setup. If flags are provided (like `--name` or `--framework`), those specific steps will be skipped. Otherwise, you'll be prompted for:
 
-1.  **App Name**: Slug for your folder and packages.
-2.  **Application ID**: The package identifier (e.g., `com.company.app`).
-3.  **Target Platform**: Android, iOS, or Both.
-4.  **Framework**: React or SolidJS.
+1. **Project Name**: The directory name for your workspace.
+2. **Frontend Framework**: Choose between **SolidJS** (default) or **React**.
+3. **Application ID**: The package name for Android/iOS (e.g., `com.yourname.app`).
+4. **Target Platform**: Android, iOS, or both.
+5. **Framework**: React or SolidJS.
 
 ## Daily Workflow: **Install Once, Iterate Forever**
 

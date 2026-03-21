@@ -27,7 +27,11 @@ function App(): React.JSX.Element {
   const [helloLoading, setHelloLoading] = useState(false)
   const [reloadLoading, setReloadLoading] = useState(false)
 
+  // Use a ref as a synchronous mutex to prevent concurrent reloads
+  const reloadInProgressRef = React.useRef(false)
+
   useEffect(() => {
+    let disposed = false
     const mockTransport: BridgeTransport = (payload) => {
       if (payload.command === 'ping') {
         return Promise.resolve({
@@ -63,6 +67,7 @@ function App(): React.JSX.Element {
     const nativeTransport = createNativeTransport()
     configureBridge(async (payload) => {
       const nativeResponse = await nativeTransport(payload)
+      if (disposed) return nativeResponse
       if (nativeResponse.ok) {
         setBackendMode(getNativeBackendMode())
         return nativeResponse
@@ -80,7 +85,9 @@ function App(): React.JSX.Element {
     const init = async () => {
       try {
         const pingResult = (await invoke('ping')) as { pong: string }
+        if (disposed) return
         const info = (await invoke('app.info')) as { version: string; hot_reload: boolean }
+        if (disposed) return
         setBridgeStatus(pingResult.pong === 'pong' ? 'BRIDGE LIVE' : 'DISCONNECTED')
         const hotReload = info.hot_reload === true
         setAppInfo({ version: info.version, hot_reload: hotReload })
@@ -96,21 +103,32 @@ function App(): React.JSX.Element {
         }
       } catch (e) {
         console.error('[Befu] Bridge initialization failed:', e)
-        setBridgeStatus(`ERROR`)
+        if (!disposed) setBridgeStatus(`ERROR`)
       }
     }
     void init()
+
+    return () => {
+      disposed = true
+    }
   }, [])
 
   const handlePing = async () => {
-    const result = (await invoke('ping')) as { pong: string }
-    if (result.pong === 'pong') {
-      setPingCount((v: number) => v + 1)
+    try {
+      const result = (await invoke('ping')) as { pong: string }
+      if (result.pong === 'pong') {
+        setPingCount((v: number) => v + 1)
+        setBridgeStatus('BRIDGE LIVE')
+      }
+    } catch (e) {
+      console.error('[Befu] Ping failed:', e)
+      setBridgeStatus('DISCONNECTED')
     }
   }
 
   const handleReload = async () => {
-    if (reloadLoading) return
+    if (reloadInProgressRef.current) return
+    reloadInProgressRef.current = true
     setReloadLoading(true)
     setBridgeStatus('RELOADING...')
     setHelloResult(null)
@@ -124,6 +142,7 @@ function App(): React.JSX.Element {
       setBridgeStatus(`RELOAD FAILED`)
     } finally {
       setReloadLoading(false)
+      reloadInProgressRef.current = false
     }
   }
 

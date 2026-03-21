@@ -15,4 +15,3 @@ befu-bridge = { path = "../bridge" }
 libloading = "0.8"
 
 [dev-dependencies]
-serde_json = "1.0"

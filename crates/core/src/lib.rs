@@ -39,22 +39,7 @@ fn init_registry() -> CommandRegistry {
 
     registry.register(
         CommandMetadata { name: "hello", description: "Default hello command (shadowable by app)" },
-        |req| {
-            let name = req.args.as_ref().and_then(|a| a.get("name")).and_then(|v| v.as_str());
-
-            match name {
-                Some(n) => success_response(
-                    &req.id,
-                    serde_json::json!({ "message": format!("Hello {n} from Befu!") }),
-                ),
-                None => failure_response(
-                    &req.id,
-                    "INVALID_ARGUMENT",
-                    "Missing required argument 'name'".to_string(),
-                    None,
-                ),
-            }
-        },
+        default_hello_command,
     );
 
     // Load external hot-reloadable commands
@@ -140,6 +125,23 @@ pub fn handle_request(payload: &str) -> String {
         serde_json::to_string(&failure_response("", "SERIALIZATION_ERROR", e.to_string(), None))
             .unwrap_or_default()
     })
+}
+
+fn default_hello_command(req: &BridgeRequest) -> BridgeResponse {
+    let name = req.args.as_ref().and_then(|a| a.get("name")).and_then(|v| v.as_str());
+
+    match name {
+        Some(n) => success_response(
+            &req.id,
+            serde_json::json!({ "message": format!("Hello {n} from Befu!") }),
+        ),
+        None => failure_response(
+            &req.id,
+            "INVALID_ARGUMENT",
+            "Missing required argument 'name'".to_string(),
+            None,
+        ),
+    }
 }
 
 fn ping_command(req: &BridgeRequest) -> BridgeResponse {

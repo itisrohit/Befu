@@ -102,9 +102,15 @@ function App() {
   })
 
   const handlePing = async () => {
-    const result = await invoke('ping')
-    if (result.pong === 'pong') {
-      setPingCount((v) => v + 1)
+    try {
+      const result = await invoke('ping')
+      if (result.pong === 'pong') {
+        setPingCount((v) => v + 1)
+        setBridgeStatus('BRIDGE LIVE')
+      }
+    } catch (e) {
+      console.error('[Befu] Ping failed:', e)
+      setBridgeStatus('DISCONNECTED')
     }
   }
 

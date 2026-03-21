@@ -376,18 +376,34 @@ function applyPlatformSelection(projectDir, platform) {
 function applyFrameworkSelection(projectDir, framework) {
   const appsDir = join(projectDir, 'apps')
   const targetDir = join(appsDir, 'web')
-  const solidDir = join(appsDir, 'web-solid')
-  const reactDir = join(appsDir, 'web-react')
 
   if (framework === 'react') {
-    cpSync(reactDir, targetDir, { recursive: true })
+    const reactDir = join(appsDir, 'web-react')
+    if (existsSync(reactDir)) {
+      cpSync(reactDir, targetDir, { recursive: true })
+    } else {
+      console.error(`[error] React template not found at ${reactDir}`)
+      process.exit(1)
+    }
   } else {
-    cpSync(solidDir, targetDir, { recursive: true })
+    // Default to Solid
+    const solidDir = join(appsDir, 'web-solid')
+    if (existsSync(solidDir)) {
+      cpSync(solidDir, targetDir, { recursive: true })
+    } else {
+      console.error(`[error] Solid template not found at ${solidDir}`)
+      process.exit(1)
+    }
   }
 
-  // Cleanup template folders
-  rmSync(solidDir, { recursive: true, force: true })
-  rmSync(reactDir, { recursive: true, force: true })
+  // Prune unused template folders (only if they exist)
+  const templates = ['web-react', 'web-solid']
+  for (const t of templates) {
+    const p = join(appsDir, t)
+    if (existsSync(p)) {
+      rmSync(p, { recursive: true, force: true })
+    }
+  }
 }
 
 /**
