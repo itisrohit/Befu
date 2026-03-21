@@ -1,0 +1,78 @@
+:root {
+  --text: #20303c;
+  --text-h: #0d1b22;
+  --bg: radial-gradient(circle at top right, #f3f8ff 0%, #eaf4f0 40%, #f9fbfd 100%);
+  --border: #c9d8e4;
+  --code-bg: #e7f0f8;
+  --accent: #136f63;
+  --accent-bg: rgba(19, 111, 99, 0.14);
+  --accent-border: rgba(19, 111, 99, 0.45);
+  --surface: rgba(255, 255, 255, 0.82);
+  --shadow: rgba(20, 40, 60, 0.12) 0 10px 24px -12px, rgba(20, 40, 60, 0.08) 0 8px 12px -8px;
+
+  --sans: 'DM Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  --heading: 'Space Grotesk', 'Avenir Next', 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizelegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+}
+
+#root {
+  width: 980px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: initial;
+  min-height: 100svh;
+  box-sizing: border-box;
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 2.6rem;
+  letter-spacing: -0.04em;
+  margin: 0;
+  @media (max-width: 1024px) {
+    font-size: 2rem;
+  }
+}
+
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 14px;
+  line-height: 135%;
+  padding: 2px 6px;
+  background: var(--code-bg);
+}

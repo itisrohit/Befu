@@ -8,6 +8,7 @@ import { stdin as input, stdout as output } from 'node:process'
 
 const DEFAULT_PACKAGE_MANAGER = process.env.BEFU_PACKAGE_MANAGER ?? 'bun@1.3.11'
 const DEFAULT_PLATFORM = 'both'
+const DEFAULT_FRAMEWORK = 'solid'
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url))
 const TEMPLATE_ROOT = resolve(SCRIPT_DIR, '../template')
@@ -66,6 +67,7 @@ function parseArgs(argv) {
   const parsed = {
     name: '',
     platform: '',
+    framework: '',
     yes: false,
   }
 
@@ -84,6 +86,12 @@ function parseArgs(argv) {
 
     if (arg === '--platform' && argv[index + 1]) {
       parsed.platform = argv[index + 1]
+      index += 1
+      continue
+    }
+
+    if (arg === '--framework' && argv[index + 1]) {
+      parsed.framework = argv[index + 1]
       index += 1
       continue
     }
@@ -363,6 +371,42 @@ function applyPlatformSelection(projectDir, platform) {
 }
 
 /**
+ * Handle framework selection and cleanup.
+ */
+function applyFrameworkSelection(projectDir, framework) {
+  const appsDir = join(projectDir, 'apps')
+  const targetDir = join(appsDir, 'web')
+
+  if (framework === 'react') {
+    const reactDir = join(appsDir, 'web-react')
+    if (existsSync(reactDir)) {
+      cpSync(reactDir, targetDir, { recursive: true })
+    } else {
+      console.error(`[error] React template not found at ${reactDir}`)
+      process.exit(1)
+    }
+  } else {
+    // Default to Solid
+    const solidDir = join(appsDir, 'web-solid')
+    if (existsSync(solidDir)) {
+      cpSync(solidDir, targetDir, { recursive: true })
+    } else {
+      console.error(`[error] Solid template not found at ${solidDir}`)
+      process.exit(1)
+    }
+  }
+
+  // Prune unused template folders (only if they exist)
+  const templates = ['web-react', 'web-solid']
+  for (const t of templates) {
+    const p = join(appsDir, t)
+    if (existsSync(p)) {
+      rmSync(p, { recursive: true, force: true })
+    }
+  }
+}
+
+/**
  * Scaffold a full Befu workspace.
  */
 async function main() {
@@ -400,6 +444,18 @@ async function main() {
       ? platformAnswer
       : DEFAULT_PLATFORM
 
+    const frameworkInput =
+      args.framework.length > 0
+        ? args.framework
+        : rl
+          ? await rl.question('Frontend framework [solid/react] (default: solid): ')
+          : DEFAULT_FRAMEWORK
+
+    const frameworkAnswer = frameworkInput.trim().toLowerCase()
+    const framework = ['solid', 'react'].includes(frameworkAnswer)
+      ? frameworkAnswer
+      : DEFAULT_FRAMEWORK
+
     const projectDir = resolve(process.cwd(), appName)
     if (existsSync(projectDir)) {
       console.error(`Directory already exists: ${projectDir}`)
@@ -409,6 +465,7 @@ async function main() {
     mkdirSync(projectDir, { recursive: true })
     copyTemplate(projectDir)
     applyProjectMetadata(projectDir, appName, applicationId)
+    applyFrameworkSelection(projectDir, framework)
     applyPlatformSelection(projectDir, platform)
 
     console.log('')

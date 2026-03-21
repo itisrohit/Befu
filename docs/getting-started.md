@@ -17,6 +17,22 @@ bun run doctor
 bun run bootstrap
 ```
 
+## Scaffold a New Project
+
+If you are starting from scratch, use the Befu CLI to set up a fresh monorepo:
+
+```bash
+bunx create-befu-app --name my-visionary-app --framework react
+```
+
+The CLI will guide you through the setup. If flags are provided (like `--name` or `--framework`), those specific steps will be skipped. Otherwise, you'll be prompted for:
+
+1. **Project Name**: The directory name for your workspace.
+2. **Frontend Framework**: Choose between **SolidJS** (default) or **React**.
+3. **Application ID**: The package name for Android/iOS (e.g., `com.yourname.app`).
+4. **Target Platform**: Android, iOS, or both.
+5. **Framework**: React or SolidJS.
+
 ## Daily Workflow: **Install Once, Iterate Forever**
 
 Traditional mobile development requires a full build and reinstall for every Rust change. Befu eliminates this loop by letting you sync logic directly into the running app.

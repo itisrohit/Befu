@@ -82,7 +82,18 @@ function App() {
         const pingResult = await invoke('ping')
         const info = await invoke('app.info')
         setBridgeStatus(pingResult.pong === 'pong' ? 'BRIDGE LIVE' : 'DISCONNECTED')
-        setAppInfo({ version: info.version, hot_reload: info.hot_reload === true })
+        const hotReload = info.hot_reload === true
+        setAppInfo({ version: info.version, hot_reload: hotReload })
+
+        // Auto-reload the dynamic module on startup so fresh library is
+        // picked up without requiring the user to press the button.
+        if (hotReload) {
+          try {
+            await invoke('befu.reload')
+          } catch {
+            // Not fatal — app commands may not be ready yet on first cold boot
+          }
+        }
       } catch (e) {
         console.error('[Befu] Bridge initialization failed:', e)
         setBridgeStatus(`ERROR`)
@@ -91,9 +102,15 @@ function App() {
   })
 
   const handlePing = async () => {
-    const result = await invoke('ping')
-    if (result.pong === 'pong') {
-      setPingCount((v) => v + 1)
+    try {
+      const result = await invoke('ping')
+      if (result.pong === 'pong') {
+        setPingCount((v) => v + 1)
+        setBridgeStatus('BRIDGE LIVE')
+      }
+    } catch (e) {
+      console.error('[Befu] Ping failed:', e)
+      setBridgeStatus('DISCONNECTED')
     }
   }
 

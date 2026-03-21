@@ -13,3 +13,5 @@ serde_json = "1.0"
 befu-macros = { path = "../macros" }
 befu-bridge = { path = "../bridge" }
 libloading = "0.8"
+
+[dev-dependencies]

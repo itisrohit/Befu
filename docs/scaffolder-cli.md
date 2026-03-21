@@ -1,42 +1,42 @@
-# create-befu-app CLI
+# Scaffolder CLI
 
-## Install And Run
+Befu provides a unified CLI for bootstrapping new monorepos.
+
+## Creating a Project
 
 ```bash
-bunx create-befu-app
+bunx create-befu-app --name my-app
 ```
 
 Non-interactive mode:
 
 ```bash
-bunx create-befu-app --name my-befu-app --platform both --yes
+bunx create-befu-app --name my-app --platform both --framework react --yes
 ```
 
-Supported platforms:
+### Options
 
-- `android`
-- `ios`
-- `both`
+| Flag          | Description                  | Values                   | Default    |
+| ------------- | ---------------------------- | ------------------------ | ---------- |
+| `--name`      | Project directory name       | string                   | `befu-app` |
+| `--framework` | Frontend framework to use    | `solid`, `react`         | `solid`    |
+| `--platform`  | Target mobile platform       | `android`, `ios`, `both` | `both`     |
+| `--yes`       | Skip all interactive prompts | N/A                      | N/A        |
 
-## Deterministic Version Pinning
+## Project Structure
 
-Use explicit versions in CI or debugging:
+A scaffolded project contains:
 
-```bash
-bunx create-befu-app@0.1.3 --name my-befu-app --platform both --yes
-```
+- `apps/web`: The selected frontend (Solid or React).
+- `crates/core`: Rust logic and binary bridge.
+- `crates/app`: Dynamic side-loadable project commands.
+- `android/`: Native Android project setup.
+- `ios/`: Native iOS project setup (using `project.yml`).
 
 ## Next Steps In Generated Project
 
 ```bash
-cd my-befu-app
+cd my-app
 bun run bootstrap
 bun run dev
 ```
-
-## Troubleshooting
-
-- `bunx create-befu-app` pulls an older build:
-  - pin version once (`@0.1.3`) or clear local bunx cache.
-- `bun install` in generated folder fails on hook install:
-  - run inside a git repository, or initialize git first with `git init`.
