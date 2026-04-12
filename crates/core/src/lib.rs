@@ -12,6 +12,7 @@ use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 use std::sync::{Mutex, OnceLock};
 
+mod demo_commands;
 mod hot_reload;
 
 fn init_registry() -> CommandRegistry {
@@ -40,6 +41,13 @@ fn init_registry() -> CommandRegistry {
     registry.register(
         CommandMetadata { name: "hello", description: "Default hello command (shadowable by app)" },
         default_hello_command,
+    );
+
+    // Complex struct demo commands (Phase 6)
+    befu_macros::register_commands!(
+        registry,
+        demo_commands::user_profile_echo,
+        demo_commands::data_aggregate
     );
 
     // Load external hot-reloadable commands

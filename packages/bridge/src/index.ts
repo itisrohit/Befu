@@ -1,3 +1,55 @@
+// ── Shared complex types ──────────────────────────────────────
+
+export interface GeoCoord {
+  lat: number
+  lng: number
+}
+
+export interface Address {
+  street: string
+  city: string
+  country: string
+  coords: GeoCoord
+}
+
+export interface UserProfile {
+  id: number
+  name: string
+  email: string
+  active: boolean
+  tags: string[]
+  scores: number[]
+  address: Address
+  metadata: Record<string, unknown>
+}
+
+export interface ComputedFields {
+  tag_count: number
+  avg_score: number
+}
+
+export interface UserProfileEchoResponse {
+  profile: UserProfile
+  computed: ComputedFields
+}
+
+export interface DataItem {
+  label: string
+  value: number
+  category: string
+  nested_tags: string[][]
+}
+
+export interface AggregateResponse {
+  count: number
+  total: number
+  average: number
+  categories: string[]
+  items: DataItem[]
+}
+
+// ── Command registry ──────────────────────────────────────────
+
 export interface BridgeCommandMap {
   hello: {
     args: { name: string }
@@ -19,6 +71,14 @@ export interface BridgeCommandMap {
   'befu.reload': {
     args: undefined
     result: boolean
+  }
+  'user.profile.echo': {
+    args: { profile: UserProfile }
+    result: UserProfileEchoResponse
+  }
+  'data.aggregate': {
+    args: { items: DataItem[] }
+    result: AggregateResponse
   }
 }
 
