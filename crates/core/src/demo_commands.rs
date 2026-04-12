@@ -33,7 +33,9 @@ pub struct Address {
 /// A user profile with nested structs and collections.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct UserProfile {
-    pub id: u64,
+    /// Use u32 instead of u64 to avoid precision loss across the JS bridge
+    /// (JavaScript numbers are IEEE-754 doubles, safe only up to 2^53 - 1)
+    pub id: u32,
     pub name: String,
     pub email: String,
     pub active: bool,
